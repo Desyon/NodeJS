@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./src/server/app"
   },
   "dependencies": {
+    "consolidate": "^0.14.5",
     "express": "~4.14.1",
     "hbs": "~4.0.1",
     "less-middleware": "~2.2.0"
