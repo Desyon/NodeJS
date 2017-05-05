@@ -1,7 +1,16 @@
 {
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "root": true,
+  "rules": {
+    "space-before-function-paren": "off",
+    "semi": "warn",
+    "valid-jsdoc": "off"
+  },
   "env": {
     "node": true,
     "browser": true
-  },
-  "extends": "google"
+  }
 }
