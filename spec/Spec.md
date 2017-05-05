@@ -13,42 +13,38 @@ A user. Has events(>= 0) and categories(>=1)
 
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
-Username | String | unique username; format [A-Za-Z0-9]* | x
-First Name | String | u know ... | x
-Last Name | String | u know ... | x
-Password | String | hashed | x
-BoD | Date | Date of Birth | x
-E-mail | String | u know... | x
-Phone | String | u know |
-Title | String | select from Mr/Mrs | x
-Gender | String | free selection | 
-ID | ? | unique ID; automatically generated | x
+uname | String | unique username; format [A-Za-Z0-9]* | x
+fname | String | first name | x
+lname | String | last name | x
+password | String | hashed | x
+dob | Date | Date of Birth | 
+phone | String | u know |
 
 ### Event
 Depicts one event with all properties has an creator/owner + category
 
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
-Title | String | u know ... | x
-Date | date | u know ... | x
-Time | String | u know ... | x
-Allday | bool | u know... | x
-Category | Category | u know... | x
-Creator | User | u know...; automatically filled | x
-Location | String | u know ... (Google Maps?) | 
-Participants | String | u know ... |
-Notes | String | u know ... (max length) |
-ID | ? | unique ID; automatically generated | x 
+title | String | u know ... | x
+date | date | u know ... | x
+tile | String | u know ... | x
+allday | bool | u know... | x
+category | Category | u know... | x
+owner | User | u know...; automatically filled | x
+location | String | u know ... (Google Maps?) | 
+notes | String | u know ... (max length) |
+id | ? | unique ID; automatically generated | x 
 
 ### Category
 Depicts a calender for a certain purpose, e.g. private use, school, work
 
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
-Name | String | u know... | x
-Color | Hex | u know... (color picker?) | x
-Description | String | u know ... | 
-ID | ? | unique ID; automatically generated | x
+name | String | u know... | x
+color | Hex | u know... (color picker?) | x
+descr | String | u know ... | 
+id | ? | unique ID; automatically generated | x
+owner | user | username`` | x
 
 ## REST-Routes
 
