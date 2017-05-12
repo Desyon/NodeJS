@@ -2,18 +2,23 @@
   "name": "CalendarApp",
   "description": "Web Engineering Project",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./src/server/app"
+    "start": "node ./src/server/app",
+    "eslint": "./node_modules/.bin/eslint ./"
   },
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "less-middleware": "~2.2.0",
     "tingodb": "^0.5.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.1"
+    "eslint-config-google": "^0.7.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "run-sequence": "^1.2.2"
   }
 }
