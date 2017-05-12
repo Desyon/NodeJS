@@ -5,12 +5,12 @@
 // TODO: Getters for user specific content
 // TODO: indexing
 
-let TingoDB = require('tingodb')().Db;
-let db = new TingoDB('./database');
+const TingoDB = require('tingodb')();
+const db = new TingoDB.Db('./database', {});
 
-let users = db.collection('user.db');
-let events = db.collection('event.db');
-let categories = db.collection('category.db');
+const users = db.collection('user.db');
+const events = db.collection('event.db');
+const categories = db.collection('category.db');
 
 // Inserts
 /**
@@ -20,8 +20,8 @@ let categories = db.collection('category.db');
  */
 module.exports.insertUser = function (user, res) {
   users.insert(user, function (err) {
-    res.send(err);
-  })
+    res(err);
+  });
 };
 
 /**
@@ -31,8 +31,8 @@ module.exports.insertUser = function (user, res) {
  */
 module.exports.insertEvent = function (event, res) {
   events.insert(event, function (err) {
-    res.send(err);
-  })
+    res(err);
+  });
 };
 
 /**
@@ -42,20 +42,20 @@ module.exports.insertEvent = function (event, res) {
  */
 module.exports.insertCategory = function (category, res) {
   categories.insert(category, function (err) {
-    res.send(err);
-  })
+    res(err);
+  });
 };
 
 // Getter
 /**
  * Gets one user by his unique username. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param username Key of the element to be found.
  * @param res Response
  */
-module.exports.getUser = function (key, res) {
-  users.findOne({'uname': key}, function (err, item) {
-    res.send(err, item);
-  })
+module.exports.getUser = function (username, res) {
+  users.findOne({'username': username}, function (err, item) {
+    res(err, item);
+  });
 };
 
 /**
@@ -65,8 +65,8 @@ module.exports.getUser = function (key, res) {
  */
 module.exports.getEvent = function (key, res) {
   users.findOne({'_id': key}, function(err, item) {
-    res.send(err, item);
-  })
+    res(err, item);
+  });
 };
 
 /**
@@ -76,19 +76,19 @@ module.exports.getEvent = function (key, res) {
  */
 module.exports.getCategory = function (key, res) {
   users.findOne({'_id:': key}, function (err, item) {
-    res.send(err, item);
-  })
+    res(err, item);
+  });
 };
 
 // Delete
 /**
  * Deletes the user with the given username.
- * @param uname Username of the user to be deleted
+ * @param username Username of the user to be deleted
  * @param res Response
  */
-module.exports.deleteUser = function (uname, res) {
-  users.remove({'uname': uname}, {w: 1}, function (err, result) {
-    res.send(err, result);
+module.exports.deleteUser = function (username, res) {
+  users.remove({'username': username}, {w: 1}, function (err, result) {
+    res(err, result);
   });
 };
 
@@ -99,7 +99,7 @@ module.exports.deleteUser = function (uname, res) {
  */
 module.exports.deleteEvent = function (id, res) {
   events.remove({'_id': id}, {w: 1}, function (err, result) {
-    res.send(err, result);
+    res(err, result);
   });
 };
 
@@ -110,6 +110,6 @@ module.exports.deleteEvent = function (id, res) {
  */
 module.exports.deleteCategory = function (id, res) {
   categories.remove({'_id': id}, {w: 1}, function (err, result) {
-    res.send(err, result);
+    res(err, result);
   });
 };

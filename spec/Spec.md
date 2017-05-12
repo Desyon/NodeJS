@@ -13,12 +13,11 @@ A user. Has events(>= 0) and categories(>=1)
 
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
-uname | String | unique username; format [A-Za-Z0-9]* | x
-fname | String | first name | x
-lname | String | last name | x
+username | String | unique username; format [A-Za-Z0-9]* | x
+name | String | first name | x
 password | String | hashed | x
 dob | Date | Date of Birth | 
-phone | String | u know |
+email | String | u know |
 
 ### Event
 Depicts one event with all properties has an creator/owner + category

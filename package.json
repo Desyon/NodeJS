@@ -8,6 +8,7 @@
     "start": "node ./src/server/app"
   },
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "less-middleware": "~2.2.0",
     "tingodb": "^0.5.1"
