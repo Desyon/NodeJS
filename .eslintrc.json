@@ -6,8 +6,15 @@
   "root": true,
   "rules": {
     "space-before-function-paren": "off",
+    "valid-jsdoc": "off",
+    "new-cap": [
+      "warn",
+      {
+        "capIsNew": false
+      }
+    ],
     "semi": "warn",
-    "valid-jsdoc": "off"
+    "eol-last": "warn"
   },
   "env": {
     "node": true,

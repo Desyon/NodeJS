@@ -2,15 +2,12 @@
 
 This is a simple app including a server on NodeJS and a Angular based WebApp communication over a REST API. This project is for studying purposes.
 
-## Features
-The app currently offers the following features.
+## Installation
+These steps must be followed to install and run the app and be able to use all tools 
+such as gulp or eslint:
+1. Run ``npm install --global gulp-cli``. If you have it already installed this is not 
+necessary.
 
-The following features are currently under development
-- [ ] User Management
-  - [ ] creating/deleting
-  - [ ] access restriction
-- [ ] Event Handeling/Management
-  - [ ] creating/deleting
-  - [ ] sharing
-- [ ] Category Management
-  - [ ] creating/deleting
+2. Run ``npm install`` to install all dependencies of the project. 
+
+3. Now the server can be started any time using the command ``npm start``
