@@ -21,7 +21,7 @@ let categories = db.collection('category.db');
 module.exports.insertUser = function (user, res) {
   users.insert(user, function (err) {
     res.send(err);
-  })
+  });
 };
 
 /**
@@ -32,7 +32,7 @@ module.exports.insertUser = function (user, res) {
 module.exports.insertEvent = function (event, res) {
   events.insert(event, function (err) {
     res.send(err);
-  })
+  });
 };
 
 /**
@@ -43,7 +43,7 @@ module.exports.insertEvent = function (event, res) {
 module.exports.insertCategory = function (category, res) {
   categories.insert(category, function (err) {
     res.send(err);
-  })
+  });
 };
 
 // Getter
@@ -55,7 +55,7 @@ module.exports.insertCategory = function (category, res) {
 module.exports.getUser = function (key, res) {
   users.findOne({'uname': key}, function (err, item) {
     res.send(err, item);
-  })
+  });
 };
 
 /**
@@ -66,7 +66,7 @@ module.exports.getUser = function (key, res) {
 module.exports.getEvent = function (key, res) {
   users.findOne({'_id': key}, function(err, item) {
     res.send(err, item);
-  })
+  });
 };
 
 /**
@@ -77,7 +77,7 @@ module.exports.getEvent = function (key, res) {
 module.exports.getCategory = function (key, res) {
   users.findOne({'_id:': key}, function (err, item) {
     res.send(err, item);
-  })
+  });
 };
 
 // Delete

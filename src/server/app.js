@@ -2,7 +2,8 @@
  * Created by Desyon on 07.04.2017.
  */
 
-let express = require('express');
+const express = require('express');
+const winston = require('./util/winston');
 
 app = express();
 
@@ -15,5 +16,7 @@ app.get('/test', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Now listening on localhost:3000');
+  winston.warn('Now listening on localhost:3000');
+  winston.silly('This is really silly.');
+  winston.error('Test error.');
 });
