@@ -3,6 +3,7 @@
  */
 
 const express = require('express');
+const winston = require('./util/winston');
 
 const userRouter = require('./routers/user');
 const eventRouter = require('./routers/event');
@@ -18,7 +19,9 @@ app.use('/event', eventRouter);
 app.use('/category', categoryRouter);
 
 app.listen(httpPort, function () {
-  console.log('Now listening on localhost: ' + httpPort);
+  winston.info('Now listening on localhost: ' + httpPort);
+  winston.silly('This is really silly.');
+  winston.error('Test error.');
 });
 
 
