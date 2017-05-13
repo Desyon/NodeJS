@@ -60,24 +60,42 @@ module.exports.getUser = function (username, res) {
 
 /**
  * Gets one event by his unique ID. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param id Key of the element to be found.
  * @param res Response
  */
-module.exports.getEvent = function (key, res) {
-  users.findOne({'_id': key}, function(err, item) {
+module.exports.getEvent = function (id, res) {
+  users.findOne({'_id': id}, function(err, item) {
     res(err, item);
   });
 };
 
 /**
  * Gets one Category by his unique ID. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param id Key of the element to be found.
  * @param res Response
  */
-module.exports.getCategory = function (key, res) {
-  users.findOne({'_id:': key}, function (err, item) {
+module.exports.getCategory = function (id, res) {
+  users.findOne({'_id:': id}, function (err, item) {
     res(err, item);
   });
+};
+
+/**
+ * Retrieves all events of one specific given user as a JSON list.
+ * @param user user to retrieve all events for
+ * @param res Response
+ */
+module.exports.getAllEvents = function (user, res) {
+  // TODO: implement dis
+};
+
+/**
+ * Retrieves all categories of one specific given user as a JSON list.
+ * @param user user to retrieve all categories for
+ * @param res Response
+ */
+module.exports.getAllCategories = function (user, res) {
+  // TODO: implement dis
 };
 
 // Delete

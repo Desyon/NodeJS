@@ -15,12 +15,12 @@ router.post('/create', bodyParser, function (req, res) {
 
   if (req.get('content-type') !== 'application/json') {
     error = 'Wrong content type. Application only consumes JSON.';
-    res.status(406).send(error);
+    return res.status(406).send(error);
   }
 
   if (!req.body) {
-    error = 'Request body missing. Request failed.'
-    res.status(400).send(error)
+    error = 'Request body missing. Request failed.';
+    return res.status(400).send(error);
   }
 
   let category = {};
@@ -39,6 +39,14 @@ router.post('/create', bodyParser, function (req, res) {
 });
 
 router.get('/all', bodyParser, function (req, res) {
+  let error;
+
+  // check for correct content type
+  if (req.get('content-type') !== 'application/json') {
+    error = 'Wrong content type. Application only consumes JSON.';
+    return res.status(406).send(error);
+  }
+
   res.send('GET on /category/all --> return all categories');
 });
 
@@ -49,8 +57,24 @@ router.put('/:id', bodyParser, function (req, res) {
 });
 
 router.delete('/:id', bodyParser, function (req, res) {
-  res.send(
-      'DELETE on /category/' + req.params.id + ' --> delete category with id');
+  let error;
+
+  if (req.get('content-type') !== 'application/json') {
+    error = 'Wrong content type. Application only consumes JSON.';
+    return res.status(406).send(error);
+  }
+
+  let categoryId = req.params.id;
+
+  db.deleteCategory(categoryId, function (err) {
+    if (err) {
+      console.log();
+      error = 'Database error. See log for more information';
+      return res.status(500).send(error);
+    } else {
+      return res.sendStatus(200);
+    }
+  });
 });
 
 router.get('/:id', bodyParser, function (req, res) {
