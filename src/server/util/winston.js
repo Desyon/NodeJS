@@ -8,6 +8,7 @@ const winston = require('winston');
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console,
     {
+      level: 'debug',
       timestamp: timestamp(),
       formatter: function (options) {
         return options.level.toUpperCase() + '\t'

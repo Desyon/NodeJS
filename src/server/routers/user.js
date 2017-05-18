@@ -4,6 +4,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser').json();
+const winston = require('../util/winston');
 
 const db = require('../db');
 
@@ -49,18 +50,21 @@ router.post('/login', bodyParser, function (req, res) {
 
 router.post('/create', bodyParser, function (req, res) {
   let error;
+  winston.debug('Create user called');
 
   // check for correct content type
   if (req.get('content-type') !== 'application/json') {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
+  winston.debug('Content type check passed');
 
   // check if body is not empty
   if (!req.body) {
-    error = 'Request body missing. Login failed';
+    error = 'Request body missing. User creation failed';
     return res.status(400).send(error);
   }
+  winston.debug('Request body found');
 
   let user = {};
   user.username = req.body.username;
@@ -69,11 +73,11 @@ router.post('/create', bodyParser, function (req, res) {
   user.dob = req.body.dob;
   user.email = req.body.email;
 
-  db.insertUser(user, function (err, user) {
+  db.insertUser(user, function (err, ret) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      return res.status(201).send(user);
+      return res.status(201).send(ret);
     }
   });
 });

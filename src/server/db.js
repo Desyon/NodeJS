@@ -5,12 +5,14 @@
 // TODO: Getters for user specific content
 // TODO: indexing
 
-const TingoDB = require('tingodb')();
-const db = new TingoDB.Db('./database', {});
+const winston = require('./util/winston');
 
-const users = db.collection('user.db');
-const events = db.collection('event.db');
-const categories = db.collection('category.db');
+let TingoDB = require('tingodb')();
+let db = new TingoDB.Db('./src/server/database', {});
+
+let users = db.collection('user.db');
+let events = db.collection('event.db');
+let categories = db.collection('category.db');
 
 // Inserts
 /**
@@ -19,6 +21,9 @@ const categories = db.collection('category.db');
  * @param res response to answer
  */
 module.exports.insertUser = function (user, res) {
+  winston.debug('User insertion called');
+
+  users.createIndex({"username": user.username}, {unique: true});
   users.insert(user, function (err) {
     res(err);
   });
@@ -64,7 +69,7 @@ module.exports.getUser = function (username, res) {
  * @param res Response
  */
 module.exports.getEvent = function (id, res) {
-  users.findOne({'_id': id}, function(err, item) {
+  users.findOne({'_id': id}, function (err, item) {
     res(err, item);
   });
 };
@@ -130,4 +135,38 @@ module.exports.deleteCategory = function (id, res) {
   categories.remove({'_id': id}, {w: 1}, function (err, result) {
     res(err, result);
   });
+};
+
+
+/* DANGERZONE */
+
+module.exports.initUserDB = function (res) {
+  users.drop(function () {
+    users = db.createCollection('user.db', {autoIndexId: false}, function () {
+      users.createIndex({"username": 1}, {unique: true}, function (userErr) {
+        res(userErr);
+      });
+    });
+  });
+  winston.debug('User DB created');
+};
+
+module.exports.initEventDB = function (res) {
+  events.drop(function () {
+    events = db.createCollection('event.db', {autoIndexId: true},
+        function (eventErr) {
+          return res(eventErr);
+        });
+  });
+  winston.debug('Event DB created');
+};
+
+module.exports.initCategoryDB = function (res) {
+  categories.drop(function () {
+    categories = db.createCollection('category.db', {autoIndexId: true},
+        function (catErr) {
+          return res(catErr);
+        });
+  });
+  winston.debug('Category DB created');
 };
