@@ -2,9 +2,6 @@
  * Created by Desyon on 05.05.2017.
  */
 
-// TODO: Getters for user specific content
-// TODO: indexing
-
 const winston = require('./util/winston');
 
 let TingoDB = require('tingodb')();
@@ -21,9 +18,7 @@ let categories = db.collection('category.db');
  * @param res response to answer
  */
 module.exports.insertUser = function (user, res) {
-  winston.debug('User insertion called');
-
-  users.createIndex({"username": user.username}, {unique: true});
+  users.createIndex({'username': 1}, {unique: true});
   users.insert(user, function (err) {
     res(err);
   });
@@ -48,6 +43,13 @@ module.exports.insertEvent = function (event, res) {
 module.exports.insertCategory = function (category, res) {
   categories.insert(category, function (err) {
     res(err);
+  });
+};
+
+// Update
+module.exports.updateUser = function (username, user, res) {
+  users.update({username: username}, user, function (ret) {
+    res(ret);
   });
 };
 
@@ -137,36 +139,76 @@ module.exports.deleteCategory = function (id, res) {
   });
 };
 
-
-/* DANGERZONE */
-
+/* ------------------------ Database Initialization ------------------------ */
+/**
+ * Creates a user database and defines the username as unique index.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
 module.exports.initUserDB = function (res) {
-  users.drop(function () {
-    users = db.createCollection('user.db', {autoIndexId: false}, function () {
-      users.createIndex({"username": 1}, {unique: true}, function (userErr) {
-        res(userErr);
-      });
+  users = db.createCollection('user.db', {autoIndexId: false}, function () {
+    users.createIndex({'username': 1}, {unique: true}, function (error) {
+      return res(error);
     });
   });
-  winston.debug('User DB created');
+  winston.debug('User database created');
 };
 
+/**
+ * Creates a category database and defines automatic id generation.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
 module.exports.initEventDB = function (res) {
-  events.drop(function () {
-    events = db.createCollection('event.db', {autoIndexId: true},
-        function (eventErr) {
-          return res(eventErr);
-        });
-  });
-  winston.debug('Event DB created');
+  events = db.createCollection('event.db', {autoIndexId: true},
+      function (error) {
+        return res(error);
+      });
+  winston.debug('Event database created');
 };
 
+/**
+ * Creates a category database and defines automatic id generation.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
 module.exports.initCategoryDB = function (res) {
-  categories.drop(function () {
-    categories = db.createCollection('category.db', {autoIndexId: true},
-        function (catErr) {
-          return res(catErr);
-        });
+  categories = db.createCollection('category.db', {autoIndexId: true},
+      function (error) {
+        return res(error);
+      });
+  winston.debug('Category database created');
+};
+
+/**
+ * Deletes the user database. Sends out the error message if unsuccessful.
+ * @param res Response
+ */
+module.exports.deleteUserDB = function (res) {
+  users.drop(function (error) {
+    return res(error)
   });
-  winston.debug('Category DB created');
+  winston.debug('User database deleted');
+};
+
+/**
+ * Deletes the event database. Sends out the error message if unsuccessful
+ * @param res Response
+ */
+module.exports.deleteEventDB = function (res) {
+  events.drop(function (error) {
+    return res(error)
+  });
+  winston.debug('Event database deleted');
+};
+
+/**
+ * Deletes the category database. Sends out the error message if unsuccessful
+ * @param res Response
+ */
+module.exports.deleteCategoryDB = function (res) {
+  categories.drop(function (error) {
+    return res(error)
+  });
+  winston.debug('Category database deleted');
 };

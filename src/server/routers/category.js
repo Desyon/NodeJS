@@ -52,8 +52,13 @@ router.get('/all', bodyParser, function (req, res) {
 
 // /:id route
 router.put('/:id', bodyParser, function (req, res) {
-  res.send(
-      'PUT on /category/' + req.params.id + ' --> update category with id');
+  let error;
+
+  // check for correct content type
+  if (req.get('content-type') !== 'application/json') {
+    error = 'Wrong content type. Application only consumes JSON.';
+    return res.status(406).send(error);
+  }
 });
 
 router.delete('/:id', bodyParser, function (req, res) {

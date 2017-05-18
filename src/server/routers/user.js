@@ -38,33 +38,34 @@ router.post('/login', bodyParser, function (req, res) {
     return res.status(422).send(error);
   }
 
-  db.getUser(user.username, function (err, user) {
+  db.getUser(user.username, function (err, ret) {
     if (err) {
       error = 'User not found';
       return res.status(404).send(error);
     } else {
-      return res.status(200).send(user);
+      if (ret.password !== user.password) {
+        return res.sendStatus(401);
+      }
+      return res.status(200).send(ret);
     }
   });
 });
 
 router.post('/create', bodyParser, function (req, res) {
   let error;
-  winston.debug('Create user called');
+  winston.debug('User creation requested');
 
   // check for correct content type
   if (req.get('content-type') !== 'application/json') {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
-  winston.debug('Content type check passed');
 
   // check if body is not empty
   if (!req.body) {
     error = 'Request body missing. User creation failed';
     return res.status(400).send(error);
   }
-  winston.debug('Request body found');
 
   let user = {};
   user.username = req.body.username;
@@ -75,16 +76,24 @@ router.post('/create', bodyParser, function (req, res) {
 
   db.insertUser(user, function (err, ret) {
     if (err) {
-      return res.status(500).send(err);
+      winston.debug('User creation failed. ' + err.errmsg);
+      return res.status(500).send(err.errmsg);
     } else {
-      return res.status(201).send(ret);
+      winston.debug('User \'' + user.username + '\' created');
+      return res.status(201).send('User created');
     }
   });
 });
 
 // /:id route
 router.put('/:id', bodyParser, function (req, res) {
-  res.send('PUT on user/' + req.params.id + ' --> account update');
+  db.updateUser(req.params.id, req.body, function (err) {
+    if (err) {
+      return res.sendStatus(500);
+    } else {
+      return res.sendStatus(200);
+    }
+  });
 });
 
 router.delete('/:id', bodyParser, function (req, res) {

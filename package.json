@@ -5,8 +5,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./src/server/app",
-    "eslint": "./node_modules/.bin/eslint ./"
+    "start": "node ./src/server/app"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
