@@ -87,9 +87,30 @@ router.post('/create', bodyParser, function (req, res) {
 
 // /:id route
 router.put('/:id', bodyParser, function (req, res) {
-  db.updateUser(req.params.id, req.body, function (err) {
+  let error;
+
+  // check for correct content type
+  if (req.get('content-type') !== 'application/json') {
+    error = 'Wrong content type. Application only consumes JSON';
+    return res.status(406).send(error);
+  }
+
+  if (!req.body) {
+    error = 'Request body missing. User updating failed';
+    return res.status(400).send(error);
+  }
+
+  let username = req.params.id;
+  let user = {};
+  user.username = req.body.username;
+  user.name = req.body.name;
+  user.password = req.body.password;
+  user.dob = req.body.dob;
+  user.email = req.body.email;
+
+  db.updateUser(username, req.body, function (err) {
     if (err) {
-      return res.sendStatus(500);
+      return res.sendStatus(500).send(err);
     } else {
       return res.sendStatus(200);
     }
@@ -105,11 +126,15 @@ router.delete('/:id', bodyParser, function (req, res) {
     return res.status(406).send(error);
   }
 
-  if (!req.body) {
-    error = 'Request body missing. Bad request.';
-    return res.status(400).send(error);
-  }
-  res.send('DELETE on user/' + req.params.id + ' --> delete account');
+  let username = req.params.id;
+
+  db.deleteUser(username, function (err) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send('User ' + username + ' deleted.');
+    }
+  });
 });
 
 module.exports = router;

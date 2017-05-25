@@ -19,7 +19,7 @@ router.post('/create', bodyParser, function (req, res) {
   }
 
   if (!req.body) {
-    error = 'Request body missing. Request failed.';
+    error = 'Request body missing. Category creation failed.';
     return res.status(400).send(error);
   }
 
@@ -47,7 +47,7 @@ router.get('/all', bodyParser, function (req, res) {
     return res.status(406).send(error);
   }
 
-  res.send('GET on /category/all --> return all categories');
+  // TODO: Implementation
 });
 
 // /:id route
@@ -59,6 +59,47 @@ router.put('/:id', bodyParser, function (req, res) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
+
+  if (!req.body) {
+    error = 'Request body missing. Category update failed.';
+    return res.status(400).send(error);
+  }
+
+  let id = req.params.id;
+  let category = {};
+
+  category.name = req.body.name;
+  category.color = req.body.color;
+  category.description = req.body.description;
+  category.owner = req.body.owner;
+
+  db.updateCategory(id, event, function (err) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send('Category updated');
+    }
+  });
+});
+
+router.get('/:id', bodyParser, function (req, res) {
+  let error;
+
+  if (req.get('content-type') !== 'application/json') {
+    error = 'Wrong content type. Application only consumes JSON.';
+    return res.status(406).send(error);
+  }
+
+
+  let id = req.params.id;
+
+  db.getEvent(id, function (err, ret) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send(ret);
+    }
+  });
 });
 
 router.delete('/:id', bodyParser, function (req, res) {
@@ -73,17 +114,11 @@ router.delete('/:id', bodyParser, function (req, res) {
 
   db.deleteCategory(categoryId, function (err) {
     if (err) {
-      console.log();
-      error = 'Database error. See log for more information';
-      return res.status(500).send(error);
+      return res.status(500).send(err);
     } else {
       return res.sendStatus(200);
     }
   });
-});
-
-router.get('/:id', bodyParser, function (req, res) {
-  res.send('GET on /category/' + req.params.id + ' --> get category with id');
 });
 
 module.exports = router;

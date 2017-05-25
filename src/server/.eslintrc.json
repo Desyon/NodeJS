@@ -5,6 +5,7 @@
   },
   "root": true,
   "rules": {
+    "linebreak-style": "off",
     "space-before-function-paren": "off",
     "valid-jsdoc": "off",
     "new-cap": [

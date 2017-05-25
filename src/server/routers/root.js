@@ -4,12 +4,11 @@
 
 const express = require('express');
 const winston = require('../util/winston');
-
 const db = require('../db');
 
 const router = express.Router();
 
-router.get('/init', function (req, res) {
+router.get('/administration/init', function (req, res) {
   db.initUserDB(function (userError) {
     if (userError) {
       return res.send(500).send('User database creation failed');
@@ -31,7 +30,7 @@ router.get('/init', function (req, res) {
   return res.status(201).send('Databases created');
 });
 
-router.get('/reset', function (req, res) {
+router.get('/administration/reset', function (req, res) {
   db.deleteUserDB(function (userErr) {
     if (userErr) {
       res.status(500).send(userErr);
@@ -51,6 +50,13 @@ router.get('/reset', function (req, res) {
   });
 
   return res.redirect('/administration/init');
+});
+
+// Easter Egg HTTP Error Code 418: I'm a tea pot
+
+router.get('*/teapot|*/coffee', function (req, res) {
+  winston.warn('No coffee for you. Sorry.');
+  res.sendStatus(418);
 });
 
 module.exports = router;

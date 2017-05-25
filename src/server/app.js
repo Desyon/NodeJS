@@ -5,9 +5,7 @@
 const express = require('express');
 const winston = require('./util/winston');
 
-const db = require('./db');
-
-const administrationRouter = require('./routers/administration');
+const rootRouter = require('./routers/root');
 const userRouter = require('./routers/user');
 const eventRouter = require('./routers/event');
 const categoryRouter = require('./routers/category');
@@ -17,7 +15,7 @@ const httpPort = 3000;
 app = express();
 
 // routes
-app.use('/administration', administrationRouter);
+app.use('/', rootRouter);
 
 app.use('/user', userRouter);
 app.use('/event', eventRouter);
@@ -28,9 +26,3 @@ app.listen(httpPort, function () {
   winston.silly('This is really silly.');
 });
 
-// Easter Egg HTTP Error Code 418: I'm a tea pot
-
-app.get('*/teapot|*/coffee', function (req, res) {
-  console.log('No coffee for you. Sorry.');
-  res.sendStatus(418);
-});

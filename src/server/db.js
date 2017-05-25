@@ -48,8 +48,20 @@ module.exports.insertCategory = function (category, res) {
 
 // Update
 module.exports.updateUser = function (username, user, res) {
-  users.update({username: username}, user, function (ret) {
-    res(ret);
+  users.update({username: username}, user, {upsert: true}, function (err) {
+    res(err);
+  });
+};
+
+module.exports.updateEvent = function (id, event, res) {
+  events.update({_id: id}, event, function (err) {
+    res(err);
+  });
+};
+
+module.exports.updateCategory = function (id, category, res) {
+  categories.update({_id: id}, category, function (err) {
+    res(err);
   });
 };
 
@@ -186,7 +198,7 @@ module.exports.initCategoryDB = function (res) {
  */
 module.exports.deleteUserDB = function (res) {
   users.drop(function (error) {
-    return res(error)
+    return res(error);
   });
   winston.debug('User database deleted');
 };
@@ -197,7 +209,7 @@ module.exports.deleteUserDB = function (res) {
  */
 module.exports.deleteEventDB = function (res) {
   events.drop(function (error) {
-    return res(error)
+    return res(error);
   });
   winston.debug('Event database deleted');
 };
@@ -208,7 +220,7 @@ module.exports.deleteEventDB = function (res) {
  */
 module.exports.deleteCategoryDB = function (res) {
   categories.drop(function (error) {
-    return res(error)
+    return res(error);
   });
   winston.debug('Category database deleted');
 };
