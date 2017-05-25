@@ -9,8 +9,16 @@ const db = require('../db');
 
 const router = express.Router();
 
-// /all route
-router.post('/all', bodyParser, function (req, res) {
+/**
+ * Handles POST requests on /event/create, and tries to create an event with the
+ * given request data.
+ *
+ * Validates multiple headers and checks if all mandatory fields have a value.
+ * If not sends a corresponding HTTP error code and and an error message.
+ *
+ * Responds with HTTP status code 201 if successful.
+ */
+router.post('/create', bodyParser, function (req, res) {
   let error;
 
   // check for correct content type
@@ -34,15 +42,31 @@ router.post('/all', bodyParser, function (req, res) {
   event.location = req.body.location;
   event.notes = req.body.notes;
 
-  db.insertEvent(event, function (err, ret) {
+  if (undefined === event.title || undefined === event.date ||
+      undefined === event.time || undefined === event.allday ||
+      undefined === event.category || undefined === event.owner) {
+    return res.status(422).send(
+        'Mandatory fields missing. Event creation rejected.');
+  }
+
+  db.insertEvent(event, function (err) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      return res.status(201).send('Event created');
+      return res.sendStatus(201);
     }
   });
 });
 
+/**
+ * Handles GET request on /event/all with a given session token (identifying a
+ * user) to receive all events the given user owns.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with a JSON list of the events if successful.
+ */
 router.get('/all', bodyParser, function (req, res) {
   let error;
 
@@ -55,8 +79,15 @@ router.get('/all', bodyParser, function (req, res) {
   // TODO: Implement
 });
 
-// /:id route
-router.put('/;id', bodyParser, function (req, res) {
+/**
+ * Handles PUT request to /event/:id, to update the given event.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with HTTP status code 200 if the update is successful.
+ */
+router.put('/:id', bodyParser, function (req, res) {
   let error;
 
   // check for correct content type
@@ -72,6 +103,7 @@ router.put('/;id', bodyParser, function (req, res) {
 
   let id = req.params.id;
   let event = {};
+
   event.title = req.body.title;
   event.date = req.body.date;
   event.time = req.body.time;
@@ -85,11 +117,20 @@ router.put('/;id', bodyParser, function (req, res) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      return res.send(200);
+      return res.sendStatus(200);
     }
   });
 });
 
+/**
+ * Handles GET request to /event/:id, to receive all saved information about the
+ * event.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with JSON element of the event if successful.
+ */
 router.get('/:id', bodyParser, function (req, res) {
   let error;
 
@@ -110,6 +151,14 @@ router.get('/:id', bodyParser, function (req, res) {
   });
 });
 
+/**
+ * Handles DELETE request to /event/:id, to delete the given event.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with HTTP status code 200 if the delete is successful.
+ */
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
@@ -125,7 +174,7 @@ router.delete('/:id', bodyParser, function (req, res) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      return res.status(200);
+      return res.sendStatus(200);
     }
   });
 });

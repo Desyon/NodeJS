@@ -14,7 +14,7 @@ A user. Has events(>= 0) and categories(>=1)
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
 username | String | unique username; format [A-Za-Z0-9]* | x
-name | String | first name | x
+name | String | first name |
 password | String | hashed | x
 dob | Date | Date of Birth | 
 email | String | u know |

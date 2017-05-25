@@ -12,6 +12,12 @@ const router = express.Router();
 
 /**
  * Handles POST request on /user/login for a login attempt.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with HTTP status code 200 if successful and transfers a session
+ * token.
  */
 router.post('/login', bodyParser, function (req, res) {
   let error;
@@ -46,14 +52,23 @@ router.post('/login', bodyParser, function (req, res) {
       if (ret.password !== user.password) {
         return res.sendStatus(401);
       }
+      winston.debug('User \'' + username + '\' logged in.');
       return res.status(200).send(ret);
     }
   });
 });
 
+/**
+ * Handles POST requests on /user/create, and tries to create a user with the
+ * given request data.
+ *
+ * Validates multiple headers and checks if all mandatory fields have a value.
+ * If not sends a corresponding HTTP error code and and error message.
+ *
+ * Responds with HTTP status code 201 if successful.
+ */
 router.post('/create', bodyParser, function (req, res) {
   let error;
-  winston.debug('User creation requested');
 
   // check for correct content type
   if (req.get('content-type') !== 'application/json') {
@@ -74,18 +89,30 @@ router.post('/create', bodyParser, function (req, res) {
   user.dob = req.body.dob;
   user.email = req.body.email;
 
+  if (undefined === user.username || undefined === user.password) {
+    return res.status(422).send(
+        'Mandatory fields missing. User creation rejected.');
+  }
+
   db.insertUser(user, function (err, ret) {
     if (err) {
       winston.debug('User creation failed. ' + err.errmsg);
       return res.status(500).send(err.errmsg);
     } else {
       winston.debug('User \'' + user.username + '\' created');
-      return res.status(201).send('User created');
+      return res.sendStatus(201);
     }
   });
 });
 
-// /:id route
+/**
+ * Handles PUT request to /user/:id, to update the given user.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with HTTP status code 200 if the update is successful.
+ */
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
@@ -102,7 +129,6 @@ router.put('/:id', bodyParser, function (req, res) {
 
   let username = req.params.id;
   let user = {};
-  user.username = req.body.username;
   user.name = req.body.name;
   user.password = req.body.password;
   user.dob = req.body.dob;
@@ -110,13 +136,22 @@ router.put('/:id', bodyParser, function (req, res) {
 
   db.updateUser(username, req.body, function (err) {
     if (err) {
-      return res.sendStatus(500).send(err);
+      return res.status(500).send(err);
     } else {
+      winston.debug('User \'' + username + '\' updated');
       return res.sendStatus(200);
     }
   });
 });
 
+/**
+ * Handles DELETE request to /user/:id, to delete the given user.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent.
+ *
+ * Responds with HTTP status code 200 if the delete is successful.
+ */
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
@@ -132,7 +167,8 @@ router.delete('/:id', bodyParser, function (req, res) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      return res.status(200).send('User ' + username + ' deleted.');
+      winston.debug('User \'' + username + '\' deleted');
+      return res.sendStatus(200);
     }
   });
 });

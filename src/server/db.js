@@ -47,20 +47,38 @@ module.exports.insertCategory = function (category, res) {
 };
 
 // Update
+/**
+ * Updates a user according to the given data. Fails if the user is not existent.
+ * @param username user to update. Unique index.
+ * @param user new data for the user
+ * @param res response
+ */
 module.exports.updateUser = function (username, user, res) {
-  users.update({username: username}, user, {upsert: true}, function (err) {
+  users.update({username: username}, user, {upsert: false}, function (err) {
     res(err);
   });
 };
 
+/**
+ * Updates a user according to the given data. Fails if the event is not existent.
+ * @param id id of the event to update. Unique index.
+ * @param event new data for the event
+ * @param res response
+ */
 module.exports.updateEvent = function (id, event, res) {
-  events.update({_id: id}, event, function (err) {
+  events.update({_id: id}, event, {upsert: false}, function (err) {
     res(err);
   });
 };
 
+/**
+ * Updates a user according to the given data. Fails if the category is not existent.
+ * @param id id of the category to update. Unique index.
+ * @param category new data for the category
+ * @param res response
+ */
 module.exports.updateCategory = function (id, category, res) {
-  categories.update({_id: id}, category, function (err) {
+  categories.update({_id: id}, category, {upsert: false}, function (err) {
     res(err);
   });
 };

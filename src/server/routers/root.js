@@ -8,6 +8,10 @@ const db = require('../db');
 
 const router = express.Router();
 
+/**
+ * Can be used to set up all databases on the first start or after a reset.
+ * Mainly for maintainability if the databases get more complex.
+ */
 router.get('/administration/init', function (req, res) {
   db.initUserDB(function (userError) {
     if (userError) {
@@ -30,6 +34,9 @@ router.get('/administration/init', function (req, res) {
   return res.status(201).send('Databases created');
 });
 
+/**
+ * Drops all databases and redirects to the init route to set them up again.
+ */
 router.get('/administration/reset', function (req, res) {
   db.deleteUserDB(function (userErr) {
     if (userErr) {
@@ -52,8 +59,12 @@ router.get('/administration/reset', function (req, res) {
   return res.redirect('/administration/init');
 });
 
-// Easter Egg HTTP Error Code 418: I'm a tea pot
-
+/**
+ * Handles all GET requests ending on /teapot or /coffee and returns error code
+ * 418 according to an april fools joke by the IETF referencing RFC 2324 (Hyper
+ * Text Coffee Pot Protocol). This error is supposed to be returned by teapots t
+ * hat are requested to brew coffee.
+ */
 router.get('*/teapot|*/coffee', function (req, res) {
   winston.warn('No coffee for you. Sorry.');
   res.sendStatus(418);

@@ -14,15 +14,24 @@ const httpPort = 3000;
 
 app = express();
 
-// routes
+// set up routers/services
 app.use('/', rootRouter);
 
 app.use('/user', userRouter);
 app.use('/event', eventRouter);
 app.use('/category', categoryRouter);
 
+// set listening port
 app.listen(httpPort, function () {
   winston.info('Now listening on localhost: ' + httpPort);
-  winston.silly('This is really silly.');
+
+  // remove comments to test logging
+
+  // winston.error('Test Error');
+  // winston.warn('Test Warining');
+  // winston.info('Test Info');
+  // winston.verbose('Test Verbose Message');
+  // winston.debug('Test Debug Message');
+  // winston.silly('Test Silly Message');
 });
 
