@@ -13,8 +13,8 @@ A user. Has events(>= 0) and categories(>=1)
 
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
-username | String | username; unique; format [A-Za-Z0-9]* | x
-name | String | name of the user | x
+username | String | unique username; format [A-Za-Z0-9]* | x
+name | String | first name |
 password | String | hashed | x
 dob | Date | Date of Birth | 
 email | String | u know |

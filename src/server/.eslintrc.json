@@ -5,12 +5,20 @@
   },
   "root": true,
   "rules": {
+    "linebreak-style": "off",
     "space-before-function-paren": "off",
     "valid-jsdoc": "off",
     "new-cap": [
       "warn",
       {
         "capIsNew": false
+      }
+    ],
+    "max-len": [
+      "warn",
+      {
+        "code": 100,
+        "tabWidth": 2
       }
     ],
     "semi": "warn",

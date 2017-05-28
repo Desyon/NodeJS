@@ -6,8 +6,10 @@ const winston = require('winston');
 
 // configure winston logger to use winston with one line in application
 winston.remove(winston.transports.Console);
+// add console logger output for immediate feedback
 winston.add(winston.transports.Console,
     {
+      level: 'debug',
       timestamp: timestamp(),
       formatter: function (options) {
         return options.level.toUpperCase() + '\t'
@@ -16,6 +18,7 @@ winston.add(winston.transports.Console,
       },
     });
 
+// add file output, offers more verbose output than the console version
 winston.add(winston.transports.File,
     {
       filename: 'logfile.log',

@@ -19,9 +19,9 @@ const files = {
  * Validates all files specified as sources above using eslint and the
  * .eslinrc.json configuration.
  */
-gulp.task('validateSources', function () {
+gulp.task('lint', function () {
   return gulp.src(files.projectSrc)
-  .pipe(eslint({configFile: '.eslintrc.json'}))
+  .pipe(eslint({configFile: 'src/server/.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
 });
@@ -29,9 +29,9 @@ gulp.task('validateSources', function () {
 /**
  * Validates the gulpfile.js using eslint and the .eslinrc.json configuration.
  */
-gulp.task('validateGulpfile', function () {
+gulp.task('lintGulpfile', function () {
   return gulp.src(files.gulpSrc)
-  .pipe(eslint({configFile: '.eslintrc.json'}))
+  .pipe(eslint({configFile: 'src/server/.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
 });
@@ -40,5 +40,5 @@ gulp.task('validateGulpfile', function () {
  * Default build task. Runs source and gulpfile validation in parallel.
  */
 gulp.task('default', function(callback) {
-  runSequence(['validateSources', 'validateGulpfile'], callback);
+  runSequence(['lint', 'lintGulpfile'], callback);
 });

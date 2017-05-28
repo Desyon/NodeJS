@@ -2,11 +2,10 @@
  * Created by Desyon on 05.05.2017.
  */
 
-// TODO: Getters for user specific content
-// TODO: indexing
+const winston = require('./util/winston');
 
-let TingoDB = require('tingodb')().Db;
-let db = new TingoDB('./database');
+let TingoDB = require('tingodb')();
+let db = new TingoDB.Db('./src/server/database', {});
 
 let users = db.collection('user.db');
 let events = db.collection('event.db');
@@ -19,8 +18,9 @@ let categories = db.collection('category.db');
  * @param res response to answer
  */
 module.exports.insertUser = function (user, res) {
+  users.createIndex({'username': 1}, {unique: true});
   users.insert(user, function (err) {
-    res.send(err);
+    res(err);
   });
 };
 
@@ -31,7 +31,7 @@ module.exports.insertUser = function (user, res) {
  */
 module.exports.insertEvent = function (event, res) {
   events.insert(event, function (err) {
-    res.send(err);
+    res(err);
   });
 };
 
@@ -42,53 +42,108 @@ module.exports.insertEvent = function (event, res) {
  */
 module.exports.insertCategory = function (category, res) {
   categories.insert(category, function (err) {
-    res.send(err);
+    res(err);
+  });
+};
+
+// Update
+/**
+ * Updates a user according to the given data. Fails if the user is not existent.
+ * @param username user to update. Unique index.
+ * @param user new data for the user
+ * @param res response
+ */
+module.exports.updateUser = function (username, user, res) {
+  users.update({username: username}, user, {upsert: false}, function (err) {
+    res(err);
+  });
+};
+
+/**
+ * Updates a user according to the given data. Fails if the event is not existent.
+ * @param id id of the event to update. Unique index.
+ * @param event new data for the event
+ * @param res response
+ */
+module.exports.updateEvent = function (id, event, res) {
+  events.update({_id: id}, event, {upsert: false}, function (err) {
+    res(err);
+  });
+};
+
+/**
+ * Updates a user according to the given data. Fails if the category is not existent.
+ * @param id id of the category to update. Unique index.
+ * @param category new data for the category
+ * @param res response
+ */
+module.exports.updateCategory = function (id, category, res) {
+  categories.update({_id: id}, category, {upsert: false}, function (err) {
+    res(err);
   });
 };
 
 // Getter
 /**
  * Gets one user by his unique username. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param username Key of the element to be found.
  * @param res Response
  */
-module.exports.getUser = function (key, res) {
-  users.findOne({'uname': key}, function (err, item) {
-    res.send(err, item);
+module.exports.getUser = function (username, res) {
+  users.findOne({'username': username}, function (err, item) {
+    res(err, item);
   });
 };
 
 /**
  * Gets one event by his unique ID. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param id Key of the element to be found.
  * @param res Response
  */
-module.exports.getEvent = function (key, res) {
-  users.findOne({'_id': key}, function(err, item) {
-    res.send(err, item);
+module.exports.getEvent = function (id, res) {
+  users.findOne({'_id': id}, function (err, item) {
+    res(err, item);
   });
 };
 
 /**
  * Gets one Category by his unique ID. Returns one object as JSON
- * @param key Key of the element to be found.
+ * @param id Key of the element to be found.
  * @param res Response
  */
-module.exports.getCategory = function (key, res) {
-  users.findOne({'_id:': key}, function (err, item) {
-    res.send(err, item);
+module.exports.getCategory = function (id, res) {
+  users.findOne({'_id:': id}, function (err, item) {
+    res(err, item);
   });
+};
+
+/**
+ * Retrieves all events of one specific given user as a JSON list.
+ * @param user user to retrieve all events for
+ * @param res Response
+ */
+module.exports.getAllEvents = function (user, res) {
+  // TODO: implement dis
+};
+
+/**
+ * Retrieves all categories of one specific given user as a JSON list.
+ * @param user user to retrieve all categories for
+ * @param res Response
+ */
+module.exports.getAllCategories = function (user, res) {
+  // TODO: implement dis
 };
 
 // Delete
 /**
  * Deletes the user with the given username.
- * @param uname Username of the user to be deleted
+ * @param username Username of the user to be deleted
  * @param res Response
  */
-module.exports.deleteUser = function (uname, res) {
-  users.remove({'uname': uname}, {w: 1}, function (err, result) {
-    res.send(err, result);
+module.exports.deleteUser = function (username, res) {
+  users.remove({'username': username}, {w: 1}, function (err, result) {
+    res(err, result);
   });
 };
 
@@ -99,7 +154,7 @@ module.exports.deleteUser = function (uname, res) {
  */
 module.exports.deleteEvent = function (id, res) {
   events.remove({'_id': id}, {w: 1}, function (err, result) {
-    res.send(err, result);
+    res(err, result);
   });
 };
 
@@ -110,6 +165,80 @@ module.exports.deleteEvent = function (id, res) {
  */
 module.exports.deleteCategory = function (id, res) {
   categories.remove({'_id': id}, {w: 1}, function (err, result) {
-    res.send(err, result);
+    res(err, result);
   });
+};
+
+/* ------------------------ Database Initialization ------------------------ */
+/**
+ * Creates a user database and defines the username as unique index.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
+module.exports.initUserDB = function (res) {
+  users = db.createCollection('user.db', {autoIndexId: false}, function () {
+    users.createIndex({'username': 1}, {unique: true}, function (error) {
+      return res(error);
+    });
+  });
+  winston.debug('User database created');
+};
+
+/**
+ * Creates a category database and defines automatic id generation.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
+module.exports.initEventDB = function (res) {
+  events = db.createCollection('event.db', {autoIndexId: true},
+      function (error) {
+        return res(error);
+      });
+  winston.debug('Event database created');
+};
+
+/**
+ * Creates a category database and defines automatic id generation.
+ * Sends out the error message if unsuccessful.
+ * @param res Response.
+ */
+module.exports.initCategoryDB = function (res) {
+  categories = db.createCollection('category.db', {autoIndexId: true},
+      function (error) {
+        return res(error);
+      });
+  winston.debug('Category database created');
+};
+
+/**
+ * Deletes the user database. Sends out the error message if unsuccessful.
+ * @param res Response
+ */
+module.exports.deleteUserDB = function (res) {
+  users.drop(function (error) {
+    return res(error);
+  });
+  winston.debug('User database deleted');
+};
+
+/**
+ * Deletes the event database. Sends out the error message if unsuccessful
+ * @param res Response
+ */
+module.exports.deleteEventDB = function (res) {
+  events.drop(function (error) {
+    return res(error);
+  });
+  winston.debug('Event database deleted');
+};
+
+/**
+ * Deletes the category database. Sends out the error message if unsuccessful
+ * @param res Response
+ */
+module.exports.deleteCategoryDB = function (res) {
+  categories.drop(function (error) {
+    return res(error);
+  });
+  winston.debug('Category database deleted');
 };
