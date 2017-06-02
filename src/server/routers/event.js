@@ -145,6 +145,9 @@ router.get('/:id', bodyParser, function (req, res) {
   db.getEvent(id, function (err, ret) {
     if (err) {
       return res.status(500).send(err);
+    } else if (!ret) {
+      error = 'Event not found.';
+      return res.status(404).send(error);
     } else {
       return res.status(200).send(ret);
     }
@@ -170,11 +173,18 @@ router.delete('/:id', bodyParser, function (req, res) {
 
   let id = req.params.id;
 
-  db.deleteEvent(id, function (err) {
-    if (err) {
-      return res.status(500).send(err);
+  db.getEvent(id, function (getErr, ret) {
+    if (!ret) {
+      error = 'Event not found.';
+      return res.status(404).send(error);
     } else {
-      return res.sendStatus(200);
+      db.deleteEvent(id, function (delErr) {
+        if (delErr) {
+          return res.status(500).send(delErr);
+        } else {
+          return res.sendStatus(200);
+        }
+      });
     }
   });
 });

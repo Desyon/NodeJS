@@ -48,9 +48,10 @@ module.exports.insertCategory = function (category, res) {
 
 // Update
 /**
- * Updates a user according to the given data. Fails if the user is not existent.
- * @param username user to update. Unique index.
- * @param user new data for the user
+ * Update function for users. Applies all changes given in the user object to
+ * the document associated with the given username.
+ * @param username username of the user to be updated
+ * @param user JSON object with the user data to be changed
  * @param res response
  */
 module.exports.updateUser = function (username, user, res) {
@@ -60,9 +61,10 @@ module.exports.updateUser = function (username, user, res) {
 };
 
 /**
- * Updates a user according to the given data. Fails if the event is not existent.
- * @param id id of the event to update. Unique index.
- * @param event new data for the event
+ * Update function for events. Applies all changes given in the event object to
+ * the document associated with the given id.
+ * @param id id of the user to be updated
+ * @param event JSON object with the event data to be changed
  * @param res response
  */
 module.exports.updateEvent = function (id, event, res) {
@@ -72,9 +74,10 @@ module.exports.updateEvent = function (id, event, res) {
 };
 
 /**
- * Updates a user according to the given data. Fails if the category is not existent.
- * @param id id of the category to update. Unique index.
- * @param category new data for the category
+ * Update function for categories. Applies all changes given in the category object to
+ * the document associated with the given id.
+ * @param id id of the user to be updated
+ * @param category JSON object with the category data to be changed
  * @param res response
  */
 module.exports.updateCategory = function (id, category, res) {

@@ -30,7 +30,7 @@ router.post('/login', bodyParser, function (req, res) {
 
   // check if body is not empty
   if (!req.body) {
-    error = 'Request body missing. Login failed';
+    error = 'Request body missing. Login failed.';
     return res.status(400).send(error);
   }
 
@@ -46,13 +46,14 @@ router.post('/login', bodyParser, function (req, res) {
 
   db.getUser(user.username, function (err, ret) {
     if (err) {
-      error = 'User not found';
+      error = 'User not found.';
       return res.status(404).send(error);
     } else {
       if (ret.password !== user.password) {
+        winston.verbose('Failed login attempt by user ' + username);
         return res.sendStatus(401);
       }
-      winston.debug('User \'' + username + '\' logged in.');
+      winston.verbose('User ' + username + ' successfully logged in.');
       return res.status(200).send(ret);
     }
   });
@@ -96,10 +97,10 @@ router.post('/create', bodyParser, function (req, res) {
 
   db.insertUser(user, function (err, ret) {
     if (err) {
-      winston.debug('User creation failed. ' + err.errmsg);
-      return res.status(500).send(err.errmsg);
+      winston.verbose('User creation failed. ' + err.errmsg);
+      return res.status(500).send(err);
     } else {
-      winston.debug('User \'' + user.username + '\' created');
+      winston.verbose('User \'' + user.username + '\' created');
       return res.sendStatus(201);
     }
   });
@@ -138,7 +139,7 @@ router.put('/:id', bodyParser, function (req, res) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      winston.debug('User \'' + username + '\' updated');
+      winston.verbose('User \'' + username + '\' updated');
       return res.sendStatus(200);
     }
   });
@@ -163,12 +164,18 @@ router.delete('/:id', bodyParser, function (req, res) {
 
   let username = req.params.id;
 
-  db.deleteUser(username, function (err) {
-    if (err) {
-      return res.status(500).send(err);
+  db.getUser(username, function (err, ret) {
+    if (!ret) {
+      error = 'User not found';
+      return res.status(404).send(error);
     } else {
-      winston.debug('User \'' + username + '\' deleted');
-      return res.sendStatus(200);
+      db.deleteUser(username, function (err) {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send('User ' + username + ' deleted.');
+        }
+      });
     }
   });
 });

@@ -134,6 +134,9 @@ router.get('/:id', bodyParser, function (req, res) {
   db.getEvent(id, function (err, ret) {
     if (err) {
       return res.status(500).send(err);
+    } else if (!ret) {
+      error = 'Category not found';
+      return res.status(404).send(error);
     } else {
       return res.status(200).send(ret);
     }
@@ -158,11 +161,18 @@ router.delete('/:id', bodyParser, function (req, res) {
 
   let categoryId = req.params.id;
 
-  db.deleteCategory(categoryId, function (err) {
-    if (err) {
-      return res.status(500).send(err);
+  db.getCategory(id, function (getErr, ret) {
+    if (!ret) {
+      error = 'Category not found';
+      return res.status(404).send(error);
     } else {
-      return res.sendStatus(200);
+      db.deleteCategory(categoryId, function (delErr) {
+        if (delErr) {
+          return res.status(500).send(delErr);
+        } else {
+          return res.sendStatus(200);
+        }
+      });
     }
   });
 });

@@ -9,8 +9,8 @@ const db = require('../db');
 const router = express.Router();
 
 /**
- * Can be used to set up all databases on the first start or after a reset.
- * Mainly for maintainability if the databases get more complex.
+ * Initialization rout to recreate the databases after resetting them. Can also
+ * be used for a first time setup.
  */
 router.get('/administration/init', function (req, res) {
   db.initUserDB(function (userError) {
