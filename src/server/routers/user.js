@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
 const winston = require('../util/winston');
+const jwt = require('../util/tokenmanager');
 
 const db = require('../db');
 
@@ -46,6 +47,7 @@ router.post('/login', bodyParser, function (req, res) {
 
   db.getUser(user.username, function (err, ret) {
     if (err) {
+      console.log(err);
       error = 'User not found.';
       return res.status(404).send(error);
     } else {
@@ -53,8 +55,9 @@ router.post('/login', bodyParser, function (req, res) {
         winston.verbose('Failed login attempt by user ' + username);
         return res.sendStatus(401);
       }
-      winston.verbose('User ' + username + ' successfully logged in.');
-      return res.status(200).send(ret);
+      winston.verbose('User ' + user.username + ' successfully logged in.');
+      let token = jwt.sign(user.username);
+      return res.status(200).send(token);
     }
   });
 });
@@ -91,11 +94,11 @@ router.post('/create', bodyParser, function (req, res) {
   user.email = req.body.email;
 
   if (undefined === user.username || undefined === user.password) {
-    return res.status(422).send(
-        'Mandatory fields missing. User creation rejected.');
+    error = 'Mandatory fields missing. User Creation rejected.';
+    return res.status(422).send(error);
   }
 
-  db.insertUser(user, function (err, ret) {
+  db.insertUser(user, function (err) {
     if (err) {
       winston.verbose('User creation failed. ' + err.errmsg);
       return res.status(500).send(err);
@@ -117,6 +120,23 @@ router.post('/create', bodyParser, function (req, res) {
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
+  if (req.get('athorization') === null ||
+      req.get('authorization') === undefined) {
+    error = 'Authorization missing';
+    return res.status(401).send(error);
+  }
+
+  let username = req.params.id;
+
+  // token validation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || decoded === null || decoded === undefined ||
+        decoded.user !== username) {
+      error = 'Authorization failed. Injvalid token';
+      return res.status(401).send(error);
+    }
+  });
+
   // check for correct content type
   if (req.get('content-type') !== 'application/json') {
     error = 'Wrong content type. Application only consumes JSON';
@@ -128,7 +148,6 @@ router.put('/:id', bodyParser, function (req, res) {
     return res.status(400).send(error);
   }
 
-  let username = req.params.id;
   let user = {};
   user.name = req.body.name;
   user.password = req.body.password;
@@ -156,13 +175,22 @@ router.put('/:id', bodyParser, function (req, res) {
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON';
-    return res.status(406).send(error);
+  if (req.get('athorization') === null ||
+      req.get('authorization') === undefined) {
+    error = 'Authorization missing';
+    return res.status(401).send(error);
   }
 
   let username = req.params.id;
+
+  // token validation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || decoded === null || decoded === undefined ||
+        decoded.user !== username) {
+      error = 'Authorization failed. Invalid token.';
+      return res.status(401).send(error);
+    }
+  });
 
   db.getUser(username, function (err, ret) {
     if (!ret) {
