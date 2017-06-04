@@ -96,7 +96,23 @@ router.get('/all', bodyParser, function (req, res) {
     return res.status(401).send(error);
   }
 
-  // TODO: Implement
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || decoded === null || decoded === undefined) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
+    }
+
+    let user = decoded.user;
+
+    db.getUserEvents(user, function (err, ret) {
+      if (err) {
+        error = 'Database error.';
+        return res.status(500).send(error);
+      } else {
+        return res.status(200).send(ret);
+      }
+    });
+  });
 });
 
 /**

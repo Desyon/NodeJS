@@ -125,8 +125,10 @@ module.exports.getCategory = function (id, res) {
  * @param user user to retrieve all events for
  * @param res Response
  */
-module.exports.getAllEvents = function (user, res) {
-  // TODO: implement dis
+module.exports.getUserEvents = function (user, res) {
+  events.find({owner: user}).toArray(function (err, items) {
+    res(err, items);
+  });
 };
 
 /**
@@ -134,8 +136,10 @@ module.exports.getAllEvents = function (user, res) {
  * @param user user to retrieve all categories for
  * @param res Response
  */
-module.exports.getAllCategories = function (user, res) {
-  // TODO: implement dis
+module.exports.getUserCategories = function (user, res) {
+  categories.find({owner: user}).toArray(function (err, items) {
+    res(err, items);
+  });
 };
 
 // Delete
