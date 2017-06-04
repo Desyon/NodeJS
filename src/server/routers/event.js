@@ -22,21 +22,20 @@ const router = express.Router();
 router.post('/create', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('authorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || decoded === null || decoded === undefined) {
+    if (err || !decoded) {
       error = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
     // content type validation
-    if (req.get('content-type') !== 'application/json') {
+    if ('application/json' !== req.get('content-type')) {
       error = 'Wrong content type. Application only consumes JSON.';
       return res.status(406).send(error);
     }
@@ -90,14 +89,13 @@ router.post('/create', bodyParser, function (req, res) {
 router.get('/all', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('authorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || decoded === null || decoded === undefined) {
+    if (err || !decoded) {
       error = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
@@ -126,8 +124,8 @@ router.get('/all', bodyParser, function (req, res) {
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
@@ -170,8 +168,7 @@ router.put('/:id', bodyParser, function (req, res) {
 router.get('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('authorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing.';
     return res.status(401).send(error);
   }
@@ -210,8 +207,7 @@ router.get('/:id', bodyParser, function (req, res) {
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('authorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing.';
     return res.status(401).send(error);
   }

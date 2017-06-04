@@ -23,8 +23,8 @@ const router = express.Router();
 router.post('/login', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
@@ -40,14 +40,13 @@ router.post('/login', bodyParser, function (req, res) {
   user.password = req.body.password;
 
   // check if username and password are contained in body
-  if (user.username === undefined || user.password === undefined) {
+  if (undefined === user.username || undefined === user.password) {
     error = 'Username or password missing.';
     return res.status(422).send(error);
   }
 
   db.getUser(user.username, function (err, ret) {
     if (err) {
-      console.log(err);
       error = 'User not found.';
       return res.status(404).send(error);
     } else {
@@ -55,7 +54,7 @@ router.post('/login', bodyParser, function (req, res) {
         winston.verbose('Failed login attempt by user ' + username);
         return res.sendStatus(401);
       }
-      winston.verbose('User ' + user.username + ' successfully logged in.');
+      winston.verbose('User \'' + user.username + '\' successfully logged in.');
       let token = jwt.sign(user.username);
       return res.status(200).send(token);
     }
@@ -74,8 +73,8 @@ router.post('/login', bodyParser, function (req, res) {
 router.post('/create', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
@@ -120,8 +119,7 @@ router.post('/create', bodyParser, function (req, res) {
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('athorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing';
     return res.status(401).send(error);
   }
@@ -130,16 +128,15 @@ router.put('/:id', bodyParser, function (req, res) {
 
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || decoded === null || decoded === undefined ||
-        decoded.user !== username) {
-      error = 'Authorization failed. Injvalid token';
+    if (err || !decoded || decoded.user !== username) {
+      error = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
   });
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON';
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
+    error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
@@ -175,8 +172,7 @@ router.put('/:id', bodyParser, function (req, res) {
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('athorization') === null ||
-      req.get('authorization') === undefined) {
+  if (!(req.get('authorization'))) {
     error = 'Authorization missing';
     return res.status(401).send(error);
   }
@@ -185,8 +181,7 @@ router.delete('/:id', bodyParser, function (req, res) {
 
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || decoded === null || decoded === undefined ||
-        decoded.user !== username) {
+    if (err || !decoded || decoded.user !== username) {
       error = 'Authorization failed. Invalid token.';
       return res.status(401).send(error);
     }

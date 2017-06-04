@@ -93,7 +93,7 @@ module.exports.updateCategory = function (id, category, res) {
  * @param res Response
  */
 module.exports.getUser = function (username, res) {
-  users.findOne({'username': username}, function (err, item) {
+  users.findOne({username: username}, function (err, item) {
     res(err, item);
   });
 };
@@ -104,7 +104,7 @@ module.exports.getUser = function (username, res) {
  * @param res Response
  */
 module.exports.getEvent = function (id, res) {
-  users.findOne({'_id': id}, function (err, item) {
+  events.findOne({_id: id}, function (err, item) {
     res(err, item);
   });
 };
@@ -115,7 +115,7 @@ module.exports.getEvent = function (id, res) {
  * @param res Response
  */
 module.exports.getCategory = function (id, res) {
-  users.findOne({'_id:': id}, function (err, item) {
+  categories.findOne({_id: id}, function (err, item) {
     res(err, item);
   });
 };
@@ -149,7 +149,7 @@ module.exports.getUserCategories = function (user, res) {
  * @param res Response
  */
 module.exports.deleteUser = function (username, res) {
-  users.remove({'username': username}, {w: 1}, function (err, result) {
+  users.remove({username: username}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };
@@ -160,7 +160,7 @@ module.exports.deleteUser = function (username, res) {
  * @param res Response
  */
 module.exports.deleteEvent = function (id, res) {
-  events.remove({'_id': id}, {w: 1}, function (err, result) {
+  events.remove({_id: id}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };
@@ -171,7 +171,7 @@ module.exports.deleteEvent = function (id, res) {
  * @param res Response
  */
 module.exports.deleteCategory = function (id, res) {
-  categories.remove({'_id': id}, {w: 1}, function (err, result) {
+  categories.remove({_id: id}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };
