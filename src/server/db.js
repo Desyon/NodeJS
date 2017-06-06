@@ -48,9 +48,10 @@ module.exports.insertCategory = function (category, res) {
 
 // Update
 /**
- * Updates a user according to the given data. Fails if the user is not existent.
- * @param username user to update. Unique index.
- * @param user new data for the user
+ * Update function for users. Applies all changes given in the user object to
+ * the document associated with the given username.
+ * @param username username of the user to be updated
+ * @param user JSON object with the user data to be changed
  * @param res response
  */
 module.exports.updateUser = function (username, user, res) {
@@ -60,9 +61,10 @@ module.exports.updateUser = function (username, user, res) {
 };
 
 /**
- * Updates a user according to the given data. Fails if the event is not existent.
- * @param id id of the event to update. Unique index.
- * @param event new data for the event
+ * Update function for events. Applies all changes given in the event object to
+ * the document associated with the given id.
+ * @param id id of the user to be updated
+ * @param event JSON object with the event data to be changed
  * @param res response
  */
 module.exports.updateEvent = function (id, event, res) {
@@ -72,9 +74,10 @@ module.exports.updateEvent = function (id, event, res) {
 };
 
 /**
- * Updates a user according to the given data. Fails if the category is not existent.
- * @param id id of the category to update. Unique index.
- * @param category new data for the category
+ * Update function for categories. Applies all changes given in the category object to
+ * the document associated with the given id.
+ * @param id id of the user to be updated
+ * @param category JSON object with the category data to be changed
  * @param res response
  */
 module.exports.updateCategory = function (id, category, res) {
@@ -90,7 +93,7 @@ module.exports.updateCategory = function (id, category, res) {
  * @param res Response
  */
 module.exports.getUser = function (username, res) {
-  users.findOne({'username': username}, function (err, item) {
+  users.findOne({username: username}, function (err, item) {
     res(err, item);
   });
 };
@@ -101,7 +104,7 @@ module.exports.getUser = function (username, res) {
  * @param res Response
  */
 module.exports.getEvent = function (id, res) {
-  users.findOne({'_id': id}, function (err, item) {
+  events.findOne({_id: id}, function (err, item) {
     res(err, item);
   });
 };
@@ -112,7 +115,7 @@ module.exports.getEvent = function (id, res) {
  * @param res Response
  */
 module.exports.getCategory = function (id, res) {
-  users.findOne({'_id:': id}, function (err, item) {
+  categories.findOne({_id: id}, function (err, item) {
     res(err, item);
   });
 };
@@ -122,8 +125,10 @@ module.exports.getCategory = function (id, res) {
  * @param user user to retrieve all events for
  * @param res Response
  */
-module.exports.getAllEvents = function (user, res) {
-  // TODO: implement dis
+module.exports.getUserEvents = function (user, res) {
+  events.find({owner: user}).toArray(function (err, items) {
+    res(err, items);
+  });
 };
 
 /**
@@ -131,8 +136,10 @@ module.exports.getAllEvents = function (user, res) {
  * @param user user to retrieve all categories for
  * @param res Response
  */
-module.exports.getAllCategories = function (user, res) {
-  // TODO: implement dis
+module.exports.getUserCategories = function (user, res) {
+  categories.find({owner: user}).toArray(function (err, items) {
+    res(err, items);
+  });
 };
 
 // Delete
@@ -142,7 +149,7 @@ module.exports.getAllCategories = function (user, res) {
  * @param res Response
  */
 module.exports.deleteUser = function (username, res) {
-  users.remove({'username': username}, {w: 1}, function (err, result) {
+  users.remove({username: username}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };
@@ -153,7 +160,7 @@ module.exports.deleteUser = function (username, res) {
  * @param res Response
  */
 module.exports.deleteEvent = function (id, res) {
-  events.remove({'_id': id}, {w: 1}, function (err, result) {
+  events.remove({_id: id}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };
@@ -164,7 +171,7 @@ module.exports.deleteEvent = function (id, res) {
  * @param res Response
  */
 module.exports.deleteCategory = function (id, res) {
-  categories.remove({'_id': id}, {w: 1}, function (err, result) {
+  categories.remove({_id: id}, {w: 1}, function (err, result) {
     res(err, result);
   });
 };

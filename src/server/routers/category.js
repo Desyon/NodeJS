@@ -4,6 +4,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser').json();
+const jwt = require('../util/tokenmanager');
 
 const db = require('../db');
 
@@ -21,34 +22,52 @@ const router = express.Router();
 router.post('/create', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON.';
-    return res.status(406).send(error);
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing.';
+    return res.status(401).send(error);
   }
 
-  if (!req.body) {
-    error = 'Request body missing. Category creation failed.';
-    return res.status(400).send(error);
-  }
-
-  let category = {};
-  category.name = req.body.name;
-  category.color = req.body.color;
-  category.description = req.body.description;
-  category.owner = req.body.owner;
-
-  if (undefined === category.name || undefined === category.color ||
-      undefined === category.owner) {
-    return res.status(422).send(
-        'Mandatory fields missing. Category creation rejected.');
-  }
-
-  db.insertCategory(category, function (err) {
-    if (err) {
-      return res.status(500).send(err);
-    } else {
-      return res.sendStatus(201);
+  // token validation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
     }
+
+    // content type validation
+    if ('application/json' !== req.get('content-type')) {
+      error = 'Wrong content type. Application only consumes JSON.';
+      return res.status(406).send(error);
+    }
+
+    if (!req.body) {
+      error = 'Request body missing. Category creation failed.';
+      return res.status(400).send(error);
+    }
+
+    let category = {};
+    category.name = req.body.name;
+    category.color = req.body.color;
+    category.description = req.body.description;
+    category.owner = req.body.owner;
+
+    if (undefined === category.name || undefined === category.color ||
+        undefined === category.owner) {
+      error = 'Mandatory fields missing. Category creation rejected.';
+      return res.status(422).send(error);
+    }
+
+    if (decoded.user !== category.owner) {
+      return res.sendStatus(403);
+    }
+
+    db.insertCategory(category, function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        return res.sendStatus(201);
+      }
+    });
   });
 });
 
@@ -64,13 +83,28 @@ router.post('/create', bodyParser, function (req, res) {
 router.get('/all', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON.';
-    return res.status(406).send(error);
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing.';
+    return res.status(401).send(error);
   }
 
-  // TODO: Implementation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
+    }
+
+    let user = decoded.user;
+
+    db.getUserCategories(user, function (err, ret) {
+      if (err) {
+        error = 'Database error.';
+        return res.status(500).send(error);
+      } else {
+        return res.status(200).send(ret);
+      }
+    });
+  });
 });
 
 /**
@@ -84,8 +118,8 @@ router.get('/all', bodyParser, function (req, res) {
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
@@ -124,19 +158,31 @@ router.put('/:id', bodyParser, function (req, res) {
 router.get('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON.';
-    return res.status(406).send(error);
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing.';
+    return res.status(401).send(error);
   }
 
-  let id = req.params.id;
-
-  db.getEvent(id, function (err, ret) {
-    if (err) {
-      return res.status(500).send(err);
-    } else {
-      return res.status(200).send(ret);
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
     }
+
+    let id = req.params.id;
+
+    db.getEvent(id, function (err, ret) {
+      if (err) {
+        return res.status(500).send(err);
+      } else if (!ret) {
+        error = 'Category not found';
+        return res.status(404).send(error);
+      } else if (decoded.user !== ret.owner) {
+        return res.sendStatus(403);
+      } else {
+        return res.status(200).send(ret);
+      }
+    });
   });
 });
 
@@ -151,19 +197,36 @@ router.get('/:id', bodyParser, function (req, res) {
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON.';
-    return res.status(406).send(error);
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing.';
+    return res.status(401).send(error);
   }
 
-  let categoryId = req.params.id;
-
-  db.deleteCategory(categoryId, function (err) {
-    if (err) {
-      return res.status(500).send(err);
-    } else {
-      return res.sendStatus(200);
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
     }
+
+    let categoryId = req.params.id;
+
+    console.log(categoryId);
+    db.getCategory(categoryId, function (getErr, ret) {
+      if (!ret) {
+        error = 'Category not found';
+        return res.status(404).send(error);
+      } else if (decoded.user !== ret.owner) {
+        return res.sendStatus(403);
+      } else {
+        db.deleteCategory(categoryId, function (delErr) {
+          if (delErr) {
+            return res.status(500).send(delErr);
+          } else {
+            return res.sendStatus(200);
+          }
+        });
+      }
+    });
   });
 });
 

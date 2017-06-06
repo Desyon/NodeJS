@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
 const winston = require('../util/winston');
+const jwt = require('../util/tokenmanager');
 
 const db = require('../db');
 
@@ -22,15 +23,15 @@ const router = express.Router();
 router.post('/login', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
   // check if body is not empty
   if (!req.body) {
-    error = 'Request body missing. Login failed';
+    error = 'Request body missing. Login failed.';
     return res.status(400).send(error);
   }
 
@@ -39,21 +40,23 @@ router.post('/login', bodyParser, function (req, res) {
   user.password = req.body.password;
 
   // check if username and password are contained in body
-  if (user.username === undefined || user.password === undefined) {
+  if (undefined === user.username || undefined === user.password) {
     error = 'Username or password missing.';
     return res.status(422).send(error);
   }
 
   db.getUser(user.username, function (err, ret) {
     if (err) {
-      error = 'User not found';
+      error = 'User not found.';
       return res.status(404).send(error);
     } else {
       if (ret.password !== user.password) {
+        winston.verbose('Failed login attempt by user ' + username);
         return res.sendStatus(401);
       }
-      winston.debug('User \'' + username + '\' logged in.');
-      return res.status(200).send(ret);
+      winston.verbose('User \'' + user.username + '\' successfully logged in.');
+      let token = jwt.sign(user.username);
+      return res.status(200).send({token: token});
     }
   });
 });
@@ -70,8 +73,8 @@ router.post('/login', bodyParser, function (req, res) {
 router.post('/create', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
@@ -90,16 +93,16 @@ router.post('/create', bodyParser, function (req, res) {
   user.email = req.body.email;
 
   if (undefined === user.username || undefined === user.password) {
-    return res.status(422).send(
-        'Mandatory fields missing. User creation rejected.');
+    error = 'Mandatory fields missing. User Creation rejected.';
+    return res.status(422).send(error);
   }
 
-  db.insertUser(user, function (err, ret) {
+  db.insertUser(user, function (err) {
     if (err) {
-      winston.debug('User creation failed. ' + err.errmsg);
-      return res.status(500).send(err.errmsg);
+      winston.verbose('User creation failed. ' + err.errmsg);
+      return res.status(500).send(err);
     } else {
-      winston.debug('User \'' + user.username + '\' created');
+      winston.verbose('User \'' + user.username + '\' created');
       return res.sendStatus(201);
     }
   });
@@ -116,9 +119,24 @@ router.post('/create', bodyParser, function (req, res) {
 router.put('/:id', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON';
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing';
+    return res.status(401).send(error);
+  }
+
+  let username = req.params.id;
+
+  // token validation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded || decoded.user !== username) {
+      error = 'Authorization failed. Invalid token';
+      return res.status(401).send(error);
+    }
+  });
+
+  // content type validation
+  if ('application/json' !== req.get('content-type')) {
+    error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
@@ -127,7 +145,6 @@ router.put('/:id', bodyParser, function (req, res) {
     return res.status(400).send(error);
   }
 
-  let username = req.params.id;
   let user = {};
   user.name = req.body.name;
   user.password = req.body.password;
@@ -138,7 +155,7 @@ router.put('/:id', bodyParser, function (req, res) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      winston.debug('User \'' + username + '\' updated');
+      winston.verbose('User \'' + username + '\' updated');
       return res.sendStatus(200);
     }
   });
@@ -155,20 +172,33 @@ router.put('/:id', bodyParser, function (req, res) {
 router.delete('/:id', bodyParser, function (req, res) {
   let error;
 
-  // check for correct content type
-  if (req.get('content-type') !== 'application/json') {
-    error = 'Wrong content type. Application only consumes JSON';
-    return res.status(406).send(error);
+  if (!(req.get('authorization'))) {
+    error = 'Authorization missing';
+    return res.status(401).send(error);
   }
 
   let username = req.params.id;
 
-  db.deleteUser(username, function (err) {
-    if (err) {
-      return res.status(500).send(err);
+  // token validation
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded || decoded.user !== username) {
+      error = 'Authorization failed. Invalid token.';
+      return res.status(401).send(error);
+    }
+  });
+
+  db.getUser(username, function (err, ret) {
+    if (!ret) {
+      error = 'User not found';
+      return res.status(404).send(error);
     } else {
-      winston.debug('User \'' + username + '\' deleted');
-      return res.sendStatus(200);
+      db.deleteUser(username, function (err) {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send('User ' + username + ' deleted.');
+        }
+      });
     }
   });
 });
