@@ -260,7 +260,7 @@ Note: JWT user has to match the owner of the category specified in the URL.
 All categories of the user specified in the JWT in an array.
 
 ### Delete
-**DELETE** ``/event/:id``
+**DELETE** ``/category/:id``
 
 #### Header:
 ````json
