@@ -56,7 +56,7 @@ router.post('/login', bodyParser, function (req, res) {
       }
       winston.verbose('User \'' + user.username + '\' successfully logged in.');
       let token = jwt.sign(user.username);
-      return res.status(200).send(token);
+      return res.status(200).send({token: token});
     }
   });
 });
