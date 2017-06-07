@@ -293,7 +293,7 @@ router.delete('/:id', bodyParser, function (req, res) {
         return res.status(404).send(error);
       } else if (decoded.user !== ret.owner) {
         winston.debug('Event deletion failed with wrong user.');
-        return res.sendStatus(403)
+        return res.sendStatus(403);
       } else {
         db.deleteEvent(id, function (delErr) {
           if (delErr) {
