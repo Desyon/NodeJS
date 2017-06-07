@@ -7,8 +7,18 @@ const eslint = require('gulp-eslint');
 const runSequence = require('run-sequence');
 
 const files = {
-  projectSrc: [
-    'src/**/*.js',
+  serverSrc: [
+    'src/server/**/*.js',
+  ],
+  clientSrc: [
+    'src/client/*.js',
+    'src/client/views/**/*.js',
+  ],
+  clientStylesheets: [
+    'src/client/*.less',
+  ],
+  bootstrapStylesheets: [
+    'node_modules/bootstrap/dist/**/*.css',
   ],
   gulpSrc: [
     'gulpfile.js',
@@ -20,7 +30,7 @@ const files = {
  * .eslinrc.json configuration.
  */
 gulp.task('lint', function () {
-  return gulp.src(files.projectSrc)
+  return gulp.src(files.serverSrc)
   .pipe(eslint({configFile: '.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
@@ -34,6 +44,10 @@ gulp.task('lintGulpfile', function () {
   .pipe(eslint({configFile: '.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
+});
+
+gulp.task('uglify', function () {
+  console.log(stuff);
 });
 
 /**

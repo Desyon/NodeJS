@@ -16,15 +16,14 @@ const httpPort = 3000;
 
 app = express();
 
+app.use('*', cors());
+
 // set up routers/services
 app.use('/', rootRouter);
 
 app.use('/user', userRouter);
 app.use('/event', eventRouter);
 app.use('/category', categoryRouter);
-
-app.use(cors());
-
 
 // set up ap to listen on port + test logging.
 app.listen(httpPort, function () {
