@@ -1,7 +1,7 @@
 # Rest API Documentation
 
 Documentation for all routes provided by the servers Rest API. Please check the specification to know
-which fields are mandatory.
+which fields are mandatory. The two routes for maintenance are not documented.
 
 ## User
 
@@ -91,7 +91,7 @@ Note: JWT user has to match the owner specified in the body.
 ### Body:
 ````json
 {
-  "title:": "My awesome Event",
+  "title": "My awesome Event",
   "date": "05.06.2017",
   "time": "20:00",
   "allday": false,
@@ -199,7 +199,6 @@ Note: JWT user has to match the owner specified in the body.
 ````json
 {
   "name": "Work",
-  "owner": "someuser",
   "color": "C0FFEE",
   "description": "My work appointments"
 }
