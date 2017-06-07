@@ -27,6 +27,7 @@ const files = {
     'node_modules/angular-animate/angular-animate.js',
     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
     'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
+    'node_modules/angular-ui-router/release/angular-ui-router.js',
   ],
   vendorAssets: [
     'node_modules/bootstrap/fonts/*',
@@ -37,10 +38,7 @@ gulp.task('clean', function () {
   return del([targetDir]);
 });
 
-/**
- * Validates all files specified as sources above using eslint and the
- * .eslinrc.json configuration.
- */
+// Linting
 gulp.task('lintServer', function () {
   return gulp.src(files.serverSrc)
   .pipe(eslint({configFile: '.eslintrc.json'}))
@@ -62,8 +60,19 @@ gulp.task('lintGulpfile', function () {
   .pipe(eslint.failAfterError());
 });
 
+// Copying to build
+gulp.task('copyVendorFonts', function () {
+  gulp.src(files.vendorAssets)
+  .pipe(gulp.dest(targetDir + '/client/fonts'));
+});
+
+gulp.task('copyServerFiles', function () {
+  gulp.src(files.serverSrc)
+  .pipe(gulp.dest(targetDir + '/server'));
+});
+
 /**
- * Default build task. Runs source and gulpfile validation in parallel.
+ * Tasks to be actually called start here.
  */
 
 gulp.task('lint', function (ret) {
@@ -72,4 +81,8 @@ gulp.task('lint', function (ret) {
 
 gulp.task('default', function (ret) {
   runSequence('clean', 'lint', ret);
+});
+
+gulp.task('build', function (ret) {
+  runSequence('clean', 'lint', ['copyVendorFonts', 'copyServerFiles']);
 });
