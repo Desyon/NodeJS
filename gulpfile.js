@@ -21,7 +21,7 @@ const files = {
  */
 gulp.task('lint', function () {
   return gulp.src(files.projectSrc)
-  .pipe(eslint({configFile: 'src/server/.eslintrc.json'}))
+  .pipe(eslint({configFile: '.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
 });
@@ -31,7 +31,7 @@ gulp.task('lint', function () {
  */
 gulp.task('lintGulpfile', function () {
   return gulp.src(files.gulpSrc)
-  .pipe(eslint({configFile: 'src/server/.eslintrc.json'}))
+  .pipe(eslint({configFile: '.eslintrc.json'}))
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
 });
@@ -39,6 +39,6 @@ gulp.task('lintGulpfile', function () {
 /**
  * Default build task. Runs source and gulpfile validation in parallel.
  */
-gulp.task('default', function(callback) {
+gulp.task('default', function (callback) {
   runSequence(['lint', 'lintGulpfile'], callback);
 });
