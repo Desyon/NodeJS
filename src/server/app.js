@@ -3,6 +3,7 @@
  */
 
 const express = require('express');
+const cors = require('cors');
 const winston = require('./util/winston');
 
 const rootRouter = require('./routers/root');
@@ -21,6 +22,9 @@ app.use('/', rootRouter);
 app.use('/user', userRouter);
 app.use('/event', eventRouter);
 app.use('/category', categoryRouter);
+
+app.use(cors());
+
 
 // set up ap to listen on port + test logging.
 app.listen(httpPort, function () {

@@ -25,11 +25,11 @@ router.post('/login', bodyParser, function (req, res) {
   let error;
 
   // content type validation
-  if ('application/json' !== req.get('content-type')) {
+  /*if ('application/json' !== req.get('content-type')) {
     winston.debug('Login failed with wrong or missing content type.');
     error = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
-  }
+  }*/
 
   // check if body is not empty
   if (!req.body) {
@@ -43,6 +43,8 @@ router.post('/login', bodyParser, function (req, res) {
   user.password = req.body.password;
 
   // check if username and password are contained in body
+    console.log(user.username);
+    console.log(user.password);
   if (undefined === user.username || undefined === user.password) {
     winston.debug('Login failed with missing username or password.');
     error = 'Username or password missing.';
