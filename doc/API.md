@@ -31,7 +31,12 @@ which fields are mandatory.
   "password": "password"
 }
 ````
-*No content in return value*
+*Return value:*
+````json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTY3NjY1MTYsInN1YiI6ImF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiY2FsZW5kYXJTZXJ2ZXIiLCJhdWQiOiJzZXJ2ZXJTZXJ2aWNlcyIsInVzZXIiOiJmcmFuayIsImlhdCI6MTQ5Njc2MjkxNn0.HqQrmsFY2zON-DXpC4Ah6IMvCt5_sIW3DXMRWtBtnzA"
+}
+````
 
 
 ### Update
