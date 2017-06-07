@@ -1,5 +1,5 @@
 /**
- * Created by Til on 06.05.2017.
+ * Created by Desyon on 06.05.2017.
  */
 
 const express = require('express');
@@ -40,7 +40,8 @@ router.post('/create', bodyParser, function (req, res) {
 
     // content type validation
     if ('application/json' !== req.get('content-type')) {
-      winston.debug('Event creation failed with wrong or missing content type.');
+      winston.debug(
+          'Event creation failed with wrong or missing content type.');
       error = 'Wrong content type. Application only consumes JSON.';
       return res.status(406).send(error);
     }
@@ -51,13 +52,15 @@ router.post('/create', bodyParser, function (req, res) {
       return res.status(400).send(error);
     }
 
+    console.log(req.body.title);
+
     let event = {};
     event.title = req.body.title;
     event.date = req.body.date;
     event.time = req.body.time;
     event.allday = req.body.allday;
     event.category = req.body.category;
-    event.owner = req.body.owner;
+    event.owner = decoded.user;
     event.location = req.body.location;
     event.notes = req.body.notes;
 
@@ -67,13 +70,6 @@ router.post('/create', bodyParser, function (req, res) {
       winston.debug('Event creation failed with missing mandatory properties.');
       error = 'Mandatory fields missing. Event creation rejected';
       return res.status(422).send(error);
-    }
-
-    // check if user is set as owner, otherwise reject creation
-    if (decoded.user !== event.owner) {
-      winston.debug('Category creation failed with due to wrong owner.');
-      error = 'Event creator is not set as owner.';
-      return res.status(400).send(error);
     }
 
     db.insertEvent(event, function (insertErr) {
@@ -284,7 +280,7 @@ router.delete('/:id', bodyParser, function (req, res) {
 
     let id = req.params.id;
 
-    winston.debug('Event deletion requested for evnent \'' + id + '\'.');
+    winston.debug('Event deletion requested for event \'' + id + '\'.');
 
     db.getEvent(id, function (getErr, ret) {
       if (!ret) {

@@ -1,5 +1,5 @@
 /**
- * Created by Til on 13.05.2017.
+ * Created by Desyon on 13.05.2017.
  */
 
 const winston = require('winston');

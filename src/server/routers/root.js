@@ -1,5 +1,5 @@
 /**
- * Created by Til on 18.05.2017.
+ * Created by Desyon on 18.05.2017.
  */
 
 const express = require('express');
@@ -15,13 +15,13 @@ const router = express.Router();
 router.get('/administration/init', function (req, res) {
   db.initUserDB(function (userError) {
     if (userError) {
-      return res.send(500).send('User database creation failed');
+      return res.status(500).send('User database creation failed');
     }
   });
 
   db.initEventDB(function (eventError) {
     if (eventError) {
-      return res.send(500).send('Event database creation failed');
+      return res.status(500).send('Event database creation failed');
     }
   });
 
@@ -36,11 +36,24 @@ router.get('/administration/init', function (req, res) {
 
 /**
  * Drops all databases and redirects to the init route to set them up again.
+ * Do not use twice at once. Otherwise the server might crash.
  */
-router.get('/administration/reset', function (req, res) {
+router.get('/administration/delete', function (req, res) {
+  let error;
+
+  if (!req.get('authorization')) {
+    error = 'Authorization missing. Reset rejected.';
+    return res.status(401).send(error);
+  }
+
+  if ('admin' !== req.get('authorization')) {
+    error = 'Invalid authorization. Reset rejected';
+    return res.status(401).send(error);
+  }
+
   db.deleteUserDB(function (userErr) {
     if (userErr) {
-      res.status(500).send(userErr);
+      return res.status(500).send(userErr);
     }
   });
 
@@ -56,7 +69,7 @@ router.get('/administration/reset', function (req, res) {
     }
   });
 
-  return res.redirect('/administration/init');
+  return res.status(200).send('Databases Deleted.');
 });
 
 /**

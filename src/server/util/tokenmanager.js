@@ -1,5 +1,5 @@
 /**
- * Created by Til on 03.06.2017.
+ * Created by Desyon on 03.06.2017.
  */
 
 const jwt = require('jsonwebtoken');

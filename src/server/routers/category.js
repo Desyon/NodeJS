@@ -1,5 +1,5 @@
 /**
- * Created by Til on 06.05.2017.
+ * Created by Desyon on 06.05.2017.
  */
 
 const express = require('express');
@@ -26,6 +26,7 @@ router.post('/create', bodyParser, function (req, res) {
 
   if (!(req.get('authorization'))) {
     winston.debug('Category creation failed with missing authorization.');
+    error = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
@@ -39,7 +40,8 @@ router.post('/create', bodyParser, function (req, res) {
 
     // content type validation
     if ('application/json' !== req.get('content-type')) {
-      winston.debug('Category creation failed with wrong or missing content type.');
+      winston.debug(
+          'Category creation failed with wrong or missing content type.');
       error = 'Wrong content type. Application only consumes JSON.';
       return res.status(406).send(error);
     }
@@ -54,18 +56,14 @@ router.post('/create', bodyParser, function (req, res) {
     category.name = req.body.name;
     category.color = req.body.color;
     category.description = req.body.description;
-    category.owner = req.body.owner;
+    category.owner = decoded.user;
 
     if (undefined === category.name || undefined === category.color ||
         undefined === category.owner) {
-      winston.debug('Category creation failed with missing mandatory properties.');
+      winston.debug(
+          'Category creation failed with missing mandatory properties.');
       error = 'Mandatory fields missing. Category creation rejected.';
       return res.status(422).send(error);
-    }
-
-    if (decoded.user !== category.owner) {
-      winston.debug('Category creation failed with due to wrong owner.');
-      return res.sendStatus(403);
     }
 
     db.insertCategory(category, function (err) {
@@ -106,7 +104,8 @@ router.put('/:id', bodyParser, function (req, res) {
     } else {
       // content type validation
       if ('application/json' !== req.get('content-type')) {
-        winston.debug('Category change failed with wrong or missing content type.');
+        winston.debug(
+            'Category change failed with wrong or missing content type.');
         error = 'Wrong content type. Application only consumes JSON.';
         return res.status(406).send(error);
       }
@@ -117,16 +116,16 @@ router.put('/:id', bodyParser, function (req, res) {
         return res.status(400).send(error);
       }
 
-      let id = req.params.id;
+      let categoryId = req.params.id;
       let category = {};
 
-      winston.debug('Category change requested for category \'' + id + '\'.');
       category.name = req.body.name;
       category.color = req.body.color;
       category.description = req.body.description;
 
-      winston.debug('Category change requested for category \'' + id + '\'.');
-      db.getCategory(id, function (getErr, ret) {
+      winston.debug(
+          'Category change requested for category \'' + categoryId + '\'.');
+      db.getCategory(categoryId, function (getErr, ret) {
         if (getErr) {
           winston.debug('Category change failed with missing category.');
           error = 'Could not find category';
@@ -135,12 +134,12 @@ router.put('/:id', bodyParser, function (req, res) {
           winston.debug('Category change failed with due to wrong owner.');
           return res.sendStatus(403);
         } else {
-          db.updateCategory(id, event, function (updateErr) {
+          db.updateCategory(categoryId, category, function (updateErr) {
             if (updateErr) {
-              winston.debug('Category creation failed with database error.');
+              winston.debug('Category change failed with database error.');
               return res.status(500).send(updateErr);
             } else {
-              winston.debug('Category creation successful.');
+              winston.debug('Category change successful.');
               return res.sendStatus(200);
             }
           });
@@ -274,7 +273,8 @@ router.delete('/:id', bodyParser, function (req, res) {
 
     let categoryId = req.params.id;
 
-    winston.debug('Category deletion requested for category \'' + id + '\'.');
+    winston.debug(
+        'Category deletion requested for category \'' + categoryId + '\'.');
 
     db.getCategory(categoryId, function (getErr, ret) {
       if (!ret) {

@@ -1,5 +1,5 @@
 /**
- * Created by Til on 06.05.2017.
+ * Created by Desyon on 06.05.2017.
  */
 
 const express = require('express');
@@ -141,7 +141,7 @@ router.put('/:id', bodyParser, function (req, res) {
 
   let username = req.params.id;
 
-  winston.debbug('User change requested for user \'' + username + '\'.');
+  winston.debug('User change requested for user \'' + username + '\'.');
 
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
@@ -221,11 +221,11 @@ router.delete('/:id', bodyParser, function (req, res) {
     } else {
       db.deleteUser(username, function (delErr) {
         if (delErr) {
-          winston.debug('User deletion fauled with database error.');
+          winston.debug('User deletion failed with database error.');
           return res.status(500).send(delErr);
         } else {
           winston.debug('User deletion successful.');
-          return res.status(200).send('User ' + username + ' deleted.');
+          return res.status(200).send('User \'' + username + '\' deleted.');
         }
       });
     }
