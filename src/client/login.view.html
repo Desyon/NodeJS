@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="utf-8">
+    <title>My HTML File</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+
+<div ng-app="myApp" ng-controller="formCtrl">
+    <form novalidate>
+        Userame:<br>
+        <input type="text" ng-model="user.username"><br>
+        Password:<br>
+        <input type="password" ng-model="user.password">
+        <br><br>
+        <button ng-click="login()">Login</button>
+    </form>
+    <p>form = {{user}}</p>
+    <p>master = {{master}}</p>
+</div>
+
+</body>
+</html>
