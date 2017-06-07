@@ -39,6 +39,6 @@ gulp.task('lintGulpfile', function () {
 /**
  * Default build task. Runs source and gulpfile validation in parallel.
  */
-gulp.task('default', function(callback) {
+gulp.task('default', function (callback) {
   runSequence(['lint', 'lintGulpfile'], callback);
 });
