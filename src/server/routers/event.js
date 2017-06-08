@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Created by Desyon on 06.05.2017.
  */
@@ -51,8 +52,6 @@ router.post('/create', bodyParser, function (req, res) {
       error = 'Request body missing. Event creation failed.';
       return res.status(400).send(error);
     }
-
-    console.log(req.body.title);
 
     let event = {};
     event.title = req.body.title;

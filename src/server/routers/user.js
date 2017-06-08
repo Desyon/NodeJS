@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Created by Desyon on 06.05.2017.
  */
@@ -44,8 +45,6 @@ router.post('/login', bodyParser, function (req, res) {
   user.password = req.body.password;
 
   // check if username and password are contained in body
-  console.log(user.username);
-  console.log(user.password);
   if (undefined === user.username || undefined === user.password) {
     winston.debug('Login failed with missing username or password.');
     error = 'Username or password missing.';
