@@ -28,11 +28,13 @@
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.8.0",
     "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-angular-templatecache": "^2.0.0",
     "gulp-babel": "^6.1.2",
     "gulp-cssmin": "^0.2.0",
     "gulp-eslint": "^3.0.1",
     "gulp-inject": "^4.2.0",
     "gulp-less": "^3.3.0",
+    "gulp-ng-constant": "^2.0.0-2",
     "gulp-uglify": "^3.0.0",
     "path": "^0.12.7",
     "pump": "^1.0.2"

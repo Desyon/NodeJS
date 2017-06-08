@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Created by Desyon on 07.04.2017.
  */
@@ -14,7 +15,7 @@ const categoryRouter = require('./routers/category');
 // listening port
 const httpPort = 3000;
 
-app = express();
+const app = express();
 
 app.use('*', cors());
 
