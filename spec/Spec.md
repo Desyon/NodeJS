@@ -25,8 +25,8 @@ Depicts one event with all properties has an creator/owner + category
 Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
 title | String | u know ... | x
-date | date | u know ... | x
-time | String | u know ... | x
+start | Date | u know ... | x
+End | Date | u know ... | x
 allday | bool | u know... | x
 category | Category | u know... | x
 owner | User | u know...; automatically filled | x
