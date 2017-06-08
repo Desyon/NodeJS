@@ -92,8 +92,8 @@ Note: JWT user has to match the owner specified in the body.
 ````json
 {
   "title": "My awesome Event",
-  "date": "05.06.2017",
-  "time": "20:00",
+  "start": "2017-06-08T13:37:00.000Z",
+  "end": "2017-06-08T15:36:14.000Z",
   "allday": false,
   "category": 4,
   "owner": "someuser",
@@ -118,8 +118,8 @@ Note: JWT user has to match the owner of the event specified in the URL.
 ````json
 {
   "title:": "My awesome Event",
-  "date": "05.06.2017",
-  "time": "20:00",
+  "start": "2017-06-08T13:37:00.000Z",
+  "end": "2017-06-08T15:36:14.000Z",
   "allday": false,
   "category": 4,
   "location": "Home",
