@@ -5,11 +5,16 @@
 angular.module('ngCalendarApp.controllers')
 .controller('RegisterController',
     function loginCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT) {
+        REST_API_ENDPOINT, $localStorage) {
       $log.debug('Initializing RegisterController');
 
       $scope.register = function () {
         let deferred = $q.defer();
+
+        if($scope.user.password !== $scope.user.confirmPW) {
+            $log.debug('Passwords do not match');
+            return deferred.reject('No Match');
+        }
 
         $log.debug('RegisterService - Sending Post Request');
         let username = $scope.user.username;
@@ -40,11 +45,13 @@ angular.module('ngCalendarApp.controllers')
           'password': password,
         };
 
-        $log.debug(data);
-
         $http.post(REST_API_ENDPOINT + '/user/create', data)
         .then(function (response) {
+              $localStorage.currentToken = response.data.token;
+              $localStorage.username = username;
+              $log.debug($localStorage.username);
               deferred.resolve(response.data);
+                $log.debug('RegisterService - User created');
             },
 
             function (response) {
@@ -54,5 +61,5 @@ angular.module('ngCalendarApp.controllers')
 
         return deferred.promise;
       };
-    }
+  }
 );

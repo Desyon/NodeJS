@@ -6,7 +6,7 @@ angular.module('ngCalendarApp.controllers')
 
 .controller('LoginController',
     function loginCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT) {
+        REST_API_ENDPOINT, $localStorage) {
       $log.debug('Initializing UserController');
 
       $scope.loginAs = function () {
@@ -15,7 +15,6 @@ angular.module('ngCalendarApp.controllers')
         $log.debug('UserService - Sending Post Request');
         let username = $scope.user.username;
         let password = $scope.user.password;
-        $log.debug(username + ' ' + password);
 
         let data = {
           'username': username,
@@ -24,11 +23,14 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/login', data)
         .then(function (response) {
+            $localStorage.currentToken = response.data.token;
+            $localStorage.username = username;
+            $log.debug('LoginService - Logged in');
               deferred.resolve(response.data);
             },
 
             function (response) {
-              $log.error('UserService - Failed to log in');
+              $log.error('LoginService - Failed to log in');
               deferred.reject(response);
             });
 

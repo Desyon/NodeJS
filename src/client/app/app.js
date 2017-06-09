@@ -4,6 +4,7 @@
 
 angular.module('ngCalendarApp', [
   'ngAnimate',
+  'ngStorage',
   'ui.bootstrap',
   'ui.router',
   'ui-notification',
@@ -14,9 +15,11 @@ angular.module('ngCalendarApp', [
 
 .config(
     function (ENABLE_DEBUG, $logProvider, $stateProvider, NotificationProvider,
-        $urlRouterProvider) {
+        $urlRouterProvider, $httpProvider) {
       $logProvider.debugEnabled(ENABLE_DEBUG);
-
+      $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
+      $httpProvider.defaults.headers.put['Content-Type'] = 'application/json';
+      //$httpProvider.defaults.headers.post['Authorizations'] = $localStorage.token;
       $urlRouterProvider.otherwise('/login');
 
       NotificationProvider.setOptions({
@@ -45,18 +48,26 @@ angular.module('ngCalendarApp', [
       .state('account', {
         url: '/account',
         templateUrl: 'app/views/account.tpl.html',
-        controller: 'AccountController',
+        controller: 'UserController',
       });
     })
 
-.run(['$rootScope', '$location', '$http',
-  function ($rootScope, $location, $http) {
+.run(['$rootScope', '$location', '$http', '$localStorage',
+  function ($rootScope, $location, $http, $localStorage) {
+    $http.defaults.headers.common.Authorization = $localStorage.currentToken;
   },
 ])
 
 .controller('AppController',
-    function ($log) {
-      $log.debug('CalendarApp initialized');
+    function ($scope, $log, $localStorage) {
+        $log.debug('CalendarApp initialized');
+
+
+        $scope.logout = function () {
+            delete $localStorage.username;
+            delete $localStorage.token;
+            $log.debug('AppService - User logged out');
+        }
     }
 );
 
