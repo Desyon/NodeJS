@@ -1,11 +1,11 @@
 /**
- * Created by Desyon on 09.06.2017.
+ * Created by Desyon, Eric on 09.06.2017.
  */
 
 angular.module('ngCalendarApp.controllers')
 .controller('RegisterController',
-    function loginCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage) {
+    function registerCtrl($scope, $log, $q, $http,
+        REST_API_ENDPOINT, $localStorage, $rootScope) {
       $log.debug('Initializing RegisterController');
 
       $scope.register = function () {
@@ -48,8 +48,8 @@ angular.module('ngCalendarApp.controllers')
         $http.post(REST_API_ENDPOINT + '/user/create', data)
         .then(function (response) {
               $localStorage.currentToken = response.data.token;
-              $localStorage.username = username;
-              $log.debug($localStorage.username);
+                $rootScope.username = username;
+                $rootScope.isLoggedIn = true;
               deferred.resolve(response.data);
               $log.debug('RegisterService - User created');
             },

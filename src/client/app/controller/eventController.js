@@ -3,9 +3,9 @@
  */
 
 angular.module('ngCalendarApp.controllers')
-.controller('UserController',
+.controller('EventController',
     function eventCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage) {
+        REST_API_ENDPOINT, $rootScope) {
       $log.debug('Initializing EventController');
 
       $scope.createEvent = function () {
@@ -14,24 +14,26 @@ angular.module('ngCalendarApp.controllers')
         $log.debug('EventService - Sending Put Request');
 
         let title = $scope.event.title;
-        let date = $scope.event.date;
-        let time = $scope.event.time;
+        let start = $scope.event.start;
+        let end = $scope.event.end;
         let allday = $scope.event.allday;
         let category = $scope.event.category;
-        let owner = $scope.event.owner;
+        let owner = $rootScope.username;
         let location = $scope.event.location;
         let notes = $scope.event.notes;
 
         let data = {
           'title': title,
-          'date': date,
-          'time': time,
+          'start': start,
+          'end': end,
           'allday': allday,
           'category': category,
           'owner': owner,
           'location': location,
           'notes': notes,
         };
+
+        $log.debug(data);
 
         $http.post(REST_API_ENDPOINT + '/event/create', data)
         .then(function (response) {
@@ -52,23 +54,25 @@ angular.module('ngCalendarApp.controllers')
         $log.debug('EventService - Sending Put Request');
 
         let title = $scope.event.title;
-        let date = $scope.event.date;
-        let time = $scope.event.time;
+        let start = $scope.event.start;
+        let end = $scope.event.end;
         let allday = $scope.event.allday;
         let category = $scope.event.category;
         let location = $scope.event.location;
         let notes = $scope.event.notes;
+        let owner = $rootScope.username;
 
         let id = $scope.event.id;
 
         let data = {
           'title': title,
-          'date': date,
-          'time': time,
+          'start': start,
+          'end': end,
           'allday': allday,
           'category': category,
           'location': location,
           'notes': notes,
+            'owner': owner,
         };
 
         $http.put(REST_API_ENDPOINT + '/event/' + id, data)
@@ -111,16 +115,7 @@ angular.module('ngCalendarApp.controllers')
         .then(function (response) {
               deferred.resolve(response.data);
 
-              $scope.event.title = response.data.title;
-              $scope.event.date = response.data.date;
-              $scope.event.time = response.data.time;
-              $scope.event.allday = response.data.allday;
-              $scope.event.category = response.data.category;
-              $scope.event.owner = response.data.owner;
-              $scope.event.location = response.data.location;
-              $scope.event.notes = response.data.notes;
-              $scope.event.id = response.data.id;
-
+              $scope.event = response.data;
               $log.debug('EventService - Event received');
             },
             function (response) {

@@ -1,12 +1,12 @@
 /**
- * Created by Desyon on 09.06.2017.
+ * Created by Desyon, Eric on 09.06.2017.
  */
 
 angular.module('ngCalendarApp.controllers')
 
 .controller('LoginController',
     function loginCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage) {
+        REST_API_ENDPOINT, $localStorage, $rootScope, $location) {
       $log.debug('Initializing UserController');
 
       $scope.loginAs = function () {
@@ -23,9 +23,11 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/login', data)
         .then(function (response) {
-              $localStorage.currentToken = response.data.token;
-              $localStorage.username = username;
-              $log.debug('LoginService - Logged in');
+            $localStorage.currentToken = response.data.token;
+            $rootScope.username = username;
+            $rootScope.isLoggedIn = true;
+            $log.debug($localStorage.currentToken);
+            $log.debug('LoginService - Logged in');
               deferred.resolve(response.data);
             },
 
