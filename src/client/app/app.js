@@ -41,6 +41,11 @@ angular.module('ngCalendarApp', [
         url: '/register',
         templateUrl: 'app/views/register.tpl.html',
         controller: 'RegisterController',
+      })
+      .state('account', {
+        url: '/account',
+        templateUrl: 'app/views/account.tpl.html',
+        controller: 'AccountController',
       });
     })
 

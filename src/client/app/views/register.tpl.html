@@ -1,49 +1,49 @@
-<div class="container row">
-  <h1>
-    Register
-  </h1>
-  <div class="panel panel-default row">
-    <div class="panel-body">
-      <div ng-app="myApp" ng-controller="RegisterController">
-        <form novalidate>
-          <div class="row">
-            <div class="col-md-6">
-              <input class="form-control" type="text" placeholder="Username"
-                     ng-model="user.username"/>
-            </div>
-            <div class="col-md-6">
-              <input class="form-control" type="text" placeholder="Name"
-                     ng-model="user.name"/>
-            </div>
-          </div>
-          <br/>
-
-          <div class="row">
-            <div class="col-md-6">
-              <input class="form-control" type="email" placeholder="E-Mail" ng-model="user.email"/>
-            </div>
-            <div class="col-md-6">
-              <input class="form-control" type="date" placeholder="DD.MM.YYYY" ng-model="user.dob"/>
-            </div>
-          </div>
-          <br/>
-
-          <div class="row">
-            <div class="col-md-6">
-              <input class="form-control" type="password" placeholder="Password"
-                     ng-model="user.password"/>
-            </div>
-            <div class="col-md-6">
-              <input class="form-control" type="text" placeholder="Retype Password"
-                     ng-model="user.retype"/>
-            </div>
-          </div>
-          <br/>
-          <button class="btn btn-default" ng-click="register()">Register</button>
-        </form>
-        <p>form = {{user}}</p>
-        <p>master = {{master}}</p>
-      </div>
+<div class="container-fluid">
+  <div class="row">
+    <h1>
+      Register
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="username">Username</label>
+      <input class="form-control" type="text" id="username" placeholder="Enter your username"
+             ng-model="user.username"/>
+    </div>
+    <div class="col-md-6">
+      <label for="name">Name</label>
+      <input class="form-control" type="text" id="name" placeholder="Enter your name"
+             ng-model="user.name"/>
     </div>
   </div>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="email">E-Mail</label>
+      <input class="form-control" type="email" id="email" placeholder="Enter your e-mail address"
+             ng-model="user.email"/>
+    </div>
+    <div class="col-md-6">
+      <label for="dob">Date of Birth</label>
+      <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
+             ng-model="user.dob"/>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="password">Password</label>
+      <input class="form-control" type="password" id="password" placeholder="Enter your password"
+             ng-model="user.password"/>
+    </div>
+    <div class="col-md-6">
+      <label for="confirmPW">Confirm your password</label>
+      <input class="form-control" type="text" id="confirmPW"
+             placeholder="Enter your password. Again..." ng-model="user.confirmPW"/>
+    </div>
+  </div>
+  <br/>
+  <button class="btn btn-default" ng-click="register()">Register</button>
 </div>
