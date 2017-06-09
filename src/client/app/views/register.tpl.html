@@ -6,13 +6,40 @@
     <div class="panel-body">
       <div ng-app="myApp" ng-controller="RegisterController">
         <form novalidate>
-          <input class="form-control" type="text" placeholder="Username" ng-model="user.username" />
-          <input class="form-control" type="text" placeholder="Name" ng-model="user.name" />
-          <input class="form-control" type="email" placeholder="E-Mail" ng-model="user.email" />
-          <input class="form-control" type="date"  placeholder="DD.MM.YYYY" ng-model="user.dob" />
-          <input class="form-control" type="password" placeholder="Password" ng-model="user.password" />
-          <input class="form-control" type="text" placeholder="Retype Password" ng-model="user.retype" />
-          <button ng-click="register()">Register</button>
+          <div class="row">
+            <div class="col-md-6">
+              <input class="form-control" type="text" placeholder="Username"
+                     ng-model="user.username"/>
+            </div>
+            <div class="col-md-6">
+              <input class="form-control" type="text" placeholder="Name"
+                     ng-model="user.name"/>
+            </div>
+          </div>
+          <br/>
+
+          <div class="row">
+            <div class="col-md-6">
+              <input class="form-control" type="email" placeholder="E-Mail" ng-model="user.email"/>
+            </div>
+            <div class="col-md-6">
+              <input class="form-control" type="date" placeholder="DD.MM.YYYY" ng-model="user.dob"/>
+            </div>
+          </div>
+          <br/>
+
+          <div class="row">
+            <div class="col-md-6">
+              <input class="form-control" type="password" placeholder="Password"
+                     ng-model="user.password"/>
+            </div>
+            <div class="col-md-6">
+              <input class="form-control" type="text" placeholder="Retype Password"
+                     ng-model="user.retype"/>
+            </div>
+          </div>
+          <br/>
+          <button class="btn btn-default" ng-click="register()">Register</button>
         </form>
         <p>form = {{user}}</p>
         <p>master = {{master}}</p>
