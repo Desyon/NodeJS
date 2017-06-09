@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Calendar App</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+  <!-- inject:css -->
+  <!-- endinject -->
+
+</head>
+<body ng-app="ngCalendarApp" ng-controller="AppController">
+
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" ui-sref="home">Calendar App</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li ui-sref-active="inactive"><a ui-sref="account">Account</a></li>
+        <li ui-sref-active="inactive"><a ui-sref="events">Events</a></li>
+        <li ui-sref-active="inactive"><a ui-sref="categories">Categories</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-click="logout()" ui-sref-active="inactive"><a ui-sref="logout">Logout</a></li>
+        <li ui-sref-active="inactive"><a ui-sref="register">Register</a></li>
+        <li ui-sref-active="inactive"><a ui-sref="login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 50px">
+    <ui-view></ui-view>
+  </div>
+
+  <!-- ngMain:js -->
+  <!-- Angular main file, has to be loaded first at all times -->
+  <!-- endinject -->
+
+  <!-- framework:js -->
+  <!-- Other framework files -->
+  <!-- endinject -->
+
+  <!-- inject:js -->
+  <!-- JS files of the angular app -->
+  <!-- endinject -->
+</body>
+</html>
