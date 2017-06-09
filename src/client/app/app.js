@@ -19,7 +19,7 @@ angular.module('ngCalendarApp', [
       $logProvider.debugEnabled(ENABLE_DEBUG);
       $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
       $httpProvider.defaults.headers.put['Content-Type'] = 'application/json';
-      //$httpProvider.defaults.headers.post['Authorizations'] = $localStorage.token;
+      // $httpProvider.defaults.headers.post['Authorizations'] = $localStorage.token;
       $urlRouterProvider.otherwise('/login');
 
       NotificationProvider.setOptions({
@@ -60,14 +60,13 @@ angular.module('ngCalendarApp', [
 
 .controller('AppController',
     function ($scope, $log, $localStorage) {
-        $log.debug('CalendarApp initialized');
+      $log.debug('CalendarApp initialized');
 
-
-        $scope.logout = function () {
-            delete $localStorage.username;
-            delete $localStorage.token;
-            $log.debug('AppService - User logged out');
-        }
+      $scope.logout = function () {
+        delete $localStorage.username;
+        delete $localStorage.token;
+        $log.debug('AppService - User logged out');
+      };
     }
 );
 
