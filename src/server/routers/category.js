@@ -22,11 +22,11 @@ const router = express.Router();
  */
 router.post('/create', bodyParser, function (req, res) {
   winston.debug('Category creation requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Category creation failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
@@ -34,7 +34,7 @@ router.post('/create', bodyParser, function (req, res) {
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Category creation failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token.';
+      error.errmsg = 'Authorization failed. Invalid token.';
       return res.status(401).send(error);
     }
 
@@ -42,13 +42,13 @@ router.post('/create', bodyParser, function (req, res) {
     if ('application/json' !== req.get('content-type')) {
       winston.debug(
           'Category creation failed with wrong or missing content type.');
-      error = 'Wrong content type. Application only consumes JSON.';
+      error.errmsg = 'Wrong content type. Application only consumes JSON.';
       return res.status(406).send(error);
     }
 
     if (!req.body) {
       winston.debug('Category creation failed with missing request body.');
-      error = 'Request body missing. Category creation failed.';
+      error.errmsg = 'Request body missing. Category creation failed.';
       return res.status(400).send(error);
     }
 
@@ -62,7 +62,7 @@ router.post('/create', bodyParser, function (req, res) {
         undefined === category.owner) {
       winston.debug(
           'Category creation failed with missing mandatory properties.');
-      error = 'Mandatory fields missing. Category creation rejected.';
+      error.errmsg = 'Mandatory fields missing. Category creation rejected.';
       return res.status(422).send(error);
     }
 
@@ -72,7 +72,8 @@ router.post('/create', bodyParser, function (req, res) {
         return res.status(500).send(err);
       } else {
         winston.debug('Category creation successful.');
-        return res.sendStatus(201);
+        let response = {msg: 'Category created'};
+        return res.status(201).send(response);
       }
     });
   });
@@ -88,31 +89,31 @@ router.post('/create', bodyParser, function (req, res) {
  */
 router.put('/:id', bodyParser, function (req, res) {
   winston.debug('Category change requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Category change failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Category change failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     } else {
       // content type validation
       if ('application/json' !== req.get('content-type')) {
         winston.debug(
             'Category change failed with wrong or missing content type.');
-        error = 'Wrong content type. Application only consumes JSON.';
+        error.errmsg = 'Wrong content type. Application only consumes JSON.';
         return res.status(406).send(error);
       }
 
       if (!req.body) {
         winston.debug('Category change failed with missing request body.');
-        error = 'Request body missing. Event update failed.';
+        error.errmsg = 'Request body missing. Event update failed.';
         return res.status(400).send(error);
       }
 
@@ -128,7 +129,7 @@ router.put('/:id', bodyParser, function (req, res) {
       db.getCategory(categoryId, function (getErr, ret) {
         if (getErr) {
           winston.debug('Category change failed with missing category.');
-          error = 'Could not find category';
+          error.errmsg = 'Could not find category';
           return res.status(404).send(error);
         } else if (ret.owner !== decoded.user) {
           winston.debug('Category change failed with due to wrong owner.');
@@ -140,7 +141,8 @@ router.put('/:id', bodyParser, function (req, res) {
               return res.status(500).send(updateErr);
             } else {
               winston.debug('Category change successful.');
-              return res.sendStatus(200);
+              let response = {msg: 'Success'};
+              return res.status(200).send(response);
             }
           });
         }
@@ -165,18 +167,18 @@ router.put('/:id', bodyParser, function (req, res) {
  */
 router.get('/all', bodyParser, function (req, res) {
   winston.debug('All categories requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Category request failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Category request failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -187,7 +189,7 @@ router.get('/all', bodyParser, function (req, res) {
     db.getUserCategories(user, function (getErr, ret) {
       if (getErr) {
         winston.debug('Category request failed with database error');
-        error = 'Database error.';
+        error.errmsg = 'Database error.';
         return res.status(500).send(error);
       } else {
         winston.debug('Category request successful');
@@ -208,18 +210,18 @@ router.get('/all', bodyParser, function (req, res) {
  */
 router.get('/:id', bodyParser, function (req, res) {
   winston.debug('Category request.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Category request failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Category request failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -233,7 +235,7 @@ router.get('/:id', bodyParser, function (req, res) {
         return res.status(500).send(getErr);
       } else if (!ret) {
         winston.debug('Category request failed as category was not found');
-        error = 'Category not found';
+        error.errmsg = 'Category not found';
         return res.status(404).send(error);
       } else if (decoded.user !== ret.owner) {
         winston.debug('Category request failed with wrong user');
@@ -256,18 +258,18 @@ router.get('/:id', bodyParser, function (req, res) {
  */
 router.delete('/:id', bodyParser, function (req, res) {
   winston.debug('Category deletion requested');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Category deletion failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Category deletion failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -279,7 +281,7 @@ router.delete('/:id', bodyParser, function (req, res) {
     db.getCategory(categoryId, function (getErr, ret) {
       if (!ret) {
         winston.debug('Category deletion failed as category was not found');
-        error = 'Category not found';
+        error.errmsg = 'Category not found';
         return res.status(404).send(error);
       } else if (decoded.user !== ret.owner) {
         winston.debug('Category deletion failed with wrong user');
@@ -291,7 +293,8 @@ router.delete('/:id', bodyParser, function (req, res) {
             return res.status(500).send(delErr);
           } else {
             winston.debug('Category deletion successful.');
-            return res.sendStatus(200);
+            let response = {msg: 'Category deleted'};
+            return res.status(200).send(response);
           }
         });
       }
