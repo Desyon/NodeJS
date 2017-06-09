@@ -23,11 +23,11 @@ const router = express.Router();
  */
 router.post('/create', bodyParser, function (req, res) {
   winston.debug('Event creation requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Event creation failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
@@ -35,7 +35,7 @@ router.post('/create', bodyParser, function (req, res) {
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Event creation failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -43,13 +43,13 @@ router.post('/create', bodyParser, function (req, res) {
     if ('application/json' !== req.get('content-type')) {
       winston.debug(
           'Event creation failed with wrong or missing content type.');
-      error = 'Wrong content type. Application only consumes JSON.';
+      error.errmsg = 'Wrong content type. Application only consumes JSON.';
       return res.status(406).send(error);
     }
 
     if (!req.body) {
       winston.debug('Event creation failed with missing request body.');
-      error = 'Request body missing. Event creation failed.';
+      error.errmsg = 'Request body missing. Event creation failed.';
       return res.status(400).send(error);
     }
 
@@ -67,7 +67,7 @@ router.post('/create', bodyParser, function (req, res) {
         undefined === event.end || undefined === event.allday ||
         undefined === event.category || undefined === event.owner) {
       winston.debug('Event creation failed with missing mandatory properties.');
-      error = 'Mandatory fields missing. Event creation rejected';
+      error.errmsg = 'Mandatory fields missing. Event creation rejected';
       return res.status(422).send(error);
     }
 
@@ -77,7 +77,8 @@ router.post('/create', bodyParser, function (req, res) {
         return res.status(500).send(insertErr);
       } else {
         winston.debug('Event creation successful.');
-        return res.sendStatus(201);
+        let response = {msg: 'Event created'};
+        return res.status(201).send(response);
       }
     });
   });
@@ -93,30 +94,30 @@ router.post('/create', bodyParser, function (req, res) {
  */
 router.put('/:id', bodyParser, function (req, res) {
   winston.debug('Event change requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Event change failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Event change failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token.';
+      error.errmsg = 'Authorization failed. Invalid token.';
       return res.status(401).send(error);
     } else {
       // content type validation
       if ('application/json' !== req.get('content-type')) {
         winston.debug('Event change failed with wrong content type.');
-        error = 'Wrong content type. Application only consumes JSON.';
+        error.errmsg = 'Wrong content type. Application only consumes JSON.';
         return res.status(406).send(error);
       }
 
       if (!req.body) {
         winston.debug('Event change failed with missing request body.');
-        error = 'Request body missing. Event update failed.';
+        error.errmsg = 'Request body missing. Event update failed.';
         return res.status(400).send(error);
       }
 
@@ -134,7 +135,7 @@ router.put('/:id', bodyParser, function (req, res) {
       db.getEvent(id, function (getErr, ret) {
         if (getErr) {
           winston.debug('Event change failed with missing event.');
-          error = 'Could not find event.';
+          error.errmsg = 'Could not find event.';
           return res.status(404).send(error);
         } else if (ret.owner !== decoded.user) {
           winston.debug('Event change failed with wrong owner.');
@@ -146,7 +147,8 @@ router.put('/:id', bodyParser, function (req, res) {
               return res.status(500).send(updateErr);
             } else {
               winston.debug('Event change successful.');
-              return res.sendStatus(200);
+              let response = {msg: 'Success'};
+              return res.status(200).send(response);
             }
           });
         }
@@ -171,18 +173,18 @@ router.put('/:id', bodyParser, function (req, res) {
  */
 router.get('/all', bodyParser, function (req, res) {
   winston.debug('All events requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Event request failed with missing authorization.');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded) {
       winston.debug('Event request failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -193,7 +195,7 @@ router.get('/all', bodyParser, function (req, res) {
     db.getUserEvents(user, function (getErr, ret) {
       if (getErr) {
         winston.debug('Event request failed with database error.');
-        error = 'Database error.';
+        error.errmsg = 'Database error.';
         return res.status(500).send(error);
       } else {
         winston.debug('Event request successful.');
@@ -214,18 +216,18 @@ router.get('/all', bodyParser, function (req, res) {
  */
 router.get('/:id', bodyParser, function (req, res) {
   winston.debug('Event request.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Event request failed with missing authorization');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || decoded === null || decoded === undefined) {
       winston.debug('Event request failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -239,7 +241,7 @@ router.get('/:id', bodyParser, function (req, res) {
         return res.status(500).send(err);
       } else if (!ret) {
         winston.debug('Event request failed with missing event.');
-        error = 'Event not found.';
+        error.errmsg = 'Event not found.';
         return res.status(404).send(error);
       } else if (decoded.user !== ret.owner) {
         winston.debug('Event request failed with wrong user.');
@@ -262,18 +264,18 @@ router.get('/:id', bodyParser, function (req, res) {
  */
 router.delete('/:id', bodyParser, function (req, res) {
   winston.debug('Event deletion requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('Event deletion failed with missing authorization');
-    error = 'Authorization missing.';
+    error.errmsg = 'Authorization missing.';
     return res.status(401).send(error);
   }
 
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || decoded === null || decoded === undefined) {
       winston.debug('Event deletion failed with invalid authorization');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
 
@@ -284,7 +286,7 @@ router.delete('/:id', bodyParser, function (req, res) {
     db.getEvent(id, function (getErr, ret) {
       if (!ret) {
         winston.debug('Event deletion failed with missing event.');
-        error = 'Event not found.';
+        error.errmsg = 'Event not found.';
         return res.status(404).send(error);
       } else if (decoded.user !== ret.owner) {
         winston.debug('Event deletion failed with wrong user.');
@@ -296,7 +298,8 @@ router.delete('/:id', bodyParser, function (req, res) {
             return res.status(500).send(delErr);
           } else {
             winston.debug('Event deletion successful.');
-            return res.sendStatus(200);
+            let response = {msg: 'Event deleted'};
+            return res.status(200).send(response);
           }
         });
       }

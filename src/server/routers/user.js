@@ -23,20 +23,19 @@ const router = express.Router();
  */
 router.post('/login', bodyParser, function (req, res) {
   winston.debug('Login requested.');
-  winston.debug(req);
-  let error;
+  let error = {};
 
   // content type validation
   if ('application/json' !== req.get('content-type')) {
     winston.debug('Login failed with wrong or missing content type.');
-    error = 'Wrong content type. Application only consumes JSON.';
+    error.errmsg = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
   // check if body is not empty
   if (!req.body) {
     winston.debug('Login failed with missing request body.');
-    error = 'Request body missing. Login failed.';
+    error.errmsg = 'Request body missing. Login failed.';
     return res.status(400).send(error);
   }
 
@@ -47,14 +46,14 @@ router.post('/login', bodyParser, function (req, res) {
   // check if username and password are contained in body
   if (undefined === user.username || undefined === user.password) {
     winston.debug('Login failed with missing username or password.');
-    error = 'Username or password missing.';
+    error.errmsg = 'Username or password missing.';
     return res.status(422).send(error);
   }
 
   db.getUser(user.username, function (err, ret) {
     if (err) {
       winston.debug('Login failed with missing user.');
-      error = 'User not found.';
+      error.errmsg = 'User not found.';
       return res.status(404).send(error);
     } else {
       if (ret.password !== user.password) {
@@ -79,19 +78,19 @@ router.post('/login', bodyParser, function (req, res) {
  */
 router.post('/create', bodyParser, function (req, res) {
   winston.debug('User creation requested.');
-  let error;
+  let error = {};
 
   // content type validation
   if ('application/json' !== req.get('content-type')) {
     winston.debug('User creation failed with wrong or missing content type.');
-    error = 'Wrong content type. Application only consumes JSON.';
+    error.errmsg = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
   // check if body is not empty
   if (!req.body) {
     winston.debug('User creation failed with missing request body');
-    error = 'Request body missing. User creation failed';
+    error.errmsg = 'Request body missing. User creation failed';
     return res.status(400).send(error);
   }
 
@@ -104,7 +103,7 @@ router.post('/create', bodyParser, function (req, res) {
 
   if (undefined === user.username || undefined === user.password) {
     winston.debug('User creation failed with missing mandatory properties.');
-    error = 'Mandatory fields missing. User Creation rejected.';
+    error.errmsg = 'Mandatory fields missing. User Creation rejected.';
     return res.status(422).send(error);
   }
 
@@ -130,11 +129,11 @@ router.post('/create', bodyParser, function (req, res) {
  */
 router.put('/:id', bodyParser, function (req, res) {
   winston.debug('User change requested.');
-  let error;
+  let error = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('User change failed with missing authorization.');
-    error = 'Authorization missing';
+    error.errmsg = 'Authorization missing';
     return res.status(401).send(error);
   }
 
@@ -146,7 +145,7 @@ router.put('/:id', bodyParser, function (req, res) {
   jwt.verify(req.get('authorization'), function (err, decoded) {
     if (err || !decoded || decoded.user !== username) {
       winston.debug('User change failed with invalid authorization.');
-      error = 'Authorization failed. Invalid token';
+      error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
   });
@@ -154,13 +153,13 @@ router.put('/:id', bodyParser, function (req, res) {
   // content type validation
   if ('application/json' !== req.get('content-type')) {
     winston.debug('User change failed with wrong or missing content type.');
-    error = 'Wrong content type. Application only consumes JSON.';
+    error.errmsg = 'Wrong content type. Application only consumes JSON.';
     return res.status(406).send(error);
   }
 
   if (!req.body) {
     winston.debug('User change failed with missing request body.');
-    error = 'Request body missing. User updating failed';
+    error.errmsg = 'Request body missing. User updating failed';
     return res.status(400).send(error);
   }
 
@@ -176,58 +175,93 @@ router.put('/:id', bodyParser, function (req, res) {
       return res.status(500).send(err);
     } else {
       winston.debug('User change successful.');
-      return res.sendStatus(200);
+      let response = {msg: 'Success'};
+      return res.status(200).send(response);
     }
   });
 });
 
 /**
- * Handles DELETE request to /user/:id, to delete the given user.
+ * Handles GET request to /user/, to get the given user.
  *
  * Validates headers and checks given request data. If an error occurs a
  * corresponding HTTP error code is sent.
  *
- * Responds with HTTP status code 200 if the delete is successful.
+ * Responds with HTTP status code 200 and the user if the get is successful.
  */
-router.delete('/:id', bodyParser, function (req, res) {
-  winston.debug('User deletion requested.');
-  let error;
+router.get('/', bodyParser, function (req, res) {
+  winston.debug('User requested.');
+  let error = {} = {};
 
   if (!(req.get('authorization'))) {
     winston.debug('User deletion failed with missing authorization.');
-    error = 'Authorization missing';
+    error.errmsg = 'Authorization missing';
     return res.status(401).send(error);
   }
 
-  let username = req.params.id;
+  jwt.verify(req.get('authorization'), function (err, decoded) {
+    if (err || !decoded) {
+      winston.debug('User deletion failed with invalid authentication.');
+      error.errmsg = 'Authorization failed. Invalid token.';
+      return res.status(401).send(error);
+    }
 
-  winston.debug('User deletion requested for user \'' + username + '\'.');
+    winston.debug('User \'' + decoded.user + '\' requested.');
+
+    db.getUser(decoded.user, function (err, ret) {
+      if (!ret) {
+        winston.debug('User request failed with missing user.');
+        error.errmsg = 'User not found';
+        return res.status(404).send(error);
+      } else if (err) {
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
+      } else {
+        return res.status(200).send(ret);
+      }
+    });
+  });
+});
+
+/**
+ * Handles DELETE request to /user/, to delete the given user.
+ *
+ * Validates headers and checks given request data. If an error occurs a
+ * corresponding HTTP error code is sent. A user can be deleted any number of
+ * times, as long as the token stays valid.
+ *
+ * Responds with HTTP status code 200 if the delete is successful.
+ */
+router.delete('/', bodyParser, function (req, res) {
+  winston.debug('User deletion requested.');
+  let error = {};
+
+  if (!(req.get('authorization'))) {
+    winston.debug('User deletion failed with missing authorization.');
+    error.errmsg = 'Authorization missing';
+    return res.status(401).send(error);
+  }
 
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || !decoded || decoded.user !== username) {
+    if (err || !decoded) {
       winston.debug('User deletion failed with invalid authentication.');
-      error = 'Authorization failed. Invalid token.';
+      error.errmsg = 'Authorization failed. Invalid token.';
       return res.status(401).send(error);
     }
-  });
 
-  db.getUser(username, function (err, ret) {
-    if (!ret) {
-      winston.debug('User deletion failed with missing user.');
-      error = 'User not found';
-      return res.status(404).send(error);
-    } else {
-      db.deleteUser(username, function (delErr) {
-        if (delErr) {
-          winston.debug('User deletion failed with database error.');
-          return res.status(500).send(delErr);
-        } else {
-          winston.debug('User deletion successful.');
-          return res.status(200).send('User \'' + username + '\' deleted.');
-        }
-      });
-    }
+    winston.debug('User deletion requested for user \'' + decoded.user + '\'.');
+
+    db.deleteUser(decoded.user, function (delErr) {
+      if (delErr) {
+        winston.debug('User deletion failed with database error.');
+        return res.status(500).send(delErr);
+      } else {
+        winston.debug('User \'' + decoded.user + '\'successfully deleted.');
+        let response = {msg: 'User deleted'};
+        return res.status(200).send(response);
+      }
+    });
   });
 });
 

@@ -32,7 +32,8 @@ router.get('/administration/init', function (req, res) {
     }
   });
 
-  return res.status(201).send('Databases created');
+  let response = {msg: 'Databases created'};
+  return res.status(201).send(response);
 });
 
 /**
@@ -40,15 +41,15 @@ router.get('/administration/init', function (req, res) {
  * Do not use twice at once. Otherwise the server might crash.
  */
 router.get('/administration/delete', function (req, res) {
-  let error;
+  let error = {};
 
   if (!req.get('authorization')) {
-    error = 'Authorization missing. Reset rejected.';
+    error.errmsg = 'Authorization missing. Reset rejected.';
     return res.status(401).send(error);
   }
 
   if ('admin' !== req.get('authorization')) {
-    error = 'Invalid authorization. Reset rejected';
+    error.errmsg = 'Invalid authorization. Reset rejected';
     return res.status(401).send(error);
   }
 
@@ -70,7 +71,8 @@ router.get('/administration/delete', function (req, res) {
     }
   });
 
-  return res.status(200).send('Databases Deleted.');
+  let response = {msg: 'Databases deleted'};
+  return res.status(200).send(response);
 });
 
 /**
