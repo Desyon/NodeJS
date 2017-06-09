@@ -13,13 +13,13 @@ const audience = 'serverServices';
 
 module.exports.sign = function (username) {
   return jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + 3600,
-    sub: subject,
-    iss: issuer,
-    aud: audience,
-    user: username,
-  },
-  privateKey);
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        sub: subject,
+        iss: issuer,
+        aud: audience,
+        user: username,
+      },
+      privateKey);
 };
 
 module.exports.verify = function (token, ret) {

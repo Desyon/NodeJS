@@ -23,9 +23,9 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/login', data)
         .then(function (response) {
-            $localStorage.currentToken = response.data.token;
-            $localStorage.username = username;
-            $log.debug('LoginService - Logged in');
+              $localStorage.currentToken = response.data.token;
+              $localStorage.username = username;
+              $log.debug('LoginService - Logged in');
               deferred.resolve(response.data);
             },
 

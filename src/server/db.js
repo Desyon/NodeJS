@@ -56,9 +56,10 @@ module.exports.insertCategory = function (category, callback) {
  * @param callback response
  */
 module.exports.updateUser = function (username, user, callback) {
-  users.update({username: username}, {$set: user}, {upsert: true}, function (err) {
-    callback(err);
-  });
+  users.update({username: username}, {$set: user}, {upsert: true},
+      function (err) {
+        callback(err);
+      });
 };
 
 /**
@@ -82,9 +83,10 @@ module.exports.updateEvent = function (id, event, callback) {
  * @param callback response
  */
 module.exports.updateCategory = function (id, category, callback) {
-  categories.update({_id: id}, {$set: category}, {upsert: true}, function (err) {
-    callback(err);
-  });
+  categories.update({_id: id}, {$set: category}, {upsert: true},
+      function (err) {
+        callback(err);
+      });
 };
 
 // Getter
