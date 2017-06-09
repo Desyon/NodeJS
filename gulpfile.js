@@ -6,9 +6,9 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const less = require('gulp-less');
-const cssmin = require('gulp-cssmin');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
+const cssmin = require('gulp-cssmin');
 const tplCache = require('gulp-angular-templatecache');
 const inject = require('gulp-inject');
 const ngConst = require('gulp-ng-constant');
@@ -112,7 +112,10 @@ function compileCSS() {
 function uglifyClientJS(ret) {
   return pump([
         gulp.src(files.clientSrc),
-        babel({presets: ['es2015']}),
+        babel({
+          presets: ['es2015'],
+          plugins: ['angularjs-annotate'],
+        }),
         uglify(),
         gulp.dest(clientTarget),
       ], ret
@@ -130,12 +133,27 @@ function compileTemplates() {
 }
 
 function configureIndex() {
-  let injectFiles = gulp.src(['./**/*.js', './assets/**/*.css'],
+  let angularMain = gulp.src(['./assets/scripts/angular.min.js'],
       {read: false, cwd: path.join(__dirname, clientTarget)});
+
+  let frameworkFiles = gulp.src(['./assets/scripts/!(angular.min)*.js'],
+      {read: false, cwd: path.join(__dirname, clientTarget)});
+
+  let appFiles = gulp.src(['./app/**/*.js', './assets/**/*.css'],
+      {read: false, cwd: path.join(__dirname, clientTarget)});
+
+  /*
+   * Using multiple and custom js injects to order script files correctly.
+   * The package gulp-angular-filesort does not work with JS ES6.
+   */
 
   return gulp
   .src(files.clientIndex)
-  .pipe(inject(injectFiles, {addRootSlash: false, removeTags: true}))
+  .pipe(inject(angularMain,
+      {addRootSlash: false, removeTags: true, name: 'ngMain'}))
+  .pipe(inject(frameworkFiles,
+      {addRootSlash: false, removeTags: true, name: 'framework'}))
+  .pipe(inject(appFiles, {addRootSlash: false, removeTags: true}))
   .pipe(gulp.dest(clientTarget));
 }
 

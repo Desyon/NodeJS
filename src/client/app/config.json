@@ -1,3 +1,4 @@
 {
+  "ENABLE_DEBUG": true,
   "REST_API_ENDPOINT": "http://localhost:3000"
 }

@@ -1,9 +1,26 @@
 /* Custom color palette */
-@color-coffee:    #C0FFEE;
-@color-black:     #000000;
+@color-coffee:         #c0ffee;
+@highlight-color:      #f0ad4e;
 
 // TODO: add some fancy custom colors
 
 /* Other definitions */
+
+@body-bg:    lighten(@color-coffee, 30%);
+
+// Changes to navigation bar. Turned black and some adaptions for effects and readability.
+@navbar-default-bg:                   @gray-base;
+@navbar-default-link-color:           @gray-lighter;
+@navbar-default-brand-color:          darken(@highlight-color, 12%);
+
+@navbar-default-link-hover-bg:        lighten(@navbar-default-bg, 15%);
+@navbar-default-brand-hover-bg:       @navbar-default-bg;
+
+@navbar-default-link-hover-color:     lighten(@navbar-default-link-color, 15%);
+@navbar-default-brand-hover-color:    @navbar-default-brand-color;
+
+@navbar-default-link-active-bg:       lighten(@navbar-default-link-color, 4%);
+@navbar-default-link-active-color:    @highlight-color;
+
 
 // TODO: add some overrides. Mainly colors I guess

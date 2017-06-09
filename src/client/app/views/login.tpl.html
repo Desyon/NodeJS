@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="row">Login</h1>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div ng-controller="LoginController">
+        <form novalidate>
+          Username:<br>
+          <input type="text" required ng-model="user.username" value='John'><br>
+          Password:<br>
+          <input type="password" required ng-model="user.password" value='Doe'>
+          <br>
+          <br>
+          <button class="btn btn-default" ng-click="loginAs()">Login</button>
+        </form>
+        <p>form = {{user}}</p>
+        <p>master = {{master}}</p>
+      </div>
+    </div>
+  </div>
+</div>
