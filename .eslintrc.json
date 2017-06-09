@@ -5,9 +5,13 @@
   },
   "root": true,
   "rules": {
-    "linebreak-style": "off",
     "space-before-function-paren": "off",
+    "require-jsdoc": "off",
     "valid-jsdoc": "off",
+    "linebreak-style": [
+      "warn",
+      "unix"
+    ],
     "new-cap": [
       "warn",
       {

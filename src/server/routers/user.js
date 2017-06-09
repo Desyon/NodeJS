@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Created by Desyon on 06.05.2017.
  */
@@ -22,6 +23,7 @@ const router = express.Router();
  */
 router.post('/login', bodyParser, function (req, res) {
   winston.debug('Login requested.');
+  winston.debug(req);
   let error;
 
   // content type validation

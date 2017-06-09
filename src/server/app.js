@@ -1,8 +1,10 @@
+'use strict';
 /**
  * Created by Desyon on 07.04.2017.
  */
 
 const express = require('express');
+const cors = require('cors');
 const winston = require('./util/winston');
 
 const rootRouter = require('./routers/root');
@@ -13,7 +15,9 @@ const categoryRouter = require('./routers/category');
 // listening port
 const httpPort = 3000;
 
-app = express();
+const app = express();
+
+app.use('*', cors());
 
 // set up routers/services
 app.use('/', rootRouter);
