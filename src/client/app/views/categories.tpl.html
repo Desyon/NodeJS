@@ -3,7 +3,7 @@
     <h2>Categories</h2>
   </div>
   <div class="table-responsive row">
-    <table class="table" ng-init="getAllCategories()">
+    <table ng-show="allCategories.length!==0" class="table" ng-init="getAllCategories()">
       <thead>
       <tr>
         <th>Name</th>
