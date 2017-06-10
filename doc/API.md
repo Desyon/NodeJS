@@ -7,6 +7,15 @@ which fields are mandatory. The two routes for maintenance are not documented.
 
 ### Login
 **POST** ``/user/login``
+
+#### Header:
+````json
+{
+  "Content-Type": "application/json"
+}
+````
+
+#### Body:
 ````json
 {
   "username": "someuser",
@@ -22,6 +31,15 @@ which fields are mandatory. The two routes for maintenance are not documented.
 
 ### Sign up
 **POST** ``/user/create``
+
+#### Header:
+````json
+{
+  "Content-Type": "application/json"
+}
+````
+
+#### Body:
 ````json
 {
   "username": "someuser",
@@ -40,7 +58,7 @@ which fields are mandatory. The two routes for maintenance are not documented.
 
 
 ### Update
-**PUT** ``/user/:username``
+**PUT** ``/user``
    
 #### Header:
 ````json
@@ -49,7 +67,6 @@ which fields are mandatory. The two routes for maintenance are not documented.
     "authorization": "jwt"
 }
 ````
-Note: JWT user has to match the username specified in the URL.
 
 #### Body:
 ````json
@@ -62,17 +79,36 @@ Note: JWT user has to match the username specified in the URL.
 ````
 *No content in return value*
 
+### Get User
+**GET** ``/user``
+
+### Header:
+````json
+{
+  "authorization": "jwt"
+}
+````
+*Return Value:*
+````json
+{
+  "name": "John Doe",
+  "dob": "20.05.1985",
+  "email": "john@doe.com",
+  "password": "password",
+  "_id": 2
+}
+````
+
 ### Delete
-**DELETE** ``/user/username``
+**DELETE** ``/user``
 
 #### Header:
 ````json
 {
-    "content-type": "application/json",
-    "authorization": "jwt"
+  "content-type": "application/json",
+  "authorization": "jwt"
 }
 ````
-Note: JWT user has to match the username specified in the URL.
 
 ## Event
 
