@@ -46,8 +46,11 @@ angular.module('ngCalendarApp.controllers')
 
         $http.delete(REST_API_ENDPOINT + '/user/')
         .then(function (response) {
-              delete $localStorage.token;
+              delete $localStorage.currentToken;
               delete $rootScope.username;
+
+              $localStorage.$reset();
+
               $rootScope.isLoggedIn = false;
               $log.debug('UserService - User deleted');
               deferred.resolve(response.data);

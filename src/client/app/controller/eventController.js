@@ -42,7 +42,7 @@ angular.module('ngCalendarApp.controllers')
         $http.post(REST_API_ENDPOINT + '/event/create', data)
         .then(function (response) {
               deferred.resolve(response.data);
-
+              $scope.getAllEvents();
               $log.debug('EventService - Event created');
             },
             function (response) {
@@ -82,6 +82,7 @@ angular.module('ngCalendarApp.controllers')
         $http.put(REST_API_ENDPOINT + '/event/' + id, data)
         .then(function (response) {
               deferred.resolve(response.data);
+              $scope.getAllEvents();
               $log.debug('EventService - Event updated');
             },
             function (response) {
@@ -104,6 +105,7 @@ angular.module('ngCalendarApp.controllers')
         $http.delete(REST_API_ENDPOINT + '/event/' + id)
         .then(function (response) {
               deferred.resolve(response.data);
+              $scope.getAllEvents();
               $log.debug('EventService - Event deleted');
             },
             function (response) {

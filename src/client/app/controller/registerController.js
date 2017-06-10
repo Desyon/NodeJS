@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('RegisterController',
     function registerCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage, $rootScope) {
+        REST_API_ENDPOINT, $localStorage, $rootScope, $location) {
       $log.debug('Initializing RegisterController');
 
       $scope.register = function () {
@@ -50,10 +50,12 @@ angular.module('ngCalendarApp.controllers')
               delete $localStorage.currentToken;
               delete $rootScope.username;
               delete $rootScope.isLoggedIn;
+              $localStorage.$reset();
               $localStorage.currentToken = response.data.token;
               $rootScope.username = username;
               $rootScope.isLoggedIn = true;
               deferred.resolve(response.data);
+              $location.path( '/events' );
               $log.debug('RegisterService - User created');
             },
 

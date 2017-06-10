@@ -14,7 +14,7 @@
                 <th>{{category.owner}}</th>
                 <th>{{category.description}}</th>
                 <th>
-                    <button class="btn btn-default" ng-click="deleteCategory(category); getAllCategories()">Delete</button>
+                    <button class="btn btn-default" ng-click="deleteCategory(category)">Delete</button>
                 </th>
             </tr>
         </table>
@@ -47,6 +47,6 @@
             </div>
         </div>
         <br/>
-        <button ng-disabled="" class="btn btn-default" ng-click="createCategory(); getAllCategories()">Register</button>
+        <button ng-disabled="" class="btn btn-default" ng-click="createCategory()">Register</button>
     </div>
 </form>

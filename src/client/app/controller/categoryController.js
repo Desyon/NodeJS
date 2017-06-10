@@ -26,7 +26,7 @@ angular.module('ngCalendarApp.controllers')
         $http.post(REST_API_ENDPOINT + '/category/create', data)
         .then(function (response) {
               deferred.resolve(response.data);
-
+              $scope.getAllCategories();
               $log.debug('CategoryService - Category created');
             },
             function (response) {
@@ -55,6 +55,7 @@ angular.module('ngCalendarApp.controllers')
 
         $http.put(REST_API_ENDPOINT + '/category/' + id, data)
         .then(function (response) {
+              $scope.getAllCategories();
               deferred.resolve(response.data);
               $log.debug('CategoryService - Category updated');
             },
@@ -73,6 +74,7 @@ angular.module('ngCalendarApp.controllers')
 
         $http.delete(REST_API_ENDPOINT + '/category/' + id)
         .then(function (response) {
+              $scope.getAllCategories();
               deferred.resolve(response.data);
               $log.debug('CategoryService - Category deleted');
             },

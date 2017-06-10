@@ -19,7 +19,7 @@
                 <th>{{event.notes}}</th>
                 <th>{{event.allday}}</th>
                 <th>
-                    <button class="btn btn-default" ng-click="deleteEvent(event); getAllEvents()">Delete</button>
+                    <button class="btn btn-default" ng-click="deleteEvent(event)">Delete</button>
                 </th>
             </tr>
         </table>
@@ -80,6 +80,6 @@
             </div>
         </div>
         <br/>
-        <button ng-disabled="" class="btn btn-default" ng-click="createEvent(); getAllEvents()">Register</button>
+        <button ng-disabled="" class="btn btn-default" ng-click="createEvent()">Register</button>
     </div>
 </form>
