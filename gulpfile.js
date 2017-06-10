@@ -204,3 +204,10 @@ gulp.task('build',
         configureIndex
     )
 );
+
+gulp.task('dist',
+  gulp.series(
+      'lint',
+      'build'
+  )
+);

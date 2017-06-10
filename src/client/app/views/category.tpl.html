@@ -1,52 +1,75 @@
-<div>
-    <ul ng-init="getAllCategories()">
-        <table style="width:100%">
-            <tr>
-                <th>Name</th>
-                <th>Color Code</th>
-                <th>Owner</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-            <tr ng-repeat="category in allCategories" ng-style="{'background-color': category.color}">
-                <th>{{category.name}}</th>
-                <th>{{category.color}}</th>
-                <th>{{category.owner}}</th>
-                <th>{{category.description}}</th>
-                <th>
-                    <button class="btn btn-default" ng-click="deleteCategory(category); getAllCategories()">Delete</button>
-                </th>
-            </tr>
-        </table>
-    </ul>
+<div class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>Categories</h2>
+  </div>
+  <div class="table-responsive row">
+    <table class="table" ng-init="getAllCategories()">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Color Code</th>
+        <th>Description</th>
+        <!-- Empty headers to have a border also over the glyphicons -->
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in allCategories" ng-style="{'background-color': category.color}">
+        <td>{{category.name}}</td>
+        <td>{{category.color}}</td>
+        <td>{{category.owner}}</td>
+        <td>{{category.description}}</td>
+        <td>
+          <i class="glyphicon glyphicon-trash"
+             ng-click="deleteCategory(category); getAllCategories()"></i>
+        </td>
+        <td>
+          <i class="glyphicon glyphicon-pencil" ng-click=""></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <button class="btn btn-default col-md-3"><i class="glyphicon glyphicon-plus"></i></button>
+  </div>
 </div>
 
-<form name="categoryForm">
-    <div class="container-fluid">
-        <div class="row">
-            <h1>
-                Categories
-            </h1>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="name">Name</label>
-                <input class="form-control" type="text" id="name" placeholder="Enter the name for your category"
-                       ng-model="category.name" required/>
-            </div>
-            <div class="col-md-6">
-                <label for="color">Color</label>
-                <input class="form-control" type="color" id="color" value="#C0FFEE"
-                       ng-model="category.color"/>
-            </div>
 
-            <div class="col-md-6">
-                <label for="description">Description</label>
-                <input class="form-control" type="text" id="description" placeholder="Category description"
-                       ng-model="category.description"/>
-            </div>
-        </div>
-        <br/>
-        <button ng-disabled="" class="btn btn-default" ng-click="createCategory(); getAllCategories()">Register</button>
+<div class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>
+      &lt;Title&gt;
+    </h2>
+  </div>
+  <br/>
+
+  <form name="categoryForm">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="name">Name</label>
+        <input class="form-control" type="text" id="name"
+               placeholder="Enter the name for your category"
+               ng-model="category.name" required/>
+      </div>
+      <div class="col-md-6">
+        <label for="color">Color</label>
+        <input class="form-control" type="color" id="color" value="#C0FFEE"
+               ng-model="category.color"/>
+      </div>
+
+      <div class="col-md-6">
+        <label for="description">Description</label>
+        <input class="form-control" type="text" id="description" placeholder="Category description"
+               ng-model="category.description"/>
+      </div>
     </div>
-</form>
+    <br/>
+
+    <button ng-disabled="categoryForm.$invalid" class="btn btn-default" ng-click="createCategory(); getAllCategories()">
+      Register
+    </button>
+  </form>
+</div>

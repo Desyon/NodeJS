@@ -1,17 +1,17 @@
-<div class="container-fluid">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="row">
-      <h2>Register</h2>
+<div class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>Register</h2>
 
-    </div>
-    <br/>
-    <form name="registerForm">
+  </div>
+  <br/>
+  <form name="registerForm">
     <div class="row">
       <div class="col-md-6">
         <label for="username">Username</label>
         <input class="form-control" type="text" id="username" placeholder="Enter your username"
                ng-model="user.username" required/>
       </div>
+      <br/>
       <div class="col-md-6">
         <label for="name">Name</label>
         <input class="form-control" type="text" id="name" placeholder="Enter your name"
@@ -19,13 +19,14 @@
       </div>
     </div>
     <br/>
-    
+
     <div class="row">
       <div class="col-md-6">
         <label for="email">E-Mail</label>
         <input class="form-control" type="email" id="email" placeholder="Enter your e-mail address"
                ng-model="user.email"/>
       </div>
+      <br/>
       <div class="col-md-6">
         <label for="dob">Date of Birth</label>
         <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
@@ -40,6 +41,7 @@
         <input class="form-control" type="password" id="password" placeholder="Enter your password"
                ng-model="user.password" required/>
       </div>
+      <br/>
       <div class="col-md-6">
         <label for="confirmPW">Confirm your password</label>
         <input class="form-control" type="password" id="confirmPW"
@@ -47,8 +49,11 @@
       </div>
     </div>
     <br/>
-    </form>
 
-    <button ng-disabled="registerForm.$invalid" class="btn btn-default" ng-click="register()">Register</button>
-  </div>
+
+    <button ng-disabled="registerForm.$invalid" class="btn btn-default" ng-click="register()">
+      Register
+    </button>
+  </form>
 </div>
+
