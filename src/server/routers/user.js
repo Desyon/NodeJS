@@ -250,14 +250,30 @@ router.delete('/', bodyParser, function (req, res) {
       return res.status(401).send(error);
     }
 
-    winston.debug('User deletion requested for user \'' + decoded.user + '\'.');
+    let user = decoded.user;
 
-    db.deleteUser(decoded.user, function (delErr) {
+    winston.debug('User deletion requested for user \'' + user + '\'.');
+
+    db.deleteAllUserEvents(user, function (delErr) {
+      if (delErr) {
+        winston.debug('User deletion failed with database error');
+        return res.status(500).send(delErr);
+      }
+    });
+
+    db.deleteAllUserCategories(user, function (delErr) {
+      if (delErr) {
+        winston.debug('User deletion failed with database error');
+        return res.status(500).send(delErr);
+      }
+    });
+
+    db.deleteUser(user, function (delErr) {
       if (delErr) {
         winston.debug('User deletion failed with database error.');
         return res.status(500).send(delErr);
       } else {
-        winston.debug('User \'' + decoded.user + '\'successfully deleted.');
+        winston.debug('User \'' + user + '\'successfully deleted.');
         let response = {msg: 'User deleted'};
         return res.status(200).send(response);
       }

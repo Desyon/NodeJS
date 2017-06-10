@@ -1,68 +1,65 @@
 <div class="container-fluid">
-  <div class="row">
-    <h3>Account Information</h3>
-  </div>
-  <div class="col-md-6">
+  <div class="col-md-10 col-md-offset-1">
     <div class="row">
-      <div class="col-md-12">
-        <label for="username">Username</label>
-        <input class="form-control" type="text" id="username" ng-model="user.username" value="$rootScope.username" readonly>
-      </div>
+      <h2>Account Information</h2>
     </div>
     <br/>
 
-    <form name="nameForm">
-    <div class="row">
-      <div class="col-md-8">
-        <label for="name">Name</label>
-        <input class="form-control" type="text" id="name" placeholder="Enter your name"
-               ng-model="user.name" required>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="username">Username</label>
+          <input class="form-control" type="text" id="username" ng-model="user.username" readonly>
+        </div>
       </div>
-    </div>
-    </form>
-    <br/>
-    <form name="dobForm">
-    <div class="row">
-      <div class="col-md-8">
-        <label for="dob">Date of Birth</label>
-        <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
-               ng-model="user.dob" required>
-      </div>
-    </div>
-    </form>
-    <br/>
+      <br/>
 
-    <form name="mailForm">
-    <div class="row">
-      <div class="col-md-8">
-        <label for="email">E-Mail</label>
-        <input class="form-control" type="email" id="email" placeholder="Enter your email"
-               ng-model="user.email" required>
+      <div class="row">
+        <div class="col-md-8">
+          <label for="name">Name</label>
+          <input class="form-control" type="text" id="name" placeholder="Enter your name"
+                 ng-model="user.username">
+        </div>
       </div>
+      <br/>
+
+      <div class="row">
+        <div class="col-md-8">
+          <label for="dob">Date of Birth</label>
+          <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
+                 ng-model="user.dob">
+        </div>
+      </div>
+      <br/>
+
+      <div class="row">
+        <div class="col-md-8">
+          <label for="email">E-Mail</label>
+          <input class="form-control" type="email" id="email" placeholder="Enter your email"
+                 ng-model="user.email">
+        </div>
+      </div>
+      <br/>
+
+      <div class="row">
+        <div class="col-md-5">
+          <label for="password">Password</label>
+          <input class="form-control" type="password" id="password"
+                 placeholder="Enter to change your password"
+                 ng-model="user.password">
+        </div>
+        <div class="col-md-5 col-md-offset-2">
+          <label for="confirmPW">Confirm Password</label>
+          <input class="form-control" type="password" id="confirmPW"
+                 placeholder="Enter your password. Again..."
+                 ng-model="user.confirmPW">
+        </div>
+      </div>
+      <br/>
+      
+      <button class="btn btn-default col-md-4" ng-click="updateUser()">Apply</button>
+      <button class="btn btn-default col-md-4 col-md-offset-4" ng-click="deleteUser()">Delete
+      </button>
     </div>
-    </form>
-    <br/>
-
-    <form name="passwordForm">
-    <div class="row">
-      <div class="col-md-5">
-        <label for="password">Password</label>
-        <input class="form-control" type="password" id="password"
-               placeholder="Enter to change your password"
-               ng-model="user.password" required>
-      </div>
-      <div class="col-md-5 col-md-offset-2">
-        <label for="confirmPW">Confirm Password</label>
-        <input class="form-control" type="password" id="confirmPW"
-               placeholder="Enter your password. Again..."
-               ng-model="user.confirmPW" required>
-      </div>
-    </div>
-    </form>
-    <br/>
-
-    <button ng-disabled="" class="btn btn-default col-md-4" ng-click="updateUser()">Apply</button>
-    <button class="btn btn-default col-md-4 col-md-offset-4" ng-click="deleteUser()">Delete</button>
-
   </div>
 </div>

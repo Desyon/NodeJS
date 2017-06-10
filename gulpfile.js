@@ -45,7 +45,7 @@ const files = {
     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
     'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
     'node_modules/@uirouter/angularjs/release/angular-ui-router.js',
-      'node_modules/ngstorage/ngStorage.min.js',
+    'node_modules/ngstorage/ngStorage.min.js',
   ],
   vendorAssets: [
     'node_modules/bootstrap/fonts/*',
@@ -53,7 +53,7 @@ const files = {
 };
 
 function clean() {
-  return del([targetDir]);
+  return del([serverTarget, clientTarget]);
 }
 
 // Linting
