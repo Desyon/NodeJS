@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('CategoryController',
     function categoryCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $rootScope, $location) {
+        REST_API_ENDPOINT, $rootScope, $location, $localStorage) {
       $log.debug('Initializing CategoryController');
 
       $scope.createCategory = function () {
