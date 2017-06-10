@@ -1,37 +1,42 @@
-<div ng-init="bCategory=$rootScope.category" class="col-md-10 col-md-offset-1">
+<div ng-init="bCategory=$rootScope.category" class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
   <div class="row">
     <h2>
       &lt;Title&gt;
     </h2>
+    <hr/>
   </div>
-  <br/>
 
-  <input ng-show="false" ng-model="category.id" ng-init="$scope.category.id=bCategory._id"></input>
+  <input ng-show="false" ng-model="category.id" ng-init="$scope.category.id=bCategory._id">
 
   <form name="categoryForm">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-5 col-sm-5 col-xs-12">
         <label for="name">Name</label>
-        <input class="form-control" type="text" id="name"
-               placeholder="Enter the name for your category"
+        <input class="form-control" type="text" id="name" placeholder="Category name"
                ng-model="category.name" ng-init="$scope.category.name = bCategory.name" required/>
+        <br/>
       </div>
-      <div class="col-md-6">
+
+      <div class="col-md-5 col-md-offset-1 col-sm-5 col-sm-offset-1 col-xs-12">
         <label for="color">Color</label>
         <input class="form-control" type="color" id="color" value="#C0FFEE"
                ng-model="category.color" ng-init="$scope.category.color = bCategory.color"/>
-      </div>
-
-      <div class="col-md-6">
-        <label for="description">Description</label>
-        <input class="form-control" type="text" id="description" placeholder="Category description"
-               ng-model="category.description" ng-init="$scope.category.description = bCategory.description"/>
+        <br/>
       </div>
     </div>
-    <br/>
 
-    <button ng-disabled="categoryForm.$invalid" class="btn btn-default" ng-click="createOrUpdate()">
-      Submit
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <label for="description">Description</label>
+        <textarea class="form-control" rows="4" id="description"
+                  placeholder="Category description" ng-model="category.description"
+                  ng-init="$$scope.category.description = bCategory.description"></textarea>
+        <br/>
+      </div>
+    </div>
+
+    <button ng-disabled="categoryForm.$invalid" class="btn btn-default col-md-2 col-sm-4 col-xs-12"
+            ng-click="createOrUpdate()">Submit
     </button>
   </form>
 </div>

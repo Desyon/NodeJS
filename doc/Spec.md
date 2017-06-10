@@ -27,7 +27,6 @@ Attribute | Data Type | Description | Mandatory
 title | String | u know ... | x
 start | Date | u know ... | x
 end | Date | u know ... | x
-allday | bool | u know... automatically added in frontend | x
 category | Category | u know... | x
 owner | User | u know...; automatically added | x
 location | String | u know ... (Google Maps?) | 

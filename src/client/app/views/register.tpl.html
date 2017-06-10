@@ -1,59 +1,61 @@
-<div class="col-md-10 col-md-offset-1">
+<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
   <div class="row">
     <h2>Register</h2>
-
+    <hr/>
   </div>
-  <br/>
-  <form name="registerForm">
-    <div class="row">
-      <div class="col-md-6">
-        <label for="username">Username</label>
-        <input class="form-control" type="text" id="username" placeholder="Enter your username"
-               ng-model="user.username" required/>
-      </div>
-      <br/>
-      <div class="col-md-6">
-        <label for="name">Name</label>
-        <input class="form-control" type="text" id="name" placeholder="Enter your name"
-               ng-model="user.name"/>
-      </div>
-    </div>
-    <br/>
 
-    <div class="row">
-      <div class="col-md-6">
-        <label for="email">E-Mail</label>
-        <input class="form-control" type="email" id="email" placeholder="Enter your e-mail address"
-               ng-model="user.email"/>
-      </div>
-      <br/>
-      <div class="col-md-6">
-        <label for="dob">Date of Birth</label>
-        <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
-               ng-model="user.dob"/>
-      </div>
-    </div>
-    <br/>
+  <div class="row">
+    <form name="registerForm">
+      <div class="col-md-5 col-sm-5 col-xs-12">
+        <div class="row">
+          <label for="username">Username</label>
+          <input class="form-control" type="text" id="username" placeholder="Enter your username"
+                 ng-model="user.username" required/>
+          <br/>
+        </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <label for="password">Password</label>
-        <input class="form-control" type="password" id="password" placeholder="Enter your password"
-               ng-model="user.password" required/>
-      </div>
-      <br/>
-      <div class="col-md-6">
-        <label for="confirmPW">Confirm your password</label>
-        <input class="form-control" type="password" id="confirmPW"
-               placeholder="Enter your password. Again..." ng-model="user.confirmPW" required/>
-      </div>
-    </div>
-    <br/>
+        <div class="row">
+          <label for="name">Name</label>
+          <input class="form-control" type="text" id="name" placeholder="Enter your name"
+                 ng-model="user.name"/>
+          <br/>
+        </div>
 
+        <div class="row">
+          <label for="dob">Date of Birth</label>
+          <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
+                 ng-model="user.dob"/>
+          <br/>
+        </div>
+      </div>
 
-    <button ng-disabled="registerForm.$invalid" class="btn btn-default" ng-click="register()">
-      Register
-    </button>
-  </form>
+      <div class="col-md-5 col-md-offset-2 col-sm-5 col-sm-offset-2 col-xs-12">
+        <div class="row">
+          <label for="email">E-Mail</label>
+          <input class="form-control" type="email" id="email"
+                 placeholder="Enter your e-mail address" ng-model="user.email"/>
+          <br/>
+        </div>
+
+        <div class="row">
+          <label for="password">Password</label>
+          <input class="form-control" type="password" id="password"
+                 placeholder="Enter your password" ng-model="user.password" required/>
+          <br/>
+        </div>
+
+        <div class="row">
+          <label for="confirmPW">Confirm your password</label>
+          <input class="form-control" type="password" id="confirmPW"
+                 placeholder="Enter your password. Again..." ng-model="user.confirmPW" required/>
+          <br/>
+        </div>
+      </div>
+
+      <button ng-disabled="registerForm.$invalid"
+              class="btn btn-default col-md-2 col-sm-2 col-xs-12" ng-click="register()">Register
+      </button>
+    </form>
+  </div>
 </div>
 

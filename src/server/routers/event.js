@@ -57,15 +57,14 @@ router.post('/create', bodyParser, function (req, res) {
     event.title = req.body.title;
     event.start = req.body.start;
     event.end = req.body.end;
-    event.allday = req.body.allday;
     event.category = req.body.category;
     event.owner = decoded.user;
     event.location = req.body.location;
     event.notes = req.body.notes;
 
     if (undefined === event.title || undefined === event.start ||
-        undefined === event.end || undefined === event.allday ||
-        undefined === event.category || undefined === event.owner) {
+        undefined === event.end || undefined === event.category ||
+        undefined === event.owner) {
       winston.debug('Event creation failed with missing mandatory properties.');
       error.errmsg = 'Mandatory fields missing. Event creation rejected';
       return res.status(422).send(error);
@@ -127,7 +126,6 @@ router.put('/:id', bodyParser, function (req, res) {
       event.title = req.body.title;
       event.start = req.body.start;
       event.end = req.body.end;
-      event.allday = req.body.allday;
       event.category = req.body.category;
       event.location = req.body.location;
       event.notes = req.body.notes;

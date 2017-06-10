@@ -1,12 +1,15 @@
 /* Custom color palette */
-@color-coffee: #c0ffee;
-@highlight-color: #f0ad4e;
+@coffee-color:        #c0ffee;
+@highlight-color:     #f0ad4e;
+
+@danger-btn-color:    #be0000;
+@danger-text-color:   #a50000;
 
 /* Media queries */
 @smartphone: ~"only screen and (max-width: 479px)";
 
 /* Other definitions */
-@body-bg:     lighten(@color-coffee, 30%);
+@body-bg:     lighten(@coffee-color, 30%);
 
 // Changes to navigation bar. Turned black and some adaptions for effects and readability.
 @navbar-default-bg:                 @gray-base;
@@ -23,8 +26,15 @@
 @navbar-default-link-active-color:  @highlight-color;
 
 // Changes to buttons for nicer accents
-@btn-default-bg:         @highlight-color;
-@btn-default-border:     darken(@highlight-color, 7%);
+@btn-default-bg:          @highlight-color;
+@btn-default-border:      darken(@highlight-color, 7%);
+
+@btn-danger-bg:           @danger-btn-color;
+@btn-danger-border:       darken(@danger-btn-color, 7%);
+
+.text-danger {
+  color: @danger-text-color;
+}
 
 // Custom class for responsive design + move content below navbar
 .content-container {
