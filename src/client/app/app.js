@@ -1,5 +1,5 @@
 /**
- * Created by Desyon on 06.06.17.
+ * Created by Desyon, Eric on 06.06.17.
  */
 
 angular.module('ngCalendarApp', [
@@ -65,17 +65,20 @@ angular.module('ngCalendarApp', [
     })
 
 .run(
-    function ($rootScope, $location, $http, $localStorage) {
+    function ($rootScope, $location, $http, $localStorage, $log) {
+      $log.debug('Been run');
       $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $rootScope.isLoggedIn = false;
     }
 )
 
 .controller('AppController',
-    function ($scope, $log, $localStorage, $rootScope) {
+    function ($scope, $log, $localStorage, $rootScope, $http, $location) {
       $log.debug('CalendarApp initialized');
+      $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $log.debug($localStorage.currentToken);
       $log.debug($localStorage.username);
+      $rootScope.isLoggedIn = false;
       if ($localStorage.currentToken !== undefined) {
         $log.debug('Found Token -> Logged In');
         $rootScope.isLoggedIn = true;
@@ -83,9 +86,13 @@ angular.module('ngCalendarApp', [
 
       $scope.logout = function () {
         delete $localStorage.username;
-        delete $localStorage.token;
+        delete $localStorage.currentToken;
+        $localStorage.$reset();
+        $localStorage.username;
+        $localStorage.currentToken;
         $rootScope.isLoggedIn = false;
         $log.debug('AppService - User logged out');
+        $location.path( '/login' );
       };
     }
 );

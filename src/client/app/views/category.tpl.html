@@ -23,7 +23,7 @@
         <td>{{category.description}}</td>
         <td>
           <i class="glyphicon glyphicon-trash"
-             ng-click="deleteCategory(category); getAllCategories()"></i>
+             ng-click="deleteCategory(category)"></i>
         </td>
         <td>
           <i class="glyphicon glyphicon-pencil" ng-click=""></i>
@@ -68,7 +68,7 @@
     </div>
     <br/>
 
-    <button ng-disabled="categoryForm.$invalid" class="btn btn-default" ng-click="createCategory(); getAllCategories()">
+    <button ng-disabled="categoryForm.$invalid" class="btn btn-default" ng-click="createCategory()">
       Register
     </button>
   </form>

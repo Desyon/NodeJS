@@ -26,11 +26,15 @@ angular.module('ngCalendarApp.controllers')
               delete $localStorage.currentToken;
               delete $rootScope.username;
               delete $rootScope.isLoggedIn;
+
+              $localStorage.$reset();
+
               $localStorage.currentToken = response.data.token;
               $rootScope.username = username;
               $rootScope.isLoggedIn = true;
               $log.debug($localStorage.currentToken);
               $log.debug('LoginService - Logged in');
+              $location.path( '/events' );
               deferred.resolve(response.data);
             },
 
