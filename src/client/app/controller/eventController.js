@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('EventController',
     function eventCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $rootScope) {
+        REST_API_ENDPOINT, $rootScope, $localStorage) {
       $log.debug('Initializing EventController');
 
       $scope.createEvent = function () {
@@ -16,11 +16,15 @@ angular.module('ngCalendarApp.controllers')
         let title = $scope.event.title;
         let start = $scope.event.start;
         let end = $scope.event.end;
-        let allday = $scope.event.allday;
         let category = $scope.event.category;
         let owner = $rootScope.username;
         let location = $scope.event.location;
         let notes = $scope.event.notes;
+
+        let allday = false;
+        if ($scope.event.allday !== undefined) {
+          allday = $scope.event.allday;
+        }
 
         let data = {
           'title': title,
@@ -72,7 +76,7 @@ angular.module('ngCalendarApp.controllers')
           'category': category,
           'location': location,
           'notes': notes,
-            'owner': owner,
+          'owner': owner,
         };
 
         $http.put(REST_API_ENDPOINT + '/event/' + id, data)
@@ -87,11 +91,15 @@ angular.module('ngCalendarApp.controllers')
         return deferred.promise;
       };
 
-      $scope.deleteEvent = function () {
+      $scope.deleteEvent = function (event) {
         let deferred = $q.defer();
 
         $log.debug('EventService - Sending Delete Request');
-        let id = $scope.event.id;
+
+        $log.debug($scope);
+        $log.debug(event);
+
+        let id = event._id;
 
         $http.delete(REST_API_ENDPOINT + '/event/' + id)
         .then(function (response) {

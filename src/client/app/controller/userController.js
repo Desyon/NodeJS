@@ -3,16 +3,16 @@
  */
 
 angular.module('ngCalendarApp.controllers')
-    .controller('UserController',
-        function userCtrl($scope, $log, $q, $http,
-                          REST_API_ENDPOINT, $localStorage, $rootScope) {
-            $log.debug('Initializing UserController');
+.controller('UserController',
+    function userCtrl($scope, $log, $q, $http,
+        REST_API_ENDPOINT, $localStorage, $rootScope) {
+      $log.debug('Initializing UserController');
 
       $scope.updateUser = function () {
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Put Request');
-        let username = $localStorage.username;
+        let username = $rootScope.username;
         let password = $scope.user.password;
         let email = $scope.user.email;
         let dob = $scope.user.dob;
@@ -24,6 +24,8 @@ angular.module('ngCalendarApp.controllers')
           'dob': dob,
           'password': password,
         };
+
+        $log.debug(username);
 
         $http.put(REST_API_ENDPOINT + '/user/' + username, data)
         .then(function (response) {
@@ -41,9 +43,8 @@ angular.module('ngCalendarApp.controllers')
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Delete Request');
-        let username = $localStorage.username;
 
-        $http.delete(REST_API_ENDPOINT + '/user/' + username)
+        $http.delete(REST_API_ENDPOINT + '/user/')
         .then(function (response) {
               delete $localStorage.token;
               delete $rootScope.username;

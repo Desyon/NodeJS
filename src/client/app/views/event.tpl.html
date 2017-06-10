@@ -10,16 +10,18 @@
                     <th>Notes</th>
                     <th>Allday</th>
                 </tr>
-            <tr ng-repeat="x in allEvents" ng-style="{'background-color':'teal'}">
-                <th>{{x.title}}</th>
-                <th>{{x.start}}</th>
-                <th>{{x.end}}</th>
-                <th>{{x.category}}</th>
-                <th>{{x.location}}</th>
-                <th>{{x.notes}}</th>
-                <th>{{x.allday}}</th>
-                <th ng-show="false">{{x.id}}</th>
-        </tr>
+            <tr ng-repeat="event in allEvents" ng-style="{'background-color': '#c0ffee'}">
+                <th>{{event.title}}</th>
+                <th>{{event.start}}</th>
+                <th>{{event.end}}</th>
+                <th>{{event.category}}</th>
+                <th>{{event.location}}</th>
+                <th>{{event.notes}}</th>
+                <th>{{event.allday}}</th>
+                <th>
+                    <button class="btn btn-default" ng-click="deleteEvent(event); getAllEvents()">Delete</button>
+                </th>
+            </tr>
         </table>
     </ul>
 </div>
@@ -78,6 +80,6 @@
             </div>
         </div>
         <br/>
-        <button ng-disabled="" class="btn btn-default" ng-click="createEvent()">Register</button>
+        <button ng-disabled="" class="btn btn-default" ng-click="createEvent(); getAllEvents()">Register</button>
     </div>
 </form>

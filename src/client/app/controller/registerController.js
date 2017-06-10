@@ -47,9 +47,12 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/create', data)
         .then(function (response) {
+              delete $localStorage.currentToken;
+              delete $rootScope.username;
+              delete $rootScope.isLoggedIn;
               $localStorage.currentToken = response.data.token;
-                $rootScope.username = username;
-                $rootScope.isLoggedIn = true;
+              $rootScope.username = username;
+              $rootScope.isLoggedIn = true;
               deferred.resolve(response.data);
               $log.debug('RegisterService - User created');
             },
