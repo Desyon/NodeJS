@@ -3,9 +3,9 @@
  */
 
 angular.module('ngCalendarApp.controllers')
-.controller('UserController',
+.controller('CategoryController',
     function categoryCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage) {
+        REST_API_ENDPOINT, $rootScope) {
       $log.debug('Initializing CategoryController');
 
       $scope.createCategory = function () {
@@ -65,11 +65,11 @@ angular.module('ngCalendarApp.controllers')
         return deferred.promise;
       };
 
-      $scope.deleteCategory = function () {
+      $scope.deleteCategory = function (category) {
         let deferred = $q.defer();
+        let id = category._id;
 
         $log.debug('CategoryService - Sending Delete Request');
-        let id = $scope.category.id;
 
         $http.delete(REST_API_ENDPOINT + '/category/' + id)
         .then(function (response) {

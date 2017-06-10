@@ -4,8 +4,9 @@
       <h2 class="col-md-2 col-md-offset-5">Login</h2>
     </div>
     <br/>
-
+   
     <div class="col-md-6 col-md-offset-3">
+      <form name="loginForm">
       <div class="row">
         <div class="col-md-12">
           <label for="username">Username</label>
@@ -17,14 +18,14 @@
       <div class="row">
         <div class="col-md-12">
           <label for="password">Password</label>
-          <input class="form-control" type="password" id="password"
-                 placeholder="Enter your password"
+          <input class="form-control" type="password" id="password" placeholder="Enter your password"
                  ng-model="user.password">
         </div>
       </div>
       <br/>
-
-      <button class="btn btn-default col-md-12" ng-click="loginAs()">Login</button>
+      </form>
+      <button ng-disabled="loginForm.$invalid" class="btn btn-default col-md-12" ng-click="loginAs()">Login</button>
     </div>
+    
   </div>
 </div>

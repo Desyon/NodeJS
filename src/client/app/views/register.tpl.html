@@ -2,14 +2,15 @@
   <div class="col-md-10 col-md-offset-1">
     <div class="row">
       <h2>Register</h2>
+
     </div>
     <br/>
-
+    <form name="registerForm">
     <div class="row">
       <div class="col-md-6">
         <label for="username">Username</label>
         <input class="form-control" type="text" id="username" placeholder="Enter your username"
-               ng-model="user.username"/>
+               ng-model="user.username" required/>
       </div>
       <div class="col-md-6">
         <label for="name">Name</label>
@@ -18,7 +19,7 @@
       </div>
     </div>
     <br/>
-
+    
     <div class="row">
       <div class="col-md-6">
         <label for="email">E-Mail</label>
@@ -37,16 +38,17 @@
       <div class="col-md-6">
         <label for="password">Password</label>
         <input class="form-control" type="password" id="password" placeholder="Enter your password"
-               ng-model="user.password"/>
+               ng-model="user.password" required/>
       </div>
       <div class="col-md-6">
         <label for="confirmPW">Confirm your password</label>
         <input class="form-control" type="password" id="confirmPW"
-               placeholder="Enter your password. Again..." ng-model="user.confirmPW"/>
+               placeholder="Enter your password. Again..." ng-model="user.confirmPW" required/>
       </div>
     </div>
     <br/>
+    </form>
 
-    <button class="btn btn-default" ng-click="register()">Register</button>
+    <button ng-disabled="registerForm.$invalid" class="btn btn-default" ng-click="register()">Register</button>
   </div>
 </div>

@@ -123,3 +123,6 @@ typings/
 
 # databases
 *.db
+
+# build script
+build.sh
