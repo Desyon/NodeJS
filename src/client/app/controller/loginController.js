@@ -23,18 +23,18 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/login', data)
         .then(function (response) {
-              delete $localStorage.currentToken;
-              delete $rootScope.username;
-              delete $rootScope.isLoggedIn;
-
-              $localStorage.$reset();
+              $localStorage.currentToken = undefined;
+              $rootScope.username = undefined;
+              $rootScope.isLoggedIn = undefined;
 
               $localStorage.currentToken = response.data.token;
               $rootScope.username = username;
               $rootScope.isLoggedIn = true;
               $log.debug($localStorage.currentToken);
+              $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+              $http.defaults.headers.common.Username = $rootScope.username;
               $log.debug('LoginService - Logged in');
-              $location.path( '/events' );
+              $location.path('/events');
               deferred.resolve(response.data);
             },
 

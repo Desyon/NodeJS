@@ -1,0 +1,37 @@
+<div ng-init="bCategory=$rootScope.category" class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>
+      &lt;Title&gt;
+    </h2>
+  </div>
+  <br/>
+
+  <input ng-show="false" ng-model="category.id" ng-init="$scope.category.id=bCategory._id"></input>
+
+  <form name="categoryForm">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="name">Name</label>
+        <input class="form-control" type="text" id="name"
+               placeholder="Enter the name for your category"
+               ng-model="category.name" ng-init="$scope.category.name = bCategory.name" required/>
+      </div>
+      <div class="col-md-6">
+        <label for="color">Color</label>
+        <input class="form-control" type="color" id="color" value="#C0FFEE"
+               ng-model="category.color" ng-init="$scope.category.color = bCategory.color"/>
+      </div>
+
+      <div class="col-md-6">
+        <label for="description">Description</label>
+        <input class="form-control" type="text" id="description" placeholder="Category description"
+               ng-model="category.description" ng-init="$scope.category.description = bCategory.description"/>
+      </div>
+    </div>
+    <br/>
+
+    <button ng-disabled="categoryForm.$invalid" class="btn btn-default" ng-click="createOrUpdate()">
+      Submit
+    </button>
+  </form>
+</div>

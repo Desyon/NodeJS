@@ -1,0 +1,39 @@
+<div class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>Categories</h2>
+  </div>
+  <div class="table-responsive row">
+    <table class="table" ng-init="getAllCategories()">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Color Code</th>
+        <th>Description</th>
+        <!-- Empty headers to have a border also over the glyphicons -->
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in allCategories" ng-style="{'background-color': category.color}">
+        <td>{{category.name}}</td>
+        <td>{{category.owner}}</td>
+        <td>{{category.color}}</td>
+        <td>{{category.description}}</td>
+        <td>
+          <i class="glyphicon glyphicon-trash"
+             ng-click="deleteCategory(category)"></i>
+        </td>
+        <td>
+          <i class="glyphicon glyphicon-pencil" ng-click="addUpdateCategory(category)"></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <button ng-click="addUpdateCategory(null)" class="btn btn-default col-md-3"><i
+        class="glyphicon glyphicon-plus"></i></button>
+  </div>
+</div>

@@ -22,7 +22,7 @@ angular.module('ngCalendarApp.directives.event', [
         event: '=',
         readOnly: '<',
       },
-      templateUrl: 'views/event.tpl.html',
+      templateUrl: 'views/events.tpl.html',
       controller: 'EventController',
     };
   },

@@ -1,0 +1,69 @@
+<div ng-init="bEvent=$rootScope.event" class="col-md-10 col-md-offset-1">
+  <div class="row">
+    <h2>
+      &lt;Title&gt;
+    </h2>
+  </div>
+  <br/>
+
+  <input ng-show="false" ng-model="event.id" ng-init="$scope.event.id=bEvent._id"></input>
+
+  <form name="eventForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="title">Title</label>
+        <input class="form-control" type="text" id="title"
+               placeholder="Enter the title for your event"
+               ng-model="event.title" ng-init="$scope.event.title=bEvent.title" required/>
+      </div>
+      <div class="col-md-4">
+        <label for="start">Start Date and Time</label>
+        <input class="form-control" type="text" id="start" placeholder="YYYY-MM-DDTHH:mm:ss.000Z"
+               ng-model="event.start" ng-init="$scope.event.start=bEvent.start" required/>
+      </div>
+
+      <div class="col-md-4">
+        <label for="end">End Date and Time</label>
+        <input class="form-control" type="text" id="end" placeholder="YYYY-MM-DDTHH:mm:ss.000Z"
+               ng-model="event.end" ng-init="$scope.event.end=bEvent.end" required/>
+      </div>
+    </div>
+    <br/>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="allday">Allday Event</label>
+        <input class="form-control" type="checkbox" id="allday"
+               placeholder="Enter your e-mail address"
+               ng-model="event.allday" ng-init="$scope.event.allday=bEvent.allday"/>
+      </div>
+      <div class="col-md-6">
+        <label for="category">Category</label>
+        <input class="form-control" type="text" id="category" placeholder="Enter the category"
+               ng-model="event.category" ng-init="$scope.event.category=bEvent.category" required/>
+      </div>
+    </div>
+    <br/>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="location">Location</label>
+        <input class="form-control" type="text" id="location"
+               placeholder="Enter the location of your event"
+               ng-model="event.location" ng-init="$scope.event.location=bEvent.location"/>
+      </div>
+      <div class="col-md-6">
+        <label for="notes">Notes</label>
+        <input class="form-control" type="text" id="notes"
+               placeholder="Enter your notes" ng-model="event.notes"
+               ng-init="$scope.event.notes=bEvent.notes"/>
+      </div>
+    </div>
+
+    <br/>
+    <button ng-disabled="eventForm.$invalid" class="btn btn-default"
+            ng-click="createOrUpdate()">
+      Submit
+    </button>
+  </form>
+</div>

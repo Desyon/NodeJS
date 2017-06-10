@@ -5,14 +5,16 @@
 angular.module('ngCalendarApp.controllers')
 .controller('UserController',
     function userCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage, $rootScope) {
+        REST_API_ENDPOINT, $localStorage, $rootScope, $location) {
       $log.debug('Initializing UserController');
 
       $scope.updateUser = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Put Request');
-        let username = $rootScope.username;
+
         let password = $scope.user.password;
         let email = $scope.user.email;
         let dob = $scope.user.dob;
@@ -27,7 +29,7 @@ angular.module('ngCalendarApp.controllers')
 
         $log.debug(username);
 
-        $http.put(REST_API_ENDPOINT + '/user/' + username, data)
+        $http.put(REST_API_ENDPOINT + '/user/', data)
         .then(function (response) {
               deferred.resolve(response.data);
               $log.debug('UserService - User updated');
@@ -40,23 +42,49 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.deleteUser = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Delete Request');
 
         $http.delete(REST_API_ENDPOINT + '/user/')
         .then(function (response) {
-              delete $localStorage.currentToken;
-              delete $rootScope.username;
-
-              $localStorage.$reset();
+              $localStorage.currentToken = undefined;
 
               $rootScope.isLoggedIn = false;
               $log.debug('UserService - User deleted');
+              $location.path('/login');
               deferred.resolve(response.data);
             },
             function (response) {
               $log.error('UserService - Failed to delete user');
+              deferred.reject(response);
+            });
+        return deferred.promise;
+      };
+
+      $scope.getUser = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
+        let deferred = $q.defer();
+
+        $log.debug('UserService - Sending Get Request');
+
+        $http.get(REST_API_ENDPOINT + '/user/')
+        .then(function (response) {
+              $log.debug('UserService - Got user');
+
+              $scope.user.username = response.data.username;
+              $scope.user.email = response.data.email;
+              $scope.user.name = response.data.name;
+              $scope.user.dob = new Date(response.data.dob);
+
+              $log.debug(response);
+              deferred.resolve(response.data);
+            },
+            function (response) {
+              $log.error('UserService - Failed to get user');
               deferred.reject(response);
             });
         return deferred.promise;

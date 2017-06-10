@@ -12,10 +12,21 @@ angular.module('ngCalendarApp', [
   'ngCalendarApp.templates',
   'ngCalendarApp.controllers',
 ])
+.factory('httpRequestInterceptor', function ($localStorage) {
+  return {
+    request: function (config) {
+      config.headers['Authorization'] = $localStorage.currentToken;
+      config.headers['Content-Type'] = 'application/json';
+
+      return config;
+    },
+  };
+})
 
 .config(
     function (ENABLE_DEBUG, $logProvider, $stateProvider, NotificationProvider,
         $urlRouterProvider, $httpProvider, $qProvider) {
+      $httpProvider.interceptors.push('httpRequestInterceptor');
       $logProvider.debugEnabled(ENABLE_DEBUG);
       $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
       $httpProvider.defaults.headers.put['Content-Type'] = 'application/json';
@@ -49,12 +60,22 @@ angular.module('ngCalendarApp', [
       })
       .state('events', {
         url: '/events',
-        templateUrl: 'app/views/event.tpl.html',
+        templateUrl: 'app/views/events.tpl.html',
+        controller: 'EventController',
+      })
+      .state('eventDetail', {
+        url: '/eventDetail',
+        templateUrl: 'app/views/eventDetail.tpl.html',
         controller: 'EventController',
       })
       .state('categories', {
-        url: '/category',
-        templateUrl: 'app/views/category.tpl.html',
+        url: '/categories',
+        templateUrl: 'app/views/categories.tpl.html',
+        controller: 'CategoryController',
+      })
+      .state('categoryDetail', {
+        url: '/categoryDetail',
+        templateUrl: 'app/views/categoryDetail.tpl.html',
         controller: 'CategoryController',
       })
       .state('account', {
@@ -67,7 +88,7 @@ angular.module('ngCalendarApp', [
 .run(
     function ($rootScope, $location, $http, $localStorage, $log) {
       $log.debug('Been run');
-      $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+      // $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $rootScope.isLoggedIn = false;
     }
 )
@@ -76,8 +97,8 @@ angular.module('ngCalendarApp', [
     function ($scope, $log, $localStorage, $rootScope, $http, $location) {
       $log.debug('CalendarApp initialized');
       $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-      $log.debug($localStorage.currentToken);
-      $log.debug($localStorage.username);
+      $http.defaults.headers.common.Username = $rootScope.username;
+
       $rootScope.isLoggedIn = false;
       if ($localStorage.currentToken !== undefined) {
         $log.debug('Found Token -> Logged In');
@@ -85,14 +106,11 @@ angular.module('ngCalendarApp', [
       }
 
       $scope.logout = function () {
-        delete $localStorage.username;
-        delete $localStorage.currentToken;
-        $localStorage.$reset();
-        $localStorage.username;
-        $localStorage.currentToken;
+        $localStorage.currentToken = undefined;
+
         $rootScope.isLoggedIn = false;
         $log.debug('AppService - User logged out');
-        $location.path( '/login' );
+        $location.path('/login');
       };
     }
 );

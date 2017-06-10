@@ -5,10 +5,12 @@
 angular.module('ngCalendarApp.controllers')
 .controller('CategoryController',
     function categoryCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $rootScope) {
+        REST_API_ENDPOINT, $rootScope, $location) {
       $log.debug('Initializing CategoryController');
 
       $scope.createCategory = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('CategoryService - Sending Put Request');
@@ -28,6 +30,7 @@ angular.module('ngCalendarApp.controllers')
               deferred.resolve(response.data);
               $scope.getAllCategories();
               $log.debug('CategoryService - Category created');
+              $location.path('/categories');
             },
             function (response) {
               $log.error('CategoryService - Failed to create category');
@@ -37,6 +40,8 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.updateCategory = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('CategoryService - Sending Put Request');
@@ -57,6 +62,7 @@ angular.module('ngCalendarApp.controllers')
         .then(function (response) {
               $scope.getAllCategories();
               deferred.resolve(response.data);
+              $location.path('/categories');
               $log.debug('CategoryService - Category updated');
             },
             function (response) {
@@ -67,6 +73,8 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.deleteCategory = function (category) {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
         let id = category._id;
 
@@ -85,22 +93,18 @@ angular.module('ngCalendarApp.controllers')
         return deferred.promise;
       };
 
-      $scope.getCategory = function () {
+      $scope.getCategory = function (id) {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
+        $log.debug('Inside getCategory');
 
+        $log.debug(id);
         $log.debug('CategoryService - Sending Get Request');
-        let id = $scope.category.id;
 
         $http.get(REST_API_ENDPOINT + '/category/' + id)
         .then(function (response) {
               deferred.resolve(response.data);
-
-              $scope.category.name = response.data.title;
-              $scope.category.owner = response.data.owner;
-              $scope.category.color = response.data.color;
-              $scope.category.description = response.data.description;
-              $scope.category.id = response.data.id;
-
               $log.debug('CategoryService - Category received');
             },
             function (response) {
@@ -111,6 +115,8 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.getAllCategories = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('CategoryService - Sending Get Request');
@@ -126,6 +132,88 @@ angular.module('ngCalendarApp.controllers')
               deferred.reject(response);
             });
         return deferred.promise;
+      };
+
+      $scope.addUpdateCategory = function (category) {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
+        $log.debug('Inside addUpdateCategory');
+        if (category !== undefined) {
+          $rootScope.category = category;
+        }
+        $location.path('/categoryDetail');
+      };
+
+      $scope.createOrUpdate = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
+        $log.debug('Inside createOrUpdate');
+
+        let deferred = $q.defer();
+
+        let name;
+        let color;
+        let description;
+
+        $log.debug('rootScope');
+        $log.debug($rootScope);
+
+        $log.debug('scope');
+        $log.debug($scope);
+
+        if ($rootScope.category !== null) {
+          name = $rootScope.category.name;
+          color = $rootScope.category.color;
+          description = $rootScope.category.description;
+        } else {
+          name = $scope.category.name;
+          color = $scope.category.color;
+          description = $scope.category.description;
+        }
+
+        $log.debug($rootScope);
+
+        let data = {
+          'name': name,
+          'color': color,
+          'description': description,
+        };
+
+        $log.debug('Created Payload');
+
+        if ($rootScope.category !== null) {
+          $log.debug('CategoryService - Sending Put Request');
+
+          let id = $rootScope.category._id;
+
+          $http.put(REST_API_ENDPOINT + '/category/' + id, data)
+          .then(function (response) {
+                $scope.getAllCategories();
+                deferred.resolve(response.data);
+                $log.debug('CategoryService - Category updated');
+              },
+              function (response) {
+                $log.error('CategoryService - Failed to update category');
+                deferred.reject(response);
+              });
+          return deferred.promise;
+        } else {
+          $log.debug('CategoryService - Sending Post Request');
+
+          $http.post(REST_API_ENDPOINT + '/category/create', data)
+          .then(function (response) {
+                deferred.resolve(response.data);
+                $scope.getAllCategories();
+                $log.debug('CategoryService - Category created');
+              },
+              function (response) {
+                $log.error('CategoryService - Failed to create category');
+                deferred.reject(response);
+              });
+          return deferred.promise;
+        }
+        delete $rootScope.category;
+        $location.path('/categories');
       };
     }
 );
