@@ -243,6 +243,8 @@ angular.module('ngCalendarApp.controllers')
                 $log.error('EventService - Failed to update event');
                 deferred.reject(response);
               });
+
+          $location.path('/events');
           delete $rootScope.event;
           return deferred.promise;
         } else {
@@ -258,10 +260,11 @@ angular.module('ngCalendarApp.controllers')
                 $log.error('EventService - Failed to create event');
                 deferred.reject(response);
               });
+
+          $location.path('/events');
           delete $rootScope.event;
           return deferred.promise;
         }
-        $location.path('/events');
       };
     }
 );

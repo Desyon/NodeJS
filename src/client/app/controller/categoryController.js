@@ -196,6 +196,7 @@ angular.module('ngCalendarApp.controllers')
                 $log.error('CategoryService - Failed to update category');
                 deferred.reject(response);
               });
+          $location.path('/categories');
           return deferred.promise;
         } else {
           $log.debug('CategoryService - Sending Post Request');
@@ -210,10 +211,9 @@ angular.module('ngCalendarApp.controllers')
                 $log.error('CategoryService - Failed to create category');
                 deferred.reject(response);
               });
+          $location.path('/categories');
           return deferred.promise;
         }
-        delete $rootScope.category;
-        $location.path('/categories');
       };
     }
 );
