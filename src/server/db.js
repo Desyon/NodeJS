@@ -169,6 +169,17 @@ module.exports.deleteEvent = function (id, callback) {
 };
 
 /**
+ * Deletes all events owned by one user. For user deletion only.
+ * @param user username of the deleted user.
+ * @param callback Response
+ */
+module.exports.deleteAllUserEvents = function (user, callback) {
+  events.remove({owner: user}, function (err) {
+    callback(err);
+  });
+};
+
+/**
  * Deletes the category with the given ID.
  * @param id ID of the category to be deleted.
  * @param callback Response
@@ -176,6 +187,17 @@ module.exports.deleteEvent = function (id, callback) {
 module.exports.deleteCategory = function (id, callback) {
   categories.remove({_id: id}, {w: 1}, function (err, result) {
     callback(err, result);
+  });
+};
+
+/**
+ * Deletes all categories owned by one user. For user deletion only.
+ * @param user username of the deleted user.
+ * @param callback Response
+ */
+module.exports.deleteAllUserCategories = function (user, callback) {
+  categories.remove({owner: user}, function (err) {
+    callback(err);
   });
 };
 
