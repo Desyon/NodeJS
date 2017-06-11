@@ -238,7 +238,6 @@ angular.module('ngCalendarApp.controllers')
           category = $rootScope.event.category;
           location = $rootScope.event.location;
           notes = $rootScope.event.notes;
-
         } else {
           title = $scope.event.title;
 
@@ -344,6 +343,5 @@ angular.module('ngCalendarApp.controllers')
           $scope.event.end = $scope.event.end.toString().substring(0, 10);
         }
       };
-
     }
 );

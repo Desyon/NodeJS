@@ -93,7 +93,7 @@ angular.module('ngCalendarApp', [
 )
 
 .controller('AppController',
-    function ($scope, $log, $localStorage, $rootScope, $http, $location) {
+    function ($scope, $log, $localStorage, $rootScope, $http, $location, notification) {
       $log.debug('CalendarApp initialized');
       $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $http.defaults.headers.common.Username = $rootScope.username;
@@ -108,6 +108,7 @@ angular.module('ngCalendarApp', [
         $localStorage.currentToken = undefined;
 
         $rootScope.isLoggedIn = false;
+        notification.success({data: {msg: 'Success'}});
         $log.debug('AppService - User logged out');
         $location.path('/login');
       };

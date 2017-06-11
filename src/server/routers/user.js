@@ -58,7 +58,7 @@ router.post('/login', bodyParser, function (req, res) {
     } else {
       if (ret.password !== user.password) {
         winston.debug('Login failed with wrong password or username');
-        error.errmsg = 'Wrong password or username.'
+        error.errmsg = 'Wrong password or username.';
         return res.status(401).send(error);
       }
       winston.debug('Login successful. Token send');
@@ -114,7 +114,8 @@ router.post('/create', bodyParser, function (req, res) {
   db.insertUser(user, function (err) {
     if (err) {
       winston.debug('User creation failed with database error.');
-      return res.status(500).send(err);
+      error.errmsg = 'Database error';
+      return res.status(500).send(error);
     } else {
       winston.debug('User creation successful.');
       let token = jwt.sign(user.username);
@@ -178,7 +179,8 @@ router.put('/', bodyParser, function (req, res) {
     db.updateUser(username, req.body, function (err) {
       if (err) {
         winston.debug('User change failed with database error.');
-        return res.status(500).send(err);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else {
         winston.debug('User change successful.');
         let response = {msg: 'Success'};
@@ -264,21 +266,24 @@ router.delete('/', bodyParser, function (req, res) {
     db.deleteAllUserEvents(user, function (delErr) {
       if (delErr) {
         winston.debug('User deletion failed with database error');
-        return res.status(500).send(delErr);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       }
     });
 
     db.deleteAllUserCategories(user, function (delErr) {
       if (delErr) {
         winston.debug('User deletion failed with database error');
-        return res.status(500).send(delErr);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       }
     });
 
     db.deleteUser(user, function (delErr) {
       if (delErr) {
         winston.debug('User deletion failed with database error.');
-        return res.status(500).send(delErr);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else {
         winston.debug('User \'' + user + '\'successfully deleted.');
         let response = {msg: 'User deleted'};
