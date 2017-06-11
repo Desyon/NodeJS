@@ -10,7 +10,7 @@ angular.module('ngCalendarApp')
   };
 
   this.error = function (errorResponse) {
-      $log.debug(errorResponse.data.errmsg);
-      Notification.error(errorResponse.data.errmsg);
+    $log.debug(errorResponse.data.errmsg);
+    Notification.error(errorResponse.data.errmsg);
   };
 });

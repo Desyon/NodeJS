@@ -117,12 +117,12 @@ router.put('/administration/test', function (req, res) {
             'color': '#c0ffee',
           };
 
-           db.insertEvent(event, function (err) {
-           if (err) {
-           error.errmsg = 'Error creating event';
-           return res.status(500).send(error);
-           }
-           });
+          db.insertEvent(event, function (err) {
+            if (err) {
+              error.errmsg = 'Error creating event';
+              return res.status(500).send(error);
+            }
+          });
         }
       });
     }
