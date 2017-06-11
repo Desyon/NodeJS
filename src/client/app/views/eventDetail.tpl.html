@@ -29,34 +29,30 @@
         </div>
       </div>
 
-      <div class="row">
+      <div ng-init="getDateTime()" class="row">
         <div class="col-md-3 col-sm-4 col-xs-12">
           <label for="startDate">Start Date</label>
-          <input class="form-control" type="text" id="startDate"
-                 placeholder="YYYY-MM-DD" ng-model="event.start"
-                 ng-init="$scope.event.start=bEvent.start" required/>
+          <input class="form-control" type="date" id="startDate"
+                 placeholder="YYYY-MM-DD" ng-model="event.startDate" required/>
           <br/>
 
 
           <label for="startTime">Start Time</label>
-          <input class="form-control" type="text" id="startTime" ng-model="event.startTime"
-                 placeholder="HH:MM:ss"
-                 ng-init="setStartTime()" required>
+          <input class="form-control" type="time" id="startTime" ng-model="event.startTime"
+                 placeholder="HH:MM:ss" required>
           <br/>
         </div>
 
         <div class="col-md-3 col-md-offset-1 col-sm-4 col-sm-offset-1 col-xs-12">
           <label for="endDate">End Date</label>
-          <input class="form-control" type="text" id="endDate"
-                 placeholder="YYYY-MM-DD" ng-model="event.end"
-                 ng-init="$scope.event.end=bEvent.end" required/>
+          <input class="form-control" type="date" id="endDate"
+                 placeholder="YYYY-MM-DD" ng-model="event.endDate" required/>
           <br/>
 
 
           <label for="endTime">End Time</label>
-          <input class="form-control" type="text" id="endTime" ng-model="event.endTime"
-                 placeholder="HH:MM:ss"
-                 ng-init="setEndTime()" required>
+          <input class="form-control" type="time" id="endTime" ng-model="event.endTime"
+                 placeholder="HH:MM:ss" required>
           <br/>
         </div>
       </div>

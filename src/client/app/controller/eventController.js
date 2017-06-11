@@ -175,7 +175,7 @@ angular.module('ngCalendarApp.controllers')
         if (event !== undefined) {
           $rootScope.event = event;
         }
-
+        $log.debug(event);
         $location.path('/eventDetail');
       };
 
@@ -187,8 +187,6 @@ angular.module('ngCalendarApp.controllers')
         let deferred = $q.defer();
 
         let title;
-        let start;
-        let end;
 
         let startTime;
         let endTime;
@@ -210,29 +208,11 @@ angular.module('ngCalendarApp.controllers')
         if (!($rootScope.event === undefined || $rootScope.event === null)) {
           title = $rootScope.event.title;
 
-          $log.debug('Start Date');
-          $log.debug($rootScope.event.start);
+          startDate = $rootScope.event.startDate;
+          startTime = $rootScope.event.startTime;
 
-          let start = $rootScope.event.start.toString().substring(0, 10);
-          let startTime = $scope.event.startTime;
-          let whole = start + 'T' + startTime;
-
-          $log.debug('Start string');
-          $log.debug(whole);
-
-          startDate = new Date(whole);
-
-          $log.debug('End Date');
-          $log.debug($rootScope.event.end);
-
-          let end = $rootScope.event.end.toString().substring(0, 10);
-          let endTime = $scope.event.endTime;
-          whole = end + 'T' + endTime;
-
-          $log.debug('End string');
-          $log.debug(whole);
-
-          endDate = new Date(whole);
+          endDate = $rootScope.event.endDate;
+          endTime = $rootScope.event.endTime;
 
           if ($rootScope.event.allday !== undefined) {
             allday = $rootScope.event.allday;
@@ -243,23 +223,17 @@ angular.module('ngCalendarApp.controllers')
         } else {
           title = $scope.event.title;
 
-          start = $scope.event.start;
+          startDate = $scope.event.startDate;
           startTime = $scope.event.startTime;
 
-          let whole = start + 'T' + startTime;
-          startDate = new Date(whole);
-
-          $log.debug('All the start values');
-
-          $log.debug(start);
-          $log.debug(startTime);
-          $log.debug(startDate);
-
-          end = $scope.event.end;
+          endDate = $scope.event.endDate;
           endTime = $scope.event.endTime;
 
-          whole = end + 'T' + endTime;
-          endDate = new Date(whole);
+          $log.debug('All Time Values');
+          $log.debug(startDate);
+          $log.debug(startTime);
+          $log.debug(endDate);
+          $log.debug(endTime);
 
           if ($scope.event.allday !== undefined) {
             allday = $scope.event.allday;
@@ -269,13 +243,12 @@ angular.module('ngCalendarApp.controllers')
           notes = $scope.event.notes;
         }
 
-        $log.debug(startDate);
-        $log.debug(endDate);
-
         let data = {
           'title': title,
-          'start': startDate,
-          'end': endDate,
+          'startDate': startDate,
+          'startTime': startTime,
+          'endDate': endDate,
+          'endTime': endTime,
           'allday': allday,
           'category': category,
           'location': location,
@@ -365,5 +338,16 @@ angular.module('ngCalendarApp.controllers')
             });
         return deferred.promise;
       };
+
+      $scope.getDateTime = function () {
+        if ($rootScope.event === null || $rootScope.event === undefined) {
+          return;
+        }
+        $scope.event.endDate = new Date($rootScope.event.endDate);
+        $scope.event.endTime = new Date($rootScope.event.endTime);
+        $scope.event.startDate = new Date($rootScope.event.startDate);
+        $scope.event.startTime = new Date($rootScope.event.startTime);
+      };
     }
-);
+)
+;
