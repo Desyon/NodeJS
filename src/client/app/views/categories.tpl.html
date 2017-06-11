@@ -9,7 +9,6 @@
       <thead>
       <tr>
         <th>Name</th>
-        <th>Owner</th>
         <th>Color Code</th>
         <th>Description</th>
         <!-- Empty headers to have a border also over the glyphicons -->
@@ -20,7 +19,6 @@
       <tbody>
       <tr ng-repeat="category in allCategories" ng-style="{'background-color': category.color}">
         <td>{{category.name}}</td>
-        <td>{{category.owner}}</td>
         <td>{{category.color}}</td>
         <td>{{category.description}}</td>
         <td>

@@ -129,14 +129,14 @@ Note: JWT user has to match the owner specified in the body.
 ### Body:
 ````json
 {
-  "title": "My awesome Event",
-  "startDate": "2017-06-08T13:37:00.000Z",
-  "startTime": "",
-  "endDate": "2017-06-08T15:36:14.000Z",
-  "endTime": "",
-  "category": "Awesome Events",
-  "location": "Home",
-  "notes": "definitely get some food before"
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "location":"Home",
+  "notes":"Definitely get some food before"
 }
 ````
 Note: The given category has to exist.
@@ -156,14 +156,14 @@ Note: JWT user has to match the owner of the event specified in the URL.
 ### Body:
 ````json
 {
-  "title:": "My awesome Event",
-  "startDate": "2017-06-08T13:37:00.000Z",
-  "startTime": "",
-  "endDate": "2017-06-08T15:36:14.000Z",
-  "endTime": "",
-  "category": "Awesome Events",
-  "location": "Home",
-  "notes": "definitely get some food before"
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "location":"Home",
+  "notes":"Definitely get some food before"
 }
 ````
 
@@ -182,17 +182,17 @@ Note: JWT user has to match the owner of the event specified in the URL.
 *Return Value:*
 ````json
 {
-  "title:": "My awesome Event",
-  "startDate": "2017-06-08T13:37:00.000Z",
-  "startTime": "",
-  "endDate": "2017-06-08T15:36:14.000Z",
-  "endTime": "",
-  "owner": "someuser",
-  "category": "Awesome Events",
-  "location": "Home",
-  "notes": "definitely get some food before",
-  "color": "#c0ffee",
-  "_id": 3
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "owner":"someuser",
+  "location":"Home",
+  "notes":"Definitely get some food before",
+  "color":"#c0ffee",
+  "_id": 2
 }
 ````
 

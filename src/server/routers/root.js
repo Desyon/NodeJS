@@ -105,15 +105,17 @@ router.put('/administration/test', function (req, res) {
           return res.status(500).send(error);
         } else {
           let event = {
-           'title': 'My awesome Event',
-           'start': '2017-06-08T13:37:00.000Z',
-           'end': '2017-06-08T15:36:14.000Z',
-           'category': 'Awesome Events',
-           'owner': 'someuser',
-           'color': '#c0ffee',
-           'location': 'Home',
-           'notes': 'definitely get some food before',
-           };
+            'title': 'My Awesome Event',
+            'startDate': 1496613600000,
+            'startTime': 45420000,
+            'endDate': 1496613600000,
+            'endTime': 52560000,
+            'owner': 'someuser',
+            'category': 'Awesome Events',
+            'location': 'Home',
+            'notes': 'Definitely get some food before',
+            'color': '#c0ffee',
+          };
 
            db.insertEvent(event, function (err) {
            if (err) {

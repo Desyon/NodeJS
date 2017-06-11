@@ -9,12 +9,9 @@
       <thead>
       <tr>
         <th>Title</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Category</th>
+        <th>Start Date</th>
+        <th>Start Time</th>
         <th>Location</th>
-        <th>Notes</th>
-        <th>Allday</th>
         <!-- Empty headers to have a border also over the glyphicons -->
         <th></th>
         <th></th>
@@ -23,12 +20,9 @@
       <tbody>
       <tr ng-repeat="event in allEvents" ng-style="{'background-color': event.color}">
         <td>{{event.title}}</td>
-        <td>{{event.start}}</td>
-        <td>{{event.end}}</td>
-        <td>{{event.category}}</td>
+        <td>{{event.startDate | date:'d.MMMM y'}}</td>
+        <td>{{event.startTime | date:'HH:mm'}}</td>
         <td>{{event.location}}</td>
-        <td>{{event.notes}}</td>
-        <td>{{event.allday}}</td>
         <td>
           <i class="glyphicon glyphicon-trash" ng-click="deleteEvent(event)"></i>
         </td>

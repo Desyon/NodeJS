@@ -98,10 +98,10 @@ angular.module('ngCalendarApp.controllers')
 
         let data = {
           'title': title,
-          'startDate': startDate,
-          'startTime': startTime,
-          'endDate': endDate,
-          'endTime': endTime,
+          'startDate': new Date(startDate).getTime(),
+          'startTime': new Date(startTime).getTime(),
+          'endDate': new Date(endDate).getTime(),
+          'endTime': new Date(endTime).getTime(),
           'category': category,
           'location': location,
           'notes': notes,
