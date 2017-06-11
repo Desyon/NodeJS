@@ -55,8 +55,10 @@ router.post('/create', bodyParser, function (req, res) {
 
     let event = {};
     event.title = req.body.title;
-    event.start = req.body.start;
-    event.end = req.body.end;
+    event.startDate = req.body.startDate;
+    event.startTime = req.body.startTime;
+    event.endDate = req.body.endDate;
+    event.endTime = req.body.endTime;
     event.category = req.body.category;
     event.owner = decoded.user;
     event.location = req.body.location;
@@ -140,8 +142,10 @@ router.put('/:id', bodyParser, function (req, res) {
       let event = {};
 
       event.title = req.body.title;
-      event.start = req.body.start;
-      event.end = req.body.end;
+      event.startDate = req.body.startDate;
+      event.startTime = req.body.startTime;
+      event.endDate = req.body.endDate;
+      event.endTime = req.body.endTime;
       event.category = req.body.category;
       event.location = req.body.location;
       event.notes = req.body.notes;
