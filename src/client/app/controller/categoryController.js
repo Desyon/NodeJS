@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('CategoryController',
     function categoryCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $rootScope, $location, $localStorage) {
+        REST_API_ENDPOINT, $rootScope, $location, $localStorage, notification) {
       $log.debug('Initializing CategoryController');
 
       $scope.createCategory = function () {
@@ -29,10 +29,12 @@ angular.module('ngCalendarApp.controllers')
         .then(function (response) {
               deferred.resolve(response.data);
               $scope.getAllCategories();
+              notification.success(response);
               $log.debug('CategoryService - Category created');
               $location.path('/categories');
             },
             function (response) {
+              notification.error(response);
               $log.error('CategoryService - Failed to create category');
               deferred.reject(response);
             });
@@ -63,9 +65,11 @@ angular.module('ngCalendarApp.controllers')
               $scope.getAllCategories();
               deferred.resolve(response.data);
               $location.path('/categories');
+              notification.success(response);
               $log.debug('CategoryService - Category updated');
             },
             function (response) {
+              notification.error(response);
               $log.error('CategoryService - Failed to update category');
               deferred.reject(response);
             });
@@ -84,9 +88,11 @@ angular.module('ngCalendarApp.controllers')
         .then(function (response) {
               $scope.getAllCategories();
               deferred.resolve(response.data);
+              notification.success(response);
               $log.debug('CategoryService - Category deleted');
             },
             function (response) {
+              notification.error(response);
               $log.error('CategoryService - Failed to delete category');
               deferred.reject(response);
             });
@@ -109,6 +115,7 @@ angular.module('ngCalendarApp.controllers')
             },
             function (response) {
               $log.error('CategoryService - Failed to get category');
+              notification.error(response);
               deferred.reject(response);
             });
         return deferred.promise;
@@ -129,6 +136,7 @@ angular.module('ngCalendarApp.controllers')
             },
             function (response) {
               $log.error('CategoryService - Failed to get Categories');
+              notification.error(response);
               deferred.reject(response);
             });
         return deferred.promise;
@@ -194,6 +202,7 @@ angular.module('ngCalendarApp.controllers')
               },
               function (response) {
                 $log.error('CategoryService - Failed to update category');
+                notification.error(response);
                 deferred.reject(response);
               });
           $location.path('/categories');
@@ -209,6 +218,7 @@ angular.module('ngCalendarApp.controllers')
               },
               function (response) {
                 $log.error('CategoryService - Failed to create category');
+                notification.error(response);
                 deferred.reject(response);
               });
           $location.path('/categories');

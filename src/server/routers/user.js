@@ -58,11 +58,15 @@ router.post('/login', bodyParser, function (req, res) {
     } else {
       if (ret.password !== user.password) {
         winston.debug('Login failed with wrong password or username');
-        return res.status(401).send('Wrong password or username.');
+        error.errmsg = 'Wrong password or username.'
+        return res.status(401).send(error);
       }
       winston.debug('Login successful. Token send');
       let token = jwt.sign(user.username);
-      return res.status(200).send({token: token});
+      return res.status(200).send({
+        token: token,
+        msg: 'Success',
+      });
     }
   });
 });
@@ -114,7 +118,10 @@ router.post('/create', bodyParser, function (req, res) {
     } else {
       winston.debug('User creation successful.');
       let token = jwt.sign(user.username);
-      return res.status(201).send({token: token});
+      return res.status(201).send({
+        token: token,
+        msg: 'Success',
+      });
     }
   });
 });

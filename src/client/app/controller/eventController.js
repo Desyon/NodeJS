@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('EventController',
     function eventCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $rootScope, $location, $localStorage) {
+        REST_API_ENDPOINT, $rootScope, $location, $localStorage, notification) {
       $log.debug('Initializing EventController');
 
       $scope.createEvent = function () {
@@ -117,6 +117,7 @@ angular.module('ngCalendarApp.controllers')
               $log.debug('EventService - Event deleted');
             },
             function (response) {
+              notification.error(response);
               $log.error('EventService - Failed to delete event');
               deferred.reject(response);
             });
@@ -137,6 +138,7 @@ angular.module('ngCalendarApp.controllers')
               $log.debug('EventService - Event received');
             },
             function (response) {
+              notification.error(response);
               $log.error('EventService - Failed to get event');
               deferred.reject(response);
             });
@@ -157,6 +159,7 @@ angular.module('ngCalendarApp.controllers')
               $log.debug('EventService - Events received');
             },
             function (response) {
+              notification.error(response);
               $log.error('EventService - Failed to get events');
               deferred.reject(response);
             });
@@ -194,7 +197,7 @@ angular.module('ngCalendarApp.controllers')
         $log.debug('scope');
         $log.debug($scope);
 
-        if (!($rootScope.event == undefined || $rootScope.event === null)) {
+        if (!($rootScope.event === undefined || $rootScope.event === null)) {
           title = $rootScope.event.title;
           start = new Date($rootScope.event.start);
           end = new Date($rootScope.event.end);
@@ -240,6 +243,7 @@ angular.module('ngCalendarApp.controllers')
                 $log.debug('EventService - Event updated');
               },
               function (response) {
+                notification.error(response);
                 $log.error('EventService - Failed to update event');
                 deferred.reject(response);
               });
@@ -257,6 +261,7 @@ angular.module('ngCalendarApp.controllers')
                 $log.debug('EventService - Event created');
               },
               function (response) {
+                notification.error(response);
                 $log.error('EventService - Failed to create event');
                 deferred.reject(response);
               });

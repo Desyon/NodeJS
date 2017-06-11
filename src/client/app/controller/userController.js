@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('UserController',
     function userCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage, $rootScope, $location) {
+        REST_API_ENDPOINT, $localStorage, $rootScope, $location, notification) {
       $log.debug('Initializing UserController');
 
       $scope.updateUser = function () {
@@ -32,9 +32,11 @@ angular.module('ngCalendarApp.controllers')
         $http.put(REST_API_ENDPOINT + '/user/', data)
         .then(function (response) {
               deferred.resolve(response.data);
+              notification.success(response);
               $log.debug('UserService - User updated');
             },
             function (response) {
+              notification.error(response);
               $log.error('UserService - Failed to update user');
               deferred.reject(response);
             });
@@ -58,6 +60,7 @@ angular.module('ngCalendarApp.controllers')
               deferred.resolve(response.data);
             },
             function (response) {
+              notification.error(response);
               $log.error('UserService - Failed to delete user');
               deferred.reject(response);
             });
@@ -84,6 +87,7 @@ angular.module('ngCalendarApp.controllers')
               deferred.resolve(response.data);
             },
             function (response) {
+              notification.error({data: {errmsg: 'Failed to get userdata'}});
               $log.error('UserService - Failed to get user');
               deferred.reject(response);
             });

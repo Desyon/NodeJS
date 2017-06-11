@@ -47,7 +47,10 @@ const files = {
     'node_modules/@uirouter/angularjs/release/angular-ui-router.js',
     'node_modules/ngstorage/ngStorage.min.js',
   ],
-  vendorAssets: [
+  vendorStyles: [
+    'node_modules/angular-ui-notification/dist/angular-ui-notification.min.css',
+  ],
+  fonts: [
     'node_modules/bootstrap/fonts/*',
   ],
 };
@@ -91,7 +94,7 @@ function copyServerFiles() {
 // Assets
 function copyFonts() {
   return gulp
-  .src(files.vendorAssets)
+  .src(files.fonts)
   .pipe(gulp.dest(clientTarget + '/fonts'));
 }
 
@@ -101,11 +104,15 @@ function copyFrameworkScripts() {
   .pipe(gulp.dest(clientTarget + '/assets/scripts'));
 }
 
-function compileCSS() {
-  return gulp
+function getStyles() {
+  gulp
   .src(files.clientStyle)
   .pipe(less())
   .pipe(cssmin())
+  .pipe(gulp.dest(clientTarget + '/assets'));
+
+  return gulp
+  .src(files.vendorStyles)
   .pipe(gulp.dest(clientTarget + '/assets'));
 }
 
@@ -175,7 +182,7 @@ function constants() {
 const getClientAssets = gulp.parallel(
     copyFonts,
     copyFrameworkScripts,
-    compileCSS,
+    getStyles,
     compileTemplates,
     uglifyClientJS
 );
@@ -206,8 +213,8 @@ gulp.task('build',
 );
 
 gulp.task('dist',
-  gulp.series(
-      'lint',
-      'build'
-  )
+    gulp.series(
+        'lint',
+        'build'
+    )
 );

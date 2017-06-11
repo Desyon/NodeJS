@@ -5,7 +5,7 @@
 angular.module('ngCalendarApp.controllers')
 .controller('RegisterController',
     function registerCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage, $rootScope, $location) {
+        REST_API_ENDPOINT, $localStorage, $rootScope, $location, notification) {
       $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $http.defaults.headers.common.Username = $rootScope.username;
       $log.debug('Initializing RegisterController');
@@ -58,10 +58,13 @@ angular.module('ngCalendarApp.controllers')
               $rootScope.isLoggedIn = true;
               deferred.resolve(response.data);
               $location.path( '/events' );
+
+              notification.success(response);
               $log.debug('RegisterService - User created');
             },
 
             function (response) {
+              notification.error(response);
               $log.error('RegisterService - Failed to create user');
               deferred.reject(response);
             });

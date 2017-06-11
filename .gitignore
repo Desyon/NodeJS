@@ -54,10 +54,10 @@ fabric.properties
 
 ### Intellij Patch ###
 
-# *.iml
-# modules.xml
-# .idea/misc.xml
-# *.ipr
+ *.iml
+ modules.xml
+ .idea/misc.xml
+ *.ipr
 
 
 ### Node ###
@@ -126,3 +126,5 @@ typings/
 
 # build script
 build.sh
+
+NodeJS.iml

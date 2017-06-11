@@ -36,15 +36,14 @@ angular.module('ngCalendarApp', [
       $qProvider.errorOnUnhandledRejections(false);
 
       NotificationProvider.setOptions({
-        delay: 2000,
-        startTop: 10,
+        delay: 3000,
+        startTop: 20,
         startRight: 10,
         verticalSpacing: 20,
         horizontalSpacing: 20,
         positionX: 'left',
         positionY: 'bottom',
-        closeOnClick: true,
-        maxCount: 5,
+        maxCount: 3,
       });
 
       $stateProvider
@@ -86,7 +85,7 @@ angular.module('ngCalendarApp', [
     })
 
 .run(
-    function ($rootScope, $location, $http, $localStorage, $log) {
+    function ($rootScope, $location, $http, $localStorage, $log, notification) {
       $log.debug('Been run');
       // $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $rootScope.isLoggedIn = false;
