@@ -13,12 +13,14 @@ angular.module('ngCalendarApp.controllers')
         $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
-        $log.debug('EventService - Sending Put Request');
+        $log.debug('EventService - Sending Post Request');
+
+        $log.debug($scope.category);
 
         let title = $scope.event.title;
         let start = $scope.event.start;
         let end = $scope.event.end;
-        let category = $scope.event.category;
+        let category = $scope.event.category.name;
         let owner = $rootScope.username;
         let location = $scope.event.location;
         let notes = $scope.event.notes;
@@ -235,10 +237,9 @@ angular.module('ngCalendarApp.controllers')
           if ($rootScope.event.allday !== undefined) {
             allday = $rootScope.event.allday;
           }
-          category = $rootScope.event.category;
+          category = $rootScope.event.category.name;
           location = $rootScope.event.location;
           notes = $rootScope.event.notes;
-
         } else {
           title = $scope.event.title;
 
@@ -263,7 +264,7 @@ angular.module('ngCalendarApp.controllers')
           if ($scope.event.allday !== undefined) {
             allday = $scope.event.allday;
           }
-          category = $scope.event.category;
+          category = $scope.event.category.name;
           location = $scope.event.location;
           notes = $scope.event.notes;
         }
@@ -344,6 +345,25 @@ angular.module('ngCalendarApp.controllers')
           $scope.event.end = $scope.event.end.toString().substring(0, 10);
         }
       };
+      $scope.getAllCategories = function () {
+        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
+        $http.defaults.headers.common.Username = $rootScope.username;
+        let deferred = $q.defer();
 
+        $log.debug('CategoryService - Sending Get Request');
+
+        $http.get(REST_API_ENDPOINT + '/category/all')
+        .then(function (response) {
+              deferred.resolve(response.data);
+              $scope.allCategories = response.data;
+              $log.debug('CategoryService - Categories received');
+            },
+            function (response) {
+              $log.error('CategoryService - Failed to get Categories');
+              notification.error(response);
+              deferred.reject(response);
+            });
+        return deferred.promise;
+      };
     }
 );

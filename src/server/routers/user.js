@@ -114,6 +114,7 @@ router.post('/create', bodyParser, function (req, res) {
   db.insertUser(user, function (err) {
     if (err) {
       winston.debug('User creation failed with database error.');
+      winston.debug(err);
       return res.status(500).send(err);
     } else {
       winston.debug('User creation successful.');
