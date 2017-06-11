@@ -28,8 +28,6 @@ angular.module('ngCalendarApp', [
         $urlRouterProvider, $httpProvider, $qProvider) {
       $httpProvider.interceptors.push('httpRequestInterceptor');
       $logProvider.debugEnabled(ENABLE_DEBUG);
-      $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
-      $httpProvider.defaults.headers.put['Content-Type'] = 'application/json';
       $urlRouterProvider.otherwise('/login');
 
       // Ignore unhandled rejections
@@ -86,21 +84,18 @@ angular.module('ngCalendarApp', [
 
 .run(
     function ($rootScope, $location, $http, $localStorage, $log, notification) {
-      $log.debug('Been run');
-      // $http.defaults.headers.common.Authorization = $localStorage.currentToken;
       $rootScope.isLoggedIn = false;
     }
 )
 
 .controller('AppController',
-    function ($scope, $log, $localStorage, $rootScope, $http, $location, notification) {
+    function ($scope, $log, $localStorage, $rootScope, $http, $location,
+        notification) {
       $log.debug('CalendarApp initialized');
-      $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-      $http.defaults.headers.common.Username = $rootScope.username;
 
       $rootScope.isLoggedIn = false;
       if ($localStorage.currentToken !== undefined) {
-        $log.debug('Found Token -> Logged In');
+        $log.debug('Found Token - Logged In');
         $rootScope.isLoggedIn = true;
       }
 

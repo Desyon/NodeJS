@@ -9,8 +9,6 @@ angular.module('ngCalendarApp.controllers')
       $log.debug('Initializing UserController');
 
       $scope.updateUser = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Put Request');
@@ -62,8 +60,6 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.deleteUser = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Delete Request');
@@ -71,7 +67,7 @@ angular.module('ngCalendarApp.controllers')
         $http.delete(REST_API_ENDPOINT + '/user/')
         .then(function (response) {
               $localStorage.currentToken = undefined;
-
+              notification.success({data: {msg: 'Success'}});
               $rootScope.isLoggedIn = false;
               $log.debug('UserService - User deleted');
               $location.path('/login');
@@ -86,8 +82,6 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.getUser = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('UserService - Sending Get Request');
@@ -101,7 +95,6 @@ angular.module('ngCalendarApp.controllers')
               $scope.user.name = response.data.name;
               $scope.user.dob = new Date(response.data.dob);
 
-              $log.debug(response);
               deferred.resolve(response.data);
             },
             function (response) {

@@ -6,14 +6,13 @@ angular.module('ngCalendarApp.controllers')
 .controller('RegisterController',
     function registerCtrl($scope, $log, $q, $http,
         REST_API_ENDPOINT, $localStorage, $rootScope, $location, notification) {
-      $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-      $http.defaults.headers.common.Username = $rootScope.username;
       $log.debug('Initializing RegisterController');
 
       $scope.register = function () {
         let deferred = $q.defer();
 
         if ($scope.user.password !== $scope.user.confirmPW) {
+          notification.error({data: {errmsg: 'Passwords not matching'}});
           $log.debug('Passwords do not match');
           return deferred.reject('No Match');
         }
@@ -49,15 +48,12 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/create', data)
         .then(function (response) {
-              $localStorage.currentToken = undefined;
-              $rootScope.username = undefined;
-              $rootScope.isLoggedIn = undefined;
-
               $localStorage.currentToken = response.data.token;
               $rootScope.username = username;
               $rootScope.isLoggedIn = true;
+
               deferred.resolve(response.data);
-              $location.path( '/events' );
+              $location.path('/events');
 
               notification.success(response);
               $log.debug('RegisterService - User created');
@@ -68,7 +64,6 @@ angular.module('ngCalendarApp.controllers')
               $log.error('RegisterService - Failed to create user');
               deferred.reject(response);
             });
-
         return deferred.promise;
       };
     }

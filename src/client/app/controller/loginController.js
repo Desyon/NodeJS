@@ -23,18 +23,9 @@ angular.module('ngCalendarApp.controllers')
 
         $http.post(REST_API_ENDPOINT + '/user/login', data)
         .then(function (response) {
-              $localStorage.currentToken = undefined;
-              $rootScope.username = undefined;
-              $rootScope.isLoggedIn = undefined;
-
               $localStorage.currentToken = response.data.token;
               $rootScope.username = username;
               $rootScope.isLoggedIn = true;
-
-              $log.debug($localStorage.currentToken);
-
-              $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-              $http.defaults.headers.common.Username = $rootScope.username;
 
               notification.success(response);
               $log.debug('LoginService - Logged in');

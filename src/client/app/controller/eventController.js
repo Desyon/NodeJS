@@ -8,107 +8,10 @@ angular.module('ngCalendarApp.controllers')
         REST_API_ENDPOINT, $rootScope, $location, $localStorage, notification) {
       $log.debug('Initializing EventController');
 
-      $scope.createEvent = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Post Request');
-
-        $log.debug($scope.category);
-
-        let title = $scope.event.title;
-        let start = $scope.event.start;
-        let end = $scope.event.end;
-        let category = $scope.event.category.name;
-        let owner = $rootScope.username;
-        let location = $scope.event.location;
-        let notes = $scope.event.notes;
-
-        let allday = false;
-        if ($scope.event.allday !== undefined) {
-          allday = $scope.event.allday;
-        }
-
-        let data = {
-          'title': title,
-          'start': start,
-          'end': end,
-          'allday': allday,
-          'category': category,
-          'owner': owner,
-          'location': location,
-          'notes': notes,
-        };
-
-        $log.debug(data);
-
-        $http.post(REST_API_ENDPOINT + '/event/create', data)
-        .then(function (response) {
-              deferred.resolve(response.data);
-              $scope.getAllEvents();
-              $log.debug('EventService - Event created');
-              $location.path('/events');
-            },
-            function (response) {
-              $log.error('EventService - Failed to create event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
-      $scope.updateEvent = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Put Request');
-
-        let title = $scope.event.title;
-        let start = $scope.event.start;
-        let end = $scope.event.end;
-        let allday = $scope.event.allday;
-        let category = $scope.event.category;
-        let location = $scope.event.location;
-        let notes = $scope.event.notes;
-        let owner = $rootScope.username;
-
-        let id = $scope.event.id;
-
-        let data = {
-          'title': title,
-          'start': start,
-          'end': end,
-          'allday': allday,
-          'category': category,
-          'location': location,
-          'notes': notes,
-          'owner': owner,
-        };
-
-        $http.put(REST_API_ENDPOINT + '/event/' + id, data)
-        .then(function (response) {
-              deferred.resolve(response.data);
-              $scope.getAllEvents();
-              $location.path('/events');
-              $log.debug('EventService - Event updated');
-            },
-            function (response) {
-              $log.error('EventService - Failed to update event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
       $scope.deleteEvent = function (event) {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('EventService - Sending Delete Request');
-
-        $log.debug($scope);
-        $log.debug(event);
 
         let id = event._id;
 
@@ -126,30 +29,7 @@ angular.module('ngCalendarApp.controllers')
         return deferred.promise;
       };
 
-      $scope.getEvent = function () {
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Get Request');
-        let id = $scope.event.id;
-
-        $http.get(REST_API_ENDPOINT + '/event/' + id)
-        .then(function (response) {
-              deferred.resolve(response.data);
-
-              $scope.event = response.data;
-              $log.debug('EventService - Event received');
-            },
-            function (response) {
-              notification.error(response);
-              $log.error('EventService - Failed to get event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
       $scope.getAllEvents = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('EventService - Sending Get Request');
@@ -169,21 +49,13 @@ angular.module('ngCalendarApp.controllers')
       };
 
       $scope.addUpdateEvent = function (event) {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
-        $log.debug('Inside addUpdateEvent');
         if (event !== undefined) {
           $rootScope.event = event;
         }
-        $log.debug(event);
         $location.path('/eventDetail');
       };
 
       $scope.createOrUpdate = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
-        $log.debug('Inside createOrUpdate');
-
         let deferred = $q.defer();
 
         let title;
@@ -194,16 +66,9 @@ angular.module('ngCalendarApp.controllers')
         let startDate;
         let endDate;
 
-        let allday = false;
         let category;
         let location;
         let notes;
-
-        $log.debug('rootScope');
-        $log.debug($rootScope);
-
-        $log.debug('scope');
-        $log.debug($scope);
 
         if (!($rootScope.event === undefined || $rootScope.event === null)) {
           title = $rootScope.event.title;
@@ -214,9 +79,6 @@ angular.module('ngCalendarApp.controllers')
           endDate = $rootScope.event.endDate;
           endTime = $rootScope.event.endTime;
 
-          if ($rootScope.event.allday !== undefined) {
-            allday = $rootScope.event.allday;
-          }
           category = $rootScope.event.category.name;
           location = $rootScope.event.location;
           notes = $rootScope.event.notes;
@@ -229,15 +91,6 @@ angular.module('ngCalendarApp.controllers')
           endDate = $scope.event.endDate;
           endTime = $scope.event.endTime;
 
-          $log.debug('All Time Values');
-          $log.debug(startDate);
-          $log.debug(startTime);
-          $log.debug(endDate);
-          $log.debug(endTime);
-
-          if ($scope.event.allday !== undefined) {
-            allday = $scope.event.allday;
-          }
           category = $scope.event.category.name;
           location = $scope.event.location;
           notes = $scope.event.notes;
@@ -249,14 +102,10 @@ angular.module('ngCalendarApp.controllers')
           'startTime': startTime,
           'endDate': endDate,
           'endTime': endTime,
-          'allday': allday,
           'category': category,
           'location': location,
           'notes': notes,
         };
-
-        $log.debug('Created Payload');
-        $log.debug(data);
 
         if (!($rootScope.event === undefined || $rootScope.event === null)) {
           $log.debug('EventService - Sending Put Request');
@@ -299,28 +148,7 @@ angular.module('ngCalendarApp.controllers')
         }
       };
 
-      $scope.setStartTime = function () {
-        $log.debug('In setStartTime');
-        if (($scope.event !== undefined && $scope.event !== null)
-            && ($scope.event.start !== undefined && $scope.event.start
-            !== null)) {
-          $scope.event.startTime = $scope.event.start.toString().substring(11,
-              19);
-          $scope.event.start = $scope.event.start.toString().substring(0, 10);
-        }
-      };
-
-      $scope.setEndTime = function () {
-        $log.debug('In setEndTime');
-        if (($scope.event !== undefined && $scope.event !== null)
-            && ($scope.event.end !== undefined && $scope.event.end !== null)) {
-          $scope.event.endTime = $scope.event.end.toString().substring(11, 19);
-          $scope.event.end = $scope.event.end.toString().substring(0, 10);
-        }
-      };
       $scope.getAllCategories = function () {
-        $http.defaults.headers.common.Authorization = $localStorage.currentToken;
-        $http.defaults.headers.common.Username = $rootScope.username;
         let deferred = $q.defer();
 
         $log.debug('CategoryService - Sending Get Request');
