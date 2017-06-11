@@ -173,6 +173,7 @@ angular.module('ngCalendarApp.controllers')
         if (event !== undefined) {
           $rootScope.event = event;
         }
+
         $location.path('/eventDetail');
       };
 
@@ -186,6 +187,13 @@ angular.module('ngCalendarApp.controllers')
         let title;
         let start;
         let end;
+
+        let startTime;
+        let endTime;
+
+        let startDate;
+        let endDate;
+
         let allday = false;
         let category;
         let location;
@@ -199,18 +207,59 @@ angular.module('ngCalendarApp.controllers')
 
         if (!($rootScope.event === undefined || $rootScope.event === null)) {
           title = $rootScope.event.title;
-          start = new Date($rootScope.event.start);
-          end = new Date($rootScope.event.end);
+
+          $log.debug('Start Date');
+          $log.debug($rootScope.event.start);
+
+          let start = $rootScope.event.start.toString().substring(0, 10);
+          let startTime = $scope.event.startTime;
+          let whole = start + 'T' + startTime;
+
+          $log.debug('Start string');
+          $log.debug(whole);
+
+          startDate = new Date(whole);
+
+          $log.debug('End Date');
+          $log.debug($rootScope.event.end);
+
+          let end = $rootScope.event.end.toString().substring(0, 10);
+          let endTime = $scope.event.endTime;
+          whole = end + 'T' + endTime;
+
+          $log.debug('End string');
+          $log.debug(whole);
+
+          endDate = new Date(whole);
+
           if ($rootScope.event.allday !== undefined) {
             allday = $rootScope.event.allday;
           }
           category = $rootScope.event.category;
           location = $rootScope.event.location;
           notes = $rootScope.event.notes;
+
         } else {
           title = $scope.event.title;
-          start = new Date($scope.event.start);
-          end = new Date($scope.event.end);
+
+          start = $scope.event.start;
+          startTime = $scope.event.startTime;
+
+          let whole = start + 'T' + startTime;
+          startDate = new Date(whole);
+
+          $log.debug('All the start values');
+
+          $log.debug(start);
+          $log.debug(startTime);
+          $log.debug(startDate);
+
+          end = $scope.event.end;
+          endTime = $scope.event.endTime;
+
+          whole = end + 'T' + endTime;
+          endDate = new Date(whole);
+
           if ($scope.event.allday !== undefined) {
             allday = $scope.event.allday;
           }
@@ -219,10 +268,13 @@ angular.module('ngCalendarApp.controllers')
           notes = $scope.event.notes;
         }
 
+        $log.debug(startDate);
+        $log.debug(endDate);
+
         let data = {
           'title': title,
-          'start': start,
-          'end': end,
+          'start': startDate,
+          'end': endDate,
           'allday': allday,
           'category': category,
           'location': location,
@@ -230,6 +282,7 @@ angular.module('ngCalendarApp.controllers')
         };
 
         $log.debug('Created Payload');
+        $log.debug(data);
 
         if (!($rootScope.event === undefined || $rootScope.event === null)) {
           $log.debug('EventService - Sending Put Request');
@@ -271,5 +324,26 @@ angular.module('ngCalendarApp.controllers')
           return deferred.promise;
         }
       };
+
+      $scope.setStartTime = function () {
+        $log.debug('In setStartTime');
+        if (($scope.event !== undefined && $scope.event !== null)
+            && ($scope.event.start !== undefined && $scope.event.start
+            !== null)) {
+          $scope.event.startTime = $scope.event.start.toString().substring(11,
+              19);
+          $scope.event.start = $scope.event.start.toString().substring(0, 10);
+        }
+      };
+
+      $scope.setEndTime = function () {
+        $log.debug('In setEndTime');
+        if (($scope.event !== undefined && $scope.event !== null)
+            && ($scope.event.end !== undefined && $scope.event.end !== null)) {
+          $scope.event.endTime = $scope.event.end.toString().substring(11, 19);
+          $scope.event.end = $scope.event.end.toString().substring(0, 10);
+        }
+      };
+
     }
 );

@@ -1,9 +1,8 @@
 <div ng-init="bCategory=$rootScope.category" class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
   <div class="row">
     <h2>
-      &lt;Title&gt;
+      Category: {{category.name}}
     </h2>
-    <hr/>
   </div>
 
   <input ng-show="false" ng-model="category.id" ng-init="$scope.category.id=bCategory._id">
