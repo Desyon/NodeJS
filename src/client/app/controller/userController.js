@@ -16,9 +16,27 @@ angular.module('ngCalendarApp.controllers')
         $log.debug('UserService - Sending Put Request');
 
         let password = $scope.user.password;
+        let confirm = $scope.user.confirmPW;
         let email = $scope.user.email;
         let dob = $scope.user.dob;
         let name = $scope.user.name;
+
+        if (confirm !== password) {
+          notification.error({data: {errmsg: 'Passwords do not match'}});
+          password = undefined;
+          confirm = undefined;
+          $scope.user.password = undefined;
+          $scope.user.confirmPW = undefined;
+          deferred.reject({data: {errmsg: 'Passwords do not match'}});
+          return deferred.promise;
+        }
+
+        if (password === '') {
+          $scope.user.password = undefined;
+          $scope.user.confirmPW = undefined;
+          password = undefined;
+          confirm = undefined;
+        }
 
         let data = {
           'name': name,

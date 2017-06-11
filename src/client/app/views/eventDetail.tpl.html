@@ -18,10 +18,13 @@
         </div>
 
         <div class="col-md-4 col-md-offset-1 col-sm-4 col-sm-offset-1 col-xs-12">
-          <label for="category">Category</label>
-          <input class="form-control" type="text" id="category" placeholder="Enter the category"
-                 ng-model="event.category" ng-init="$scope.event.category=bEvent.category"
-                 required/>
+          <label ng-init="getAllCategories()" for="category">Category</label>
+
+          <select ng-model="event.category" id='category' ng-init="$scope.event.category.name=bEvent.category"
+                  required ng-model="event.category"
+                  ng-options="category.name for category in allCategories">
+          </select>
+
           <br/>
         </div>
       </div>
@@ -38,7 +41,7 @@
           <label for="startTime">Start Time</label>
           <input class="form-control" type="text" id="startTime" ng-model="event.startTime"
                  placeholder="HH:MM:ss"
-                 ng-init="setStartTime()">
+                 ng-init="setStartTime()" required>
           <br/>
         </div>
 
@@ -53,7 +56,7 @@
           <label for="endTime">End Time</label>
           <input class="form-control" type="text" id="endTime" ng-model="event.endTime"
                  placeholder="HH:MM:ss"
-                 ng-init="setEndTime()">
+                 ng-init="setEndTime()" required>
           <br/>
         </div>
       </div>
