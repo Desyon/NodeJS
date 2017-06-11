@@ -3,128 +3,27 @@
  */
 
 angular.module('ngCalendarApp.controllers')
-.controller('UserController',
+.controller('EventController',
     function eventCtrl($scope, $log, $q, $http,
-        REST_API_ENDPOINT, $localStorage) {
+        REST_API_ENDPOINT, $rootScope, $location, $localStorage, notification) {
       $log.debug('Initializing EventController');
 
-      $scope.createEvent = function () {
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Put Request');
-
-        let title = $scope.event.title;
-        let date = $scope.event.date;
-        let time = $scope.event.time;
-        let allday = $scope.event.allday;
-        let category = $scope.event.category;
-        let owner = $scope.event.owner;
-        let location = $scope.event.location;
-        let notes = $scope.event.notes;
-
-        let data = {
-          'title': title,
-          'date': date,
-          'time': time,
-          'allday': allday,
-          'category': category,
-          'owner': owner,
-          'location': location,
-          'notes': notes,
-        };
-
-        $http.post(REST_API_ENDPOINT + '/event/create', data)
-        .then(function (response) {
-              deferred.resolve(response.data);
-
-              $log.debug('EventService - Event created');
-            },
-            function (response) {
-              $log.error('EventService - Failed to create event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
-      $scope.updateEvent = function () {
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Put Request');
-
-        let title = $scope.event.title;
-        let date = $scope.event.date;
-        let time = $scope.event.time;
-        let allday = $scope.event.allday;
-        let category = $scope.event.category;
-        let location = $scope.event.location;
-        let notes = $scope.event.notes;
-
-        let id = $scope.event.id;
-
-        let data = {
-          'title': title,
-          'date': date,
-          'time': time,
-          'allday': allday,
-          'category': category,
-          'location': location,
-          'notes': notes,
-        };
-
-        $http.put(REST_API_ENDPOINT + '/event/' + id, data)
-        .then(function (response) {
-              deferred.resolve(response.data);
-              $log.debug('EventService - Event updated');
-            },
-            function (response) {
-              $log.error('EventService - Failed to update event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
-      $scope.deleteEvent = function () {
+      $scope.deleteEvent = function (event) {
         let deferred = $q.defer();
 
         $log.debug('EventService - Sending Delete Request');
-        let id = $scope.event.id;
+
+        let id = event._id;
 
         $http.delete(REST_API_ENDPOINT + '/event/' + id)
         .then(function (response) {
               deferred.resolve(response.data);
+              $scope.getAllEvents();
               $log.debug('EventService - Event deleted');
             },
             function (response) {
+              notification.error(response);
               $log.error('EventService - Failed to delete event');
-              deferred.reject(response);
-            });
-        return deferred.promise;
-      };
-
-      $scope.getEvent = function () {
-        let deferred = $q.defer();
-
-        $log.debug('EventService - Sending Get Request');
-        let id = $scope.event.id;
-
-        $http.get(REST_API_ENDPOINT + '/event/' + id)
-        .then(function (response) {
-              deferred.resolve(response.data);
-
-              $scope.event.title = response.data.title;
-              $scope.event.date = response.data.date;
-              $scope.event.time = response.data.time;
-              $scope.event.allday = response.data.allday;
-              $scope.event.category = response.data.category;
-              $scope.event.owner = response.data.owner;
-              $scope.event.location = response.data.location;
-              $scope.event.notes = response.data.notes;
-              $scope.event.id = response.data.id;
-
-              $log.debug('EventService - Event received');
-            },
-            function (response) {
-              $log.error('EventService - Failed to get event');
               deferred.reject(response);
             });
         return deferred.promise;
@@ -142,10 +41,141 @@ angular.module('ngCalendarApp.controllers')
               $log.debug('EventService - Events received');
             },
             function (response) {
+              notification.error(response);
               $log.error('EventService - Failed to get events');
               deferred.reject(response);
             });
         return deferred.promise;
       };
+
+      $scope.addUpdateEvent = function (event) {
+        if (event !== undefined) {
+          $rootScope.event = event;
+        }
+        $location.path('/eventDetail');
+      };
+
+      $scope.createOrUpdate = function () {
+        let deferred = $q.defer();
+
+        let title;
+
+        let startTime;
+        let endTime;
+
+        let startDate;
+        let endDate;
+
+        let category;
+        let location;
+        let notes;
+
+        if (!($rootScope.event === undefined || $rootScope.event === null)) {
+          title = $rootScope.event.title;
+
+          startDate = $rootScope.event.startDate;
+          startTime = $rootScope.event.startTime;
+
+          endDate = $rootScope.event.endDate;
+          endTime = $rootScope.event.endTime;
+
+          category = $rootScope.event.category.name;
+          location = $rootScope.event.location;
+          notes = $rootScope.event.notes;
+        } else {
+          title = $scope.event.title;
+
+          startDate = $scope.event.startDate;
+          startTime = $scope.event.startTime;
+
+          endDate = $scope.event.endDate;
+          endTime = $scope.event.endTime;
+
+          category = $scope.event.category.name;
+          location = $scope.event.location;
+          notes = $scope.event.notes;
+        }
+
+        let data = {
+          'title': title,
+          'startDate': new Date(startDate).getTime(),
+          'startTime': new Date(startTime).getTime(),
+          'endDate': new Date(endDate).getTime(),
+          'endTime': new Date(endTime).getTime(),
+          'category': category,
+          'location': location,
+          'notes': notes,
+        };
+
+        if (!($rootScope.event === undefined || $rootScope.event === null)) {
+          $log.debug('EventService - Sending Put Request');
+
+          let id = $rootScope.event._id;
+
+          $http.put(REST_API_ENDPOINT + '/event/' + id, data)
+          .then(function (response) {
+                $scope.getAllEvents();
+                deferred.resolve(response.data);
+                $log.debug('EventService - Event updated');
+              },
+              function (response) {
+                notification.error(response);
+                $log.error('EventService - Failed to update event');
+                deferred.reject(response);
+              });
+
+          $location.path('/events');
+          delete $rootScope.event;
+          return deferred.promise;
+        } else {
+          $log.debug('EventService - Sending Post Request');
+
+          $http.post(REST_API_ENDPOINT + '/event/create', data)
+          .then(function (response) {
+                deferred.resolve(response.data);
+                $scope.getAllEvents();
+                $log.debug('EventService - Event created');
+              },
+              function (response) {
+                notification.error(response);
+                $log.error('EventService - Failed to create event');
+                deferred.reject(response);
+              });
+
+          $location.path('/events');
+          delete $rootScope.event;
+          return deferred.promise;
+        }
+      };
+
+      $scope.getAllCategories = function () {
+        let deferred = $q.defer();
+
+        $log.debug('CategoryService - Sending Get Request');
+
+        $http.get(REST_API_ENDPOINT + '/category/all')
+        .then(function (response) {
+              deferred.resolve(response.data);
+              $scope.allCategories = response.data;
+              $log.debug('CategoryService - Categories received');
+            },
+            function (response) {
+              $log.error('CategoryService - Failed to get Categories');
+              notification.error(response);
+              deferred.reject(response);
+            });
+        return deferred.promise;
+      };
+
+      $scope.getDateTime = function () {
+        if ($rootScope.event === null || $rootScope.event === undefined) {
+          return;
+        }
+        $scope.event.endDate = new Date($rootScope.event.endDate);
+        $scope.event.endTime = new Date($rootScope.event.endTime);
+        $scope.event.startDate = new Date($rootScope.event.startDate);
+        $scope.event.startTime = new Date($rootScope.event.startTime);
+      };
     }
-);
+)
+;

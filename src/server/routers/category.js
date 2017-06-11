@@ -70,7 +70,8 @@ router.post('/create', bodyParser, function (req, res) {
     db.insertCategory(category, function (err) {
       if (err) {
         winston.debug('Category creation failed with database error.');
-        return res.status(500).send(err);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else {
         winston.debug('Category creation successful.');
         let response = {msg: 'Category created'};
@@ -139,7 +140,8 @@ router.put('/:id', bodyParser, function (req, res) {
           db.updateCategory(categoryId, category, function (updateErr) {
             if (updateErr) {
               winston.debug('Category change failed with database error.');
-              return res.status(500).send(updateErr);
+              error.errmsg = 'Database error';
+              return res.status(500).send(error);
             } else {
               winston.debug('Category change successful.');
               let response = {msg: 'Success'};
@@ -233,7 +235,8 @@ router.get('/:id', bodyParser, function (req, res) {
     db.getCategory(id, function (getErr, ret) {
       if (getErr) {
         winston.debug('Category request failed with database error');
-        return res.status(500).send(getErr);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else if (!ret) {
         winston.debug('Category request failed as category was not found');
         error.errmsg = 'Category not found';
@@ -291,7 +294,8 @@ router.delete('/:id', bodyParser, function (req, res) {
         db.deleteCategory(categoryId, function (delErr) {
           if (delErr) {
             winston.debug('Category deletion failed with database error');
-            return res.status(500).send(delErr);
+            error.errmsg = 'Database error';
+            return res.status(500).send(error);
           } else {
             winston.debug('Category deletion successful.');
             let response = {msg: 'Category deleted'};

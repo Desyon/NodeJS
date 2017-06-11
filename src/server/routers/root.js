@@ -13,22 +13,22 @@ const router = express.Router();
  * Initialization rout to recreate the databases after resetting them. Can also
  * be used for a first time setup.
  */
-router.get('/administration/init', function (req, res) {
+router.get('/administration/database', function (req, res) {
   db.initUserDB(function (userError) {
     if (userError) {
       return res.status(500).send('User database creation failed');
-    }
-  });
-
-  db.initEventDB(function (eventError) {
-    if (eventError) {
-      return res.status(500).send('Event database creation failed');
-    }
-  });
-
-  db.initCategoryDB(function (catError) {
-    if (catError) {
-      return res.status(500).send('Category databases creation failed');
+    } else {
+      db.initEventDB(function (eventError) {
+        if (eventError) {
+          return res.status(500).send('Event database creation failed');
+        } else {
+          db.initCategoryDB(function (catError) {
+            if (catError) {
+              return res.status(500).send('Category databases creation failed');
+            }
+          });
+        }
+      });
     }
   });
 
@@ -40,7 +40,7 @@ router.get('/administration/init', function (req, res) {
  * Drops all databases and redirects to the init route to set them up again.
  * Do not use twice at once. Otherwise the server might crash.
  */
-router.get('/administration/delete', function (req, res) {
+router.delete('/administration/database', function (req, res) {
   let error = {};
 
   if (!req.get('authorization')) {
@@ -55,24 +55,81 @@ router.get('/administration/delete', function (req, res) {
 
   db.deleteUserDB(function (userErr) {
     if (userErr) {
+      winston.debug(userErr);
       return res.status(500).send(userErr);
-    }
-  });
-
-  db.deleteEventDB(function (eventError) {
-    if (eventError) {
-      return res.status(500).send(eventError);
-    }
-  });
-
-  db.deleteCategoryDB(function (catError) {
-    if (catError) {
-      return res.status(500).send(catError);
+    } else {
+      db.deleteEventDB(function (eventError) {
+        if (eventError) {
+          return res.status(500).send(eventError);
+        } else {
+          db.deleteCategoryDB(function (catError) {
+            if (catError) {
+              return res.status(500).send(catError);
+            }
+          });
+        }
+      });
     }
   });
 
   let response = {msg: 'Databases deleted'};
   return res.status(200).send(response);
+});
+
+router.put('/administration/test', function (req, res) {
+  let error = {};
+
+  let user = {
+    'username': 'someuser',
+    'name': 'John Doe',
+    'email': 'john@doe.com',
+    'dob': '2017-06-10T22:00:00.000Z',
+    'password': 'password',
+  };
+
+  db.insertUser(user, function (err) {
+    if (err) {
+      error.errmsg = 'Error creating user';
+      return res.status(500).send(error);
+    } else {
+      let category = {
+        'name': 'Awesome Events',
+        'color': '#c0ffee',
+        'owner': 'someuser',
+        'description': 'Cool Stuff',
+      };
+
+      db.insertCategory(category, function (err) {
+        if (err) {
+          error.errmsg = 'Error creating category';
+          return res.status(500).send(error);
+        } else {
+          let event = {
+            'title': 'My Awesome Event',
+            'startDate': 1496613600000,
+            'startTime': 45420000,
+            'endDate': 1496613600000,
+            'endTime': 52560000,
+            'owner': 'someuser',
+            'category': 'Awesome Events',
+            'location': 'Home',
+            'notes': 'Definitely get some food before',
+            'color': '#c0ffee',
+          };
+
+          db.insertEvent(event, function (err) {
+            if (err) {
+              error.errmsg = 'Error creating event';
+              return res.status(500).send(error);
+            }
+          });
+        }
+      });
+    }
+  });
+
+  let response = {msg: 'Sample data created successfully'};
+  return res.status(201).send(response);
 });
 
 /**

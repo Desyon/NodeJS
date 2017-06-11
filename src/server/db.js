@@ -124,6 +124,18 @@ module.exports.getCategory = function (id, callback) {
 };
 
 /**
+ * Gets a category of a specific user by name
+ * @param category name of the category
+ * @param user owner of the category
+ * @param callback Response
+ */
+module.exports.getCategoryByName = function (category, user, callback) {
+  categories.findOne({name: category, owner: user}, function (err, item) {
+    callback(err, item);
+  });
+};
+
+/**
  * Retrieves all events of one specific given user as a JSON list.
  * @param user user to retrieve all events for
  * @param callback Response
@@ -169,6 +181,17 @@ module.exports.deleteEvent = function (id, callback) {
 };
 
 /**
+ * Deletes all events owned by one user. For user deletion only.
+ * @param user username of the deleted user.
+ * @param callback Response
+ */
+module.exports.deleteAllUserEvents = function (user, callback) {
+  events.remove({owner: user}, function (err) {
+    callback(err);
+  });
+};
+
+/**
  * Deletes the category with the given ID.
  * @param id ID of the category to be deleted.
  * @param callback Response
@@ -176,6 +199,17 @@ module.exports.deleteEvent = function (id, callback) {
 module.exports.deleteCategory = function (id, callback) {
   categories.remove({_id: id}, {w: 1}, function (err, result) {
     callback(err, result);
+  });
+};
+
+/**
+ * Deletes all categories owned by one user. For user deletion only.
+ * @param user username of the deleted user.
+ * @param callback Response
+ */
+module.exports.deleteAllUserCategories = function (user, callback) {
+  categories.remove({owner: user}, function (err) {
+    callback(err);
   });
 };
 
@@ -188,11 +222,7 @@ module.exports.deleteCategory = function (id, callback) {
 module.exports.initUserDB = function (callback) {
   users = db.createCollection('user.db', {autoIndexId: false}, function () {
     users.createIndex({'username': 1}, {unique: true}, function (error) {
-      if (error) {
-        return callback = error;
-      } else {
-        callback = null;
-      }
+      callback(error);
     });
   });
   winston.debug('User database created.');
@@ -206,11 +236,7 @@ module.exports.initUserDB = function (callback) {
 module.exports.initEventDB = function (callback) {
   events = db.createCollection('event.db', {autoIndexId: true},
       function (error) {
-        if (error) {
-          return callback = error;
-        } else {
-          callback = null;
-        }
+        callback(error);
       });
   winston.debug('Event database created.');
 };
@@ -223,11 +249,7 @@ module.exports.initEventDB = function (callback) {
 module.exports.initCategoryDB = function (callback) {
   categories = db.createCollection('category.db', {autoIndexId: true},
       function (error) {
-        if (error) {
-          return callback = error;
-        } else {
-          callback = null;
-        }
+        callback(error);
       });
   winston.debug('Category database created.');
 };
@@ -238,11 +260,7 @@ module.exports.initCategoryDB = function (callback) {
  */
 module.exports.deleteUserDB = function (callback) {
   users.drop(function (error) {
-    if (error) {
-      return callback = error;
-    } else {
-      callback = null;
-    }
+    callback(error);
   });
   winston.debug('User database deleted');
 };
@@ -253,11 +271,7 @@ module.exports.deleteUserDB = function (callback) {
  */
 module.exports.deleteEventDB = function (callback) {
   events.drop(function (error) {
-    if (error) {
-      return callback = error;
-    } else {
-      callback = null;
-    }
+    callback(error);
   });
   winston.debug('Event database deleted');
 };
@@ -268,11 +282,7 @@ module.exports.deleteEventDB = function (callback) {
  */
 module.exports.deleteCategoryDB = function (callback) {
   categories.drop(function (error) {
-    if (error) {
-      return callback = error;
-    } else {
-      callback = null;
-    }
+    callback(error);
   });
   winston.debug('Category database deleted');
 };

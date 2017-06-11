@@ -26,10 +26,9 @@ Attribute | Data Type | Description | Mandatory
 --------- | --------- | ----------- | :-------:
 title | String | u know ... | x
 start | Date | u know ... | x
-End | Date | u know ... | x
-allday | bool | u know... | x
+end | Date | u know ... | x
 category | Category | u know... | x
-owner | User | u know...; automatically filled | x
+owner | User | u know...; automatically added | x
 location | String | u know ... (Google Maps?) | 
 notes | String | u know ... (max length) |
 id | ? | unique ID; automatically generated | x 
@@ -43,7 +42,7 @@ name | String | u know... | x
 color | Hex | u know... (color picker?) | x
 description | String | u know ... | 
 id | ? | unique ID; automatically generated | x
-owner | user | username | x
+owner | user | username; automatically added | x
 
 ## REST-Routes
 

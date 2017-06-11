@@ -7,6 +7,15 @@ which fields are mandatory. The two routes for maintenance are not documented.
 
 ### Login
 **POST** ``/user/login``
+
+#### Header:
+````json
+{
+  "Content-Type": "application/json"
+}
+````
+
+#### Body:
 ````json
 {
   "username": "someuser",
@@ -16,31 +25,42 @@ which fields are mandatory. The two routes for maintenance are not documented.
 *Return Value:*
 ````json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTY3NjY1MTYsInN1YiI6ImF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiY2FsZW5kYXJTZXJ2ZXIiLCJhdWQiOiJzZXJ2ZXJTZXJ2aWNlcyIsInVzZXIiOiJmcmFuayIsImlhdCI6MTQ5Njc2MjkxNn0.HqQrmsFY2zON-DXpC4Ah6IMvCt5_sIW3DXMRWtBtnzA"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTY3NjY1MTYsInN1YiI6ImF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiY2FsZW5kYXJTZXJ2ZXIiLCJhdWQiOiJzZXJ2ZXJTZXJ2aWNlcyIsInVzZXIiOiJmcmFuayIsImlhdCI6MTQ5Njc2MjkxNn0.HqQrmsFY2zON-DXpC4Ah6IMvCt5_sIW3DXMRWtBtnzA",
+  "msg": "Success"
 }
 ````
 
 ### Sign up
 **POST** ``/user/create``
+
+#### Header:
+````json
+{
+  "Content-Type": "application/json"
+}
+````
+
+#### Body:
 ````json
 {
   "username": "someuser",
   "name": "John Doe",
   "email": "john@doe.com",
-  "dob": "20.05.1985",
+  "dob": "2017-06-10T22:00:00.000Z",
   "password": "password"
 }
 ````
 *Return value:*
 ````json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTY3NjY1MTYsInN1YiI6ImF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiY2FsZW5kYXJTZXJ2ZXIiLCJhdWQiOiJzZXJ2ZXJTZXJ2aWNlcyIsInVzZXIiOiJmcmFuayIsImlhdCI6MTQ5Njc2MjkxNn0.HqQrmsFY2zON-DXpC4Ah6IMvCt5_sIW3DXMRWtBtnzA"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTY3NjY1MTYsInN1YiI6ImF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiY2FsZW5kYXJTZXJ2ZXIiLCJhdWQiOiJzZXJ2ZXJTZXJ2aWNlcyIsInVzZXIiOiJmcmFuayIsImlhdCI6MTQ5Njc2MjkxNn0.HqQrmsFY2zON-DXpC4Ah6IMvCt5_sIW3DXMRWtBtnzA",
+  "msg": "Success"
 }
 ````
 
 
 ### Update
-**PUT** ``/user/:username``
+**PUT** ``/user``
    
 #### Header:
 ````json
@@ -49,30 +69,48 @@ which fields are mandatory. The two routes for maintenance are not documented.
     "authorization": "jwt"
 }
 ````
-Note: JWT user has to match the username specified in the URL.
 
 #### Body:
 ````json
 {
   "name": "John Doe",
-  "dob": "20.05.1985",
+  "dob": "2017-06-10T22:00:00.000Z",
   "email": "john@doe.com",
   "password": "password"
 }
 ````
 *No content in return value*
 
+### Get User
+**GET** ``/user``
+
+### Header:
+````json
+{
+  "authorization": "jwt"
+}
+````
+*Return Value:*
+````json
+{
+  "name": "John Doe",
+  "dob": "2017-06-10T22:00:00.000Z",
+  "email": "john@doe.com",
+  "password": "password",
+  "_id": 2
+}
+````
+
 ### Delete
-**DELETE** ``/user/username``
+**DELETE** ``/user``
 
 #### Header:
 ````json
 {
-    "content-type": "application/json",
-    "authorization": "jwt"
+  "content-type": "application/json",
+  "authorization": "jwt"
 }
 ````
-Note: JWT user has to match the username specified in the URL.
 
 ## Event
 
@@ -91,16 +129,17 @@ Note: JWT user has to match the owner specified in the body.
 ### Body:
 ````json
 {
-  "title": "My awesome Event",
-  "start": "2017-06-08T13:37:00.000Z",
-  "end": "2017-06-08T15:36:14.000Z",
-  "allday": false,
-  "category": 4,
-  "owner": "someuser",
-  "location": "Home",
-  "notes": "definitely get some food before"
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "location":"Home",
+  "notes":"Definitely get some food before"
 }
 ````
+Note: The given category has to exist.
 
 ### Update
 **PUT** ``/event/:id``
@@ -117,13 +156,14 @@ Note: JWT user has to match the owner of the event specified in the URL.
 ### Body:
 ````json
 {
-  "title:": "My awesome Event",
-  "start": "2017-06-08T13:37:00.000Z",
-  "end": "2017-06-08T15:36:14.000Z",
-  "allday": false,
-  "category": 4,
-  "location": "Home",
-  "notes": "definitely get some food before"
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "location":"Home",
+  "notes":"Definitely get some food before"
 }
 ````
 
@@ -142,15 +182,17 @@ Note: JWT user has to match the owner of the event specified in the URL.
 *Return Value:*
 ````json
 {
-  "title:": "My awesome Event",
-  "date": "05.06.2017",
-  "time": "20:00",
-  "allday": false,
-  "owner": "someuser",
-  "category": 4,
-  "location": "Home",
-  "notes": "definitely get some food before",
-  "_id": 3
+  "title":"My Awesome Event",
+  "startDate":1496613600000,
+  "startTime":45420000,
+  "endDate":1496613600000,
+  "endTime":52560000,
+  "category":"Awesome Events",
+  "owner":"someuser",
+  "location":"Home",
+  "notes":"Definitely get some food before",
+  "color":"#c0ffee",
+  "_id": 2
 }
 ````
 
@@ -198,9 +240,9 @@ Note: JWT user has to match the owner specified in the body.
 ### Body:
 ````json
 {
-  "name": "Work",
-  "color": "C0FFEE",
-  "description": "My work appointments"
+  "name": "Awesome events",
+  "color": "#c0ffee",
+  "description": "Cool Stuff"
 }
 ````
 
@@ -219,9 +261,9 @@ Note: JWT user has to match the owner of the category specified in the URL.
 ### Body:
 ````json
 {
-  "name": "Work",
-  "color": "C0FFEE",
-  "description": "My work appointments"
+  "name": "Awesome Events",
+  "color": "#c0ffee",
+  "description": "Cool Stuff"
 }
 ````
 
@@ -240,11 +282,11 @@ Note: JWT user has to match the owner of the category specified in the URL.
 *Return Value:*
 ````json
 {
-  "name": "Work",
+  "name": "Awesome Events",
   "owner": "someuser",
-  "color": "C0FFEE",
-  "description": "My work appointments",
-  "_id": 4
+  "color": "#c0ffee",
+  "description": "Cool Stuff",
+  "_id": 2
 }
 ````
 
@@ -274,3 +316,22 @@ All categories of the user specified in the JWT in an array.
 }
 ````
 Note: JWT user has to match the owner of the category specified in the URL.
+
+## Administration
+
+This routes are for administration only. 
+
+### Delete Database
+**DELETE** ``/administration/database``
+
+#### Header
+````json
+{
+  "Authorization": "admin"
+}
+````
+### Initialize Database
+**GET** ``/administration/database``
+
+### Initialize Test Data
+**PUT** ``/administration/test``

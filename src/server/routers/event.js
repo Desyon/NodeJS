@@ -55,30 +55,48 @@ router.post('/create', bodyParser, function (req, res) {
 
     let event = {};
     event.title = req.body.title;
-    event.start = req.body.start;
-    event.end = req.body.end;
-    event.allday = req.body.allday;
+    event.startDate = req.body.startDate;
+    event.startTime = req.body.startTime;
+    event.endDate = req.body.endDate;
+    event.endTime = req.body.endTime;
     event.category = req.body.category;
     event.owner = decoded.user;
     event.location = req.body.location;
     event.notes = req.body.notes;
 
-    if (undefined === event.title || undefined === event.start ||
-        undefined === event.end || undefined === event.allday ||
-        undefined === event.category || undefined === event.owner) {
+    if (undefined === event.title || undefined === event.startDate ||
+        undefined === event.endDate || undefined === event.startTime
+        || undefined === event.endTime || undefined === event.category ||
+        undefined === event.owner) {
       winston.debug('Event creation failed with missing mandatory properties.');
       error.errmsg = 'Mandatory fields missing. Event creation rejected';
       return res.status(422).send(error);
     }
 
-    db.insertEvent(event, function (insertErr) {
-      if (insertErr) {
-        winston.debug('Event creation failed with database Error.');
-        return res.status(500).send(insertErr);
+    // get color for display
+    db.getCategoryByName(event.category, decoded.user, function (err, item) {
+      if (err) {
+        winston.debug('Event creation failed with database error');
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
+      } else if (!item) {
+        winston.debug('Event creation failed with missing category');
+        error.errmsg = 'Category not found';
+        return res.status(404).send(error);
       } else {
-        winston.debug('Event creation successful.');
-        let response = {msg: 'Event created'};
-        return res.status(201).send(response);
+        event.color = item.color;
+
+        db.insertEvent(event, function (insertErr) {
+          if (insertErr) {
+            winston.debug('Event creation failed with database Error.');
+            error.errmsg = 'Database error';
+            return res.status(500).send(error);
+          } else {
+            winston.debug('Event creation successful.');
+            let response = {msg: 'Event created'};
+            return res.status(201).send(response);
+          }
+        });
       }
     });
   });
@@ -125,30 +143,47 @@ router.put('/:id', bodyParser, function (req, res) {
       let event = {};
 
       event.title = req.body.title;
-      event.start = req.body.start;
-      event.end = req.body.end;
-      event.allday = req.body.allday;
+      event.startDate = req.body.startDate;
+      event.startTime = req.body.startTime;
+      event.endDate = req.body.endDate;
+      event.endTime = req.body.endTime;
       event.category = req.body.category;
       event.location = req.body.location;
       event.notes = req.body.notes;
 
-      db.getEvent(id, function (getErr, ret) {
-        if (getErr) {
-          winston.debug('Event change failed with missing event.');
-          error.errmsg = 'Could not find event.';
+      // get color for display
+      db.getCategoryByName(event.category, decoded.user, function (err, item) {
+        if (err) {
+          winston.debug('Event creation failed with database error');
+          error.errmsg = 'Database error';
+          return res.status(500).send(error);
+        } else if (!item) {
+          winston.debug('Event creation failed with missing category');
+          error.errmsg = 'Category not found';
           return res.status(404).send(error);
-        } else if (ret.owner !== decoded.user) {
-          winston.debug('Event change failed with wrong owner.');
-          return res.sendStatus(403);
         } else {
-          db.updateEvent(id, event, function (updateErr) {
-            if (updateErr) {
-              winston.debug('Event change failed with database error.');
-              return res.status(500).send(updateErr);
+          event.color = item.color;
+
+          db.getEvent(id, function (getErr, ret) {
+            if (getErr) {
+              winston.debug('Event change failed with missing event.');
+              error.errmsg = 'Could not find event.';
+              return res.status(404).send(error);
+            } else if (ret.owner !== decoded.user) {
+              winston.debug('Event change failed with wrong owner.');
+              return res.sendStatus(403);
             } else {
-              winston.debug('Event change successful.');
-              let response = {msg: 'Success'};
-              return res.status(200).send(response);
+              db.updateEvent(id, event, function (updateErr) {
+                if (updateErr) {
+                  winston.debug('Event change failed with database error.');
+                  error.errmsg = 'Database error';
+                  return res.status(500).send(error);
+                } else {
+                  winston.debug('Event change successful.');
+                  let response = {msg: 'Success'};
+                  return res.status(200).send(response);
+                }
+              });
             }
           });
         }
@@ -195,7 +230,7 @@ router.get('/all', bodyParser, function (req, res) {
     db.getUserEvents(user, function (getErr, ret) {
       if (getErr) {
         winston.debug('Event request failed with database error.');
-        error.errmsg = 'Database error.';
+        error.errmsg = 'Database error';
         return res.status(500).send(error);
       } else {
         winston.debug('Event request successful.');
@@ -238,7 +273,8 @@ router.get('/:id', bodyParser, function (req, res) {
     db.getEvent(id, function (err, ret) {
       if (err) {
         winston.debug('Event request failed with database error.');
-        return res.status(500).send(err);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else if (!ret) {
         winston.debug('Event request failed with missing event.');
         error.errmsg = 'Event not found.';
@@ -295,7 +331,8 @@ router.delete('/:id', bodyParser, function (req, res) {
         db.deleteEvent(id, function (delErr) {
           if (delErr) {
             winston.debug('Event deletion failed with database error.');
-            return res.status(500).send(delErr);
+            error.errmsg = 'Database error';
+            return res.status(500).send(error);
           } else {
             winston.debug('Event deletion successful.');
             let response = {msg: 'Event deleted'};

@@ -1,61 +1,90 @@
-<div class="container-fluid">
+<div ng-init="account=getUser()" class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
   <div class="row">
-    <h3>Account Information</h3>
+    <h2>Your Account</h2>
+    <hr/>
   </div>
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-12">
-        <label for="username">Username</label>
-        <input class="form-control" type="text" id="username" ng-model="user.username" readonly>
-      </div>
-    </div>
-    <br/>
 
-    <div class="row">
-      <div class="col-md-8">
-        <label for="name">Name</label>
-        <input class="form-control" type="text" id="name" placeholder="Enter your name"
-               ng-model="user.username">
-      </div>
-    </div>
-    <br/>
+  <div class="row">
+    <h4>User Information</h4>
+    <hr/>
+  </div>
 
-    <div class="row">
-      <div class="col-md-8">
-        <label for="dob">Date of Birth</label>
-        <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
-               ng-model="user.dob">
-      </div>
-    </div>
-    <br/>
+  <div class="row">
+    <p class="text-primary">
+      Here you can look up and change your account information. You can change all information but
+      your username. At the bottom of the page you can delete your account permanently.
+    </p>
+  </div>
 
-    <div class="row">
-      <div class="col-md-8">
-        <label for="email">E-Mail</label>
-        <input class="form-control" type="email" id="email" placeholder="Enter your email"
-               ng-model="user.email">
+  <div class="row">
+    <form name="userForm">
+      <div class="row">
+        <div class="col-md-7 col-sm-10 col-xs-12">
+          <label for="username">Username</label>
+          <input class="form-control" type="text" id="username" ng-model="user.username"
+                 ng-init="user.username=account.data.username" readonly>
+          <br/>
+        </div>
       </div>
-    </div>
-    <br/>
 
-    <div class="row">
-      <div class="col-md-5">
-        <label for="password">Password</label>
-        <input class="form-control" type="password" id="password"
-               placeholder="Enter to change your password"
-               ng-model="user.password">
+
+      <div class="row">
+        <div class="col-md-7 col-sm-10 col-xs-12">
+          <label for="name">Name</label>
+          <input class="form-control" type="text" id="name" placeholder="Enter your name"
+                 ng-model="user.name">
+          <br/>
+        </div>
       </div>
-      <div class="col-md-5 col-md-offset-2">
-        <label for="confirmPW">Confirm Password</label>
-        <input class="form-control" type="password" id="confirmPW"
-               placeholder="Enter your password. Again..."
-               ng-model="user.confirmPW">
+
+      <div class="row">
+        <div class="col-md-3 col-sm-4 col-xs-12">
+          <label for="dob">Date of Birth</label>
+          <input class="form-control" type="date" id="dob" placeholder="Format DD.MM.YYYY"
+                 ng-model="user.dob">
+          <br/>
+
+          <label for="email">E-Mail</label>
+          <input class="form-control" type="email" id="email" placeholder="Enter your email"
+                 ng-model="user.email">
+          <br/>
+        </div>
+
+        <div class="col-md-3 col-md-offset-1 col-sm-4 col-sm-offset-2 col-xs-12">
+          <label for="password">Password</label>
+          <input class="form-control" type="password" id="password"
+                 placeholder="Enter password" ng-model="user.password">
+          <br/>
+
+          <label for="confirmPW">Confirm Password</label>
+          <input class="form-control" type="password" id="confirmPW"
+                 placeholder="Enter password. Again..." ng-model="user.confirmPW">
+          <br/>
+        </div>
       </div>
-    </div>
-    <br/>
 
-    <button class="btn btn-default col-md-4" ng-click="updateUser()">Apply</button>
-    <button class="btn btn-default col-md-4 col-md-offset-4" ng-click="deleteUser()">Delete</button>
 
+      <button class="btn btn-default col-md-2 col-sm-3 col-xs-12" ng-click="updateUser()">Update
+        Info
+      </button>
+    </form>
+  </div>
+  <br/><br/>
+
+  <div class="row text-danger">
+    <h4>Delete Account</h4>
+    <hr/>
+  </div>
+
+  <div class="row">
+    <p class="text-primary">
+      If you click this button your account will be permanently deleted. You will not be prompted
+      any confirmation requests.
+    </p>
+  </div>
+
+  <div class="row">
+    <button class="btn btn-danger col-md-2 col-sm-3 col-xs-12" ng-click="deleteUser()">Delete User
+    </button>
   </div>
 </div>

@@ -1,0 +1,41 @@
+<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
+  <div class="row">
+    <h2>Events</h2>
+    <hr/>
+  </div>
+
+  <div class="table-responsive row">
+    <table ng-show="allEvents.length!==0" class="table" ng-init="getAllEvents()">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Start Date</th>
+        <th>Start Time</th>
+        <th>Location</th>
+        <!-- Empty headers to have a border also over the glyphicons -->
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="event in allEvents" ng-style="{'background-color': event.color}">
+        <td>{{event.title}}</td>
+        <td>{{event.startDate | date:'d.MMMM y'}}</td>
+        <td>{{event.startTime | date:'HH:mm'}}</td>
+        <td>{{event.location}}</td>
+        <td>
+          <i class="glyphicon glyphicon-trash" ng-click="deleteEvent(event)"></i>
+        </td>
+        <td>
+          <i class="glyphicon glyphicon-pencil" ng-click="addUpdateEvent(event)"></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <button ng-click="addUpdateEvent(null)" class="btn btn-success col-md-3 col-sm-3 col-xs-3"><i
+        class="glyphicon glyphicon-plus"></i></button>
+  </div>
+</div>

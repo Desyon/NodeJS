@@ -1,25 +1,46 @@
 /* Custom color palette */
-@color-coffee: #c0ffee;
-@highlight-color: #f0ad4e;
+@coffee-color:        #c0ffee;
+@highlight-color:     #f0ad4e;
 
-// TODO: add some fancy custom colors
+@danger-btn-color:    #be0000;
+@danger-text-color:   #a50000;
+
+/* Media queries */
+@smartphone: ~"only screen and (max-width: 479px)";
 
 /* Other definitions */
-
-@body-bg: lighten(@color-coffee, 30%);
+@body-bg:     lighten(@coffee-color, 30%);
 
 // Changes to navigation bar. Turned black and some adaptions for effects and readability.
-@navbar-default-bg: @gray-base;
-@navbar-default-link-color: @gray-lighter;
-@navbar-default-brand-color: darken(@highlight-color, 12%);
+@navbar-default-bg:                 @gray-base;
+@navbar-default-link-color:         @gray-lighter;
+@navbar-default-brand-color:        darken(@highlight-color, 12%);
 
-@navbar-default-link-hover-bg: lighten(@navbar-default-bg, 15%);
-@navbar-default-brand-hover-bg: @navbar-default-bg;
+@navbar-default-link-hover-bg:      lighten(@navbar-default-bg, 15%);
+@navbar-default-brand-hover-bg:     @navbar-default-bg;
 
-@navbar-default-link-hover-color: lighten(@navbar-default-link-color, 15%);
-@navbar-default-brand-hover-color: @navbar-default-brand-color;
+@navbar-default-link-hover-color:   lighten(@navbar-default-link-color, 15%);
+@navbar-default-brand-hover-color:  @navbar-default-brand-color;
 
-@navbar-default-link-active-bg: lighten(@navbar-default-link-color, 90%);
-@navbar-default-link-active-color: @highlight-color;
+@navbar-default-link-active-bg:     lighten(@navbar-default-link-color, 90%);
+@navbar-default-link-active-color:  @highlight-color;
 
-// TODO: add some overrides. Mainly colors I guess
+// Changes to buttons for nicer accents
+@btn-default-bg:          @highlight-color;
+@btn-default-border:      darken(@highlight-color, 7%);
+
+@btn-danger-bg:           @danger-btn-color;
+@btn-danger-border:       darken(@danger-btn-color, 7%);
+
+.text-danger {
+  color: @danger-text-color;
+}
+
+// Custom class for responsive design + move content below navbar
+.content-container {
+   padding-top: 50px;
+
+   @media @smartphone {
+     padding-top: 230px;
+   }
+ }

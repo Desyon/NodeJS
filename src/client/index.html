@@ -19,20 +19,32 @@
         <a class="navbar-brand" ui-sref="home">Calendar App</a>
       </div>
       <ul class="nav navbar-nav">
-        <li ui-sref-active="inactive"><a ui-sref="account">Account</a></li>
-        <li ui-sref-active="inactive"><a ui-sref="events">Events</a></li>
-        <li ui-sref-active="inactive"><a ui-sref="categories">Categories</a></li>
+        <li ng-show="isLoggedIn" ui-sref-active="inactive"><a ui-sref="account">Account</a></li>
+        <li ng-show="isLoggedIn" ui-sref-active="inactive"><a ui-sref="events">Events</a></li>
+        <li ng-show="isLoggedIn" ui-sref-active="inactive"><a ui-sref="categories">Categories</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-click="logout()" ui-sref-active="inactive"><a ui-sref="logout">Logout</a></li>
-        <li ui-sref-active="inactive"><a ui-sref="register">Register</a></li>
-        <li ui-sref-active="inactive"><a ui-sref="login">Login</a></li>
+        <li ng-show="isLoggedIn" ng-click="logout()" ui-sref-active="inactive"><a ui-sref="logout">Logout</a>
+        </li>
+        <li ng-show="!isLoggedIn" ui-sref-active="inactive"><a ui-sref="register">Register</a></li>
+        <li ng-show="!isLoggedIn" ui-sref-active="inactive"><a ui-sref="login">Login</a></li>
       </ul>
     </div>
   </nav>
 
-  <div class="container" style="padding-top: 50px">
+  <div class="container content-container">
     <ui-view></ui-view>
+  </div>
+  <br/><br/>
+
+  <div class="panel-footer">
+    <p class="text-center">Created by
+      Til Goepfert (<a href="https://github.com/Desyon">Desyon</a>)
+      and
+      Eric Felix Kayser (<a href="https://github.com/0LaLaLa0">0lalala0</a>, <a
+          href="https://github.com/EricFelix">EricFelix</a>)
+    </p>
   </div>
 
   <!-- ngMain:js -->

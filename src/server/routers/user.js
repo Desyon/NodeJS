@@ -58,11 +58,15 @@ router.post('/login', bodyParser, function (req, res) {
     } else {
       if (ret.password !== user.password) {
         winston.debug('Login failed with wrong password or username');
-        return res.status(401).send('Wrong password or username.');
+        error.errmsg = 'Wrong password or username.';
+        return res.status(401).send(error);
       }
       winston.debug('Login successful. Token send');
       let token = jwt.sign(user.username);
-      return res.status(200).send({token: token});
+      return res.status(200).send({
+        token: token,
+        msg: 'Success',
+      });
     }
   });
 });
@@ -110,24 +114,28 @@ router.post('/create', bodyParser, function (req, res) {
   db.insertUser(user, function (err) {
     if (err) {
       winston.debug('User creation failed with database error.');
-      return res.status(500).send(err);
+      error.errmsg = 'Database error';
+      return res.status(500).send(error);
     } else {
       winston.debug('User creation successful.');
       let token = jwt.sign(user.username);
-      return res.status(201).send({token: token});
+      return res.status(201).send({
+        token: token,
+        msg: 'Success',
+      });
     }
   });
 });
 
 /**
- * Handles PUT request to /user/:id, to update the given user.
+ * Handles PUT request to /user/, to update the given user.
  *
  * Validates headers and checks given request data. If an error occurs a
  * corresponding HTTP error code is sent.
  *
  * Responds with HTTP status code 200 if the update is successful.
  */
-router.put('/:id', bodyParser, function (req, res) {
+router.put('/', bodyParser, function (req, res) {
   winston.debug('User change requested.');
   let error = {};
 
@@ -137,47 +145,48 @@ router.put('/:id', bodyParser, function (req, res) {
     return res.status(401).send(error);
   }
 
-  let username = req.params.id;
-
-  winston.debug('User change requested for user \'' + username + '\'.');
-
   // token validation
   jwt.verify(req.get('authorization'), function (err, decoded) {
-    if (err || !decoded || decoded.user !== username) {
+    if (err || !decoded) {
       winston.debug('User change failed with invalid authorization.');
       error.errmsg = 'Authorization failed. Invalid token';
       return res.status(401).send(error);
     }
-  });
 
-  // content type validation
-  if ('application/json' !== req.get('content-type')) {
-    winston.debug('User change failed with wrong or missing content type.');
-    error.errmsg = 'Wrong content type. Application only consumes JSON.';
-    return res.status(406).send(error);
-  }
+    let username = decoded.user;
 
-  if (!req.body) {
-    winston.debug('User change failed with missing request body.');
-    error.errmsg = 'Request body missing. User updating failed';
-    return res.status(400).send(error);
-  }
+    winston.debug('User change requested for user \'' + username + '\'.');
 
-  let user = {};
-  user.name = req.body.name;
-  user.password = req.body.password;
-  user.dob = req.body.dob;
-  user.email = req.body.email;
-
-  db.updateUser(username, req.body, function (err) {
-    if (err) {
-      winston.debug('User change failed with database error.');
-      return res.status(500).send(err);
-    } else {
-      winston.debug('User change successful.');
-      let response = {msg: 'Success'};
-      return res.status(200).send(response);
+    // content type validation
+    if ('application/json' !== req.get('content-type')) {
+      winston.debug('User change failed with wrong or missing content type.');
+      error.errmsg = 'Wrong content type. Application only consumes JSON.';
+      return res.status(406).send(error);
     }
+
+    if (!req.body) {
+      winston.debug('User change failed with missing request body.');
+      error.errmsg = 'Request body missing. User updating failed';
+      return res.status(400).send(error);
+    }
+
+    let user = {};
+    user.name = req.body.name;
+    user.password = req.body.password;
+    user.dob = req.body.dob;
+    user.email = req.body.email;
+
+    db.updateUser(username, req.body, function (err) {
+      if (err) {
+        winston.debug('User change failed with database error.');
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
+      } else {
+        winston.debug('User change successful.');
+        let response = {msg: 'Success'};
+        return res.status(200).send(response);
+      }
+    });
   });
 });
 
@@ -250,14 +259,33 @@ router.delete('/', bodyParser, function (req, res) {
       return res.status(401).send(error);
     }
 
-    winston.debug('User deletion requested for user \'' + decoded.user + '\'.');
+    let user = decoded.user;
 
-    db.deleteUser(decoded.user, function (delErr) {
+    winston.debug('User deletion requested for user \'' + user + '\'.');
+
+    db.deleteAllUserEvents(user, function (delErr) {
+      if (delErr) {
+        winston.debug('User deletion failed with database error');
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
+      }
+    });
+
+    db.deleteAllUserCategories(user, function (delErr) {
+      if (delErr) {
+        winston.debug('User deletion failed with database error');
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
+      }
+    });
+
+    db.deleteUser(user, function (delErr) {
       if (delErr) {
         winston.debug('User deletion failed with database error.');
-        return res.status(500).send(delErr);
+        error.errmsg = 'Database error';
+        return res.status(500).send(error);
       } else {
-        winston.debug('User \'' + decoded.user + '\'successfully deleted.');
+        winston.debug('User \'' + user + '\'successfully deleted.');
         let response = {msg: 'User deleted'};
         return res.status(200).send(response);
       }
