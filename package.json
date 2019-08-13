@@ -27,7 +27,7 @@
     "babel-plugin-angularjs-annotate": "^0.7.0",
     "babel-preset-es2015": "^6.24.1",
     "del": "^2.2.2",
-    "eslint": "^3.19.0",
+    "eslint": "^4.18.2",
     "eslint-config-google": "^0.8.0",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-angular-templatecache": "^2.0.0",
